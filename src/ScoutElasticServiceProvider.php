@@ -2,11 +2,13 @@
 
 namespace ScoutElastic;
 
-use ScoutElastic\Facades\ElasticClient;
-use Elasticsearch\ClientBuilder;
-use Illuminate\Support\ServiceProvider;
-use Config;
 use App;
+use Config;
+use Illuminate\Support\ServiceProvider;
+use Elasticsearch\ClientBuilder;
+use ScoutElastic\Console\ElasticIndexCreateCommand;
+use ScoutElastic\Console\ElasticIndexDropCommand;
+use ScoutElastic\Console\IndexConfiguratorMakeCommand;
 
 class ScoutElasticServiceProvider extends ServiceProvider
 {
@@ -14,6 +16,15 @@ class ScoutElasticServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/scout_elastic.php' => config_path('scout_elastic.php'),
+        ]);
+
+        $this->commands([
+            // make commands
+            IndexConfiguratorMakeCommand::class,
+
+            // elastic commands
+            ElasticIndexCreateCommand::class,
+            ElasticIndexDropCommand::class,
         ]);
     }
 

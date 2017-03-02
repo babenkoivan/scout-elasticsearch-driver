@@ -1,0 +1,10 @@
+<?php
+
+namespace DummyNamespace;
+
+use ScoutElastic\IndexConfigurator;
+
+class DummyClass extends IndexConfigurator
+{
+    //
+}
