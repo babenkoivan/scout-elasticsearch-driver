@@ -14,12 +14,14 @@ class ElasticIndexDropCommand extends ElasticIndexCommand
     {
         $configurator = $this->getConfigurator();
 
+        $name = $configurator->getName();
+
         ElasticClient::indices()
-            ->delete(['index' => $configurator->getName()]);
+            ->delete(['index' => $name]);
 
         $this->info(sprintf(
             'Index %s was deleted!',
-            $configurator->getName()
+            $name
         ));
     }
 }

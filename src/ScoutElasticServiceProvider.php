@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use Elasticsearch\ClientBuilder;
 use ScoutElastic\Console\ElasticIndexCreateCommand;
 use ScoutElastic\Console\ElasticIndexDropCommand;
+use ScoutElastic\Console\ElasticIndexUpdateCommand;
 use ScoutElastic\Console\IndexConfiguratorMakeCommand;
 
 class ScoutElasticServiceProvider extends ServiceProvider
@@ -24,6 +25,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
 
             // elastic commands
             ElasticIndexCreateCommand::class,
+            ElasticIndexUpdateCommand::class,
             ElasticIndexDropCommand::class,
         ]);
     }

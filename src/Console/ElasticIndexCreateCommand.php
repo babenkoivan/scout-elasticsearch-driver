@@ -14,12 +14,26 @@ class ElasticIndexCreateCommand extends ElasticIndexCommand
     {
         $configurator = $this->getConfigurator();
 
+        $name = $configurator->getName();
+        $body = [];
+
+        if ($settings = $this->getSettings()) {
+            $body['settings'] = $settings;
+        }
+
+        if ($mappings = $this->getMappings()) {
+            $body['mappings'] = $mappings;
+        }
+
         ElasticClient::indices()
-            ->create($configurator->toArray());
+            ->create([
+                'index' => $name,
+                'body' => $body
+            ]);
 
         $this->info(sprintf(
             'Index %s was created!',
-            $configurator->getName()
+            $name
         ));
     }
 }

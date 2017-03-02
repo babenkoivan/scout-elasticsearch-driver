@@ -30,19 +30,4 @@ abstract class IndexConfigurator
     {
         return $this->mappings;
     }
-
-    public function toArray()
-    {
-        $array = ['index' => $this->getName()];
-
-        if ($settings = $this->getSettings()) {
-            $array['settings'] = $settings;
-        }
-
-        if ($mappings = $this->getMappings()) {
-            $array['mappings'] = $mappings;
-        }
-
-        return $array;
-    }
 }
