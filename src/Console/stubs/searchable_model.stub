@@ -1,0 +1,14 @@
+<?php
+
+namespace DummyNamespace;
+
+use ScoutElastic\SearchableModel;
+
+class DummyClass extends SearchableModel
+{
+    protected $indexConfigurator = DummyConfigurator;
+
+    protected $mapping = [
+        //
+    ];
+}

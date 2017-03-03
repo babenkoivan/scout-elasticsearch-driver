@@ -13,7 +13,7 @@ abstract class ElasticIndexCommand extends Command
      */
     protected function getConfigurator()
     {
-        $configurator = $this->argument('configurator');
+        $configurator = trim($this->argument('configurator'));
         return (new $configurator);
     }
 

@@ -10,6 +10,7 @@ use ScoutElastic\Console\ElasticIndexCreateCommand;
 use ScoutElastic\Console\ElasticIndexDropCommand;
 use ScoutElastic\Console\ElasticIndexUpdateCommand;
 use ScoutElastic\Console\IndexConfiguratorMakeCommand;
+use ScoutElastic\Console\SearchableModelMakeCommand;
 
 class ScoutElasticServiceProvider extends ServiceProvider
 {
@@ -22,6 +23,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
         $this->commands([
             // make commands
             IndexConfiguratorMakeCommand::class,
+            SearchableModelMakeCommand::class,
 
             // elastic commands
             ElasticIndexCreateCommand::class,
