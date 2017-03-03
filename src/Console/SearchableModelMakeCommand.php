@@ -21,7 +21,7 @@ class SearchableModelMakeCommand extends GeneratorCommand
     protected function getOptions()
     {
         return [
-            ['configurator', 'c', InputOption::VALUE_REQUIRED, 'Determine an index configurator for the model'],
+            ['configurator', 'c', InputOption::VALUE_REQUIRED, 'Specify the index configurator for the model'],
         ];
     }
 

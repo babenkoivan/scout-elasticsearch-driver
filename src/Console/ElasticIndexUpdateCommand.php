@@ -20,13 +20,13 @@ class ElasticIndexUpdateCommand extends ElasticIndexCommand
         ];
     }
 
-    protected function buildMappingsPayload()
+    protected function buildMappingPayload()
     {
         $configurator = $this->getConfigurator();
 
-        $defaultMappings = $configurator->getDefaultMapping();
+        $defaultMapping = $configurator->getDefaultMapping();
 
-        if (!$defaultMappings) {
+        if (!$defaultMapping) {
             return null;
         }
 
@@ -35,7 +35,7 @@ class ElasticIndexUpdateCommand extends ElasticIndexCommand
             [
                 'type' => '_default_',
                 'body' => [
-                    '_default_' => $defaultMappings
+                    '_default_' => $defaultMapping
                 ]
             ]
         );
@@ -86,8 +86,8 @@ class ElasticIndexUpdateCommand extends ElasticIndexCommand
                 $indices->putSettings($settingsPayload);
             }
 
-            if ($mappingsPayload = $this->buildMappingsPayload()) {
-                $indices->putMapping($mappingsPayload);
+            if ($mappingPayload = $this->buildMappingPayload()) {
+                $indices->putMapping($mappingPayload);
             }
 
             $indices->open($basePayload);
@@ -98,7 +98,7 @@ class ElasticIndexUpdateCommand extends ElasticIndexCommand
         }
 
         $this->info(sprintf(
-            'Index %s was updated!',
+            'The index %s was updated!',
             $indexName
         ));
     }

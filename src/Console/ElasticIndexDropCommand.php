@@ -18,7 +18,7 @@ class ElasticIndexDropCommand extends ElasticIndexCommand
             ->delete(['index' => $configurator->getName()]);
 
         $this->info(sprintf(
-            'Index %s was deleted!',
+            'The index %s was deleted!',
             $configurator->getName()
         ));
     }

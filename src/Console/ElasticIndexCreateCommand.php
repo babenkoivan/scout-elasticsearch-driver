@@ -41,7 +41,7 @@ class ElasticIndexCreateCommand extends ElasticIndexCommand
             ->create($this->buildPayload());
 
         $this->info(sprintf(
-            'Index %s was created!',
+            'The index %s was created!',
             $configurator->getName()
         ));
     }

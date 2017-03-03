@@ -20,7 +20,7 @@ abstract class ElasticIndexCommand extends Command
     protected function getArguments()
     {
         return [
-            ['configurator', InputArgument::REQUIRED, 'The index configurator class.'],
+            ['configurator', InputArgument::REQUIRED, 'The index configurator class'],
         ];
     }
 }

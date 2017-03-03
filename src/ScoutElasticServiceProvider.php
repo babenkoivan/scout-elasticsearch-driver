@@ -9,6 +9,7 @@ use Elasticsearch\ClientBuilder;
 use ScoutElastic\Console\ElasticIndexCreateCommand;
 use ScoutElastic\Console\ElasticIndexDropCommand;
 use ScoutElastic\Console\ElasticIndexUpdateCommand;
+use ScoutElastic\Console\ElasticUpdateMappingCommand;
 use ScoutElastic\Console\IndexConfiguratorMakeCommand;
 use ScoutElastic\Console\SearchableModelMakeCommand;
 
@@ -29,6 +30,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
             ElasticIndexCreateCommand::class,
             ElasticIndexUpdateCommand::class,
             ElasticIndexDropCommand::class,
+            ElasticUpdateMappingCommand::class,
         ]);
     }
 
