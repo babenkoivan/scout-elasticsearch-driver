@@ -10,7 +10,7 @@ abstract class IndexConfigurator
 
     protected $settings = [];
 
-    protected $mappings = [];
+    protected $defaultMapping = [];
 
     public function getName()
     {
@@ -26,8 +26,8 @@ abstract class IndexConfigurator
         return $this->settings;
     }
 
-    public function getMappings()
+    public function getDefaultMapping()
     {
-        return $this->mappings;
+        return $this->defaultMapping;
     }
 }

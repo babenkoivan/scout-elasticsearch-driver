@@ -21,7 +21,8 @@
     }
   ],
   "require": {
-    "elasticsearch/elasticsearch": "^5.1"
+    "elasticsearch/elasticsearch": "^5.1",
+    "laravel/scout": "^3.0"
   },
   "autoload": {
     "psr-4": {

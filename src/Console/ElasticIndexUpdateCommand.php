@@ -11,49 +11,95 @@ class ElasticIndexUpdateCommand extends ElasticIndexCommand
 
     protected $description = 'Update settings and mappings of an Elasticsearch index';
 
+    protected function buildBasePayload()
+    {
+        $configurator = $this->getConfigurator();
+
+        return [
+            'index' => $configurator->getName()
+        ];
+    }
+
+    protected function buildMappingsPayload()
+    {
+        $configurator = $this->getConfigurator();
+
+        $defaultMappings = $configurator->getDefaultMapping();
+
+        if (!$defaultMappings) {
+            return null;
+        }
+
+        return array_merge(
+            $this->buildBasePayload(),
+            [
+                'type' => '_default_',
+                'body' => [
+                    '_default_' => $defaultMappings
+                ]
+            ]
+        );
+    }
+
+    protected function buildSettingsPayload()
+    {
+        $configurator = $this->getConfigurator();
+
+        $settings = $configurator->getSettings();
+
+        if (!$settings) {
+            return null;
+        }
+
+        return array_merge(
+            $this->buildBasePayload(),
+            [
+                'body' => [
+                    'settings' => $settings
+                ]
+            ]
+        );
+    }
+
     public function fire()
     {
         $configurator = $this->getConfigurator();
 
-        $name = $configurator->getName();
-        $settings = $configurator->getSettings();
-        $mappings = $configurator->getMappings();
+        $indexName = $configurator->getName();
+        $basePayload = $this->buildBasePayload();
 
-        if (!$settings && !$mappings) {
-            $this->error('Nothing to update!');
+        $indices = ElasticClient::indices();
+
+        if (!$indices->exists($basePayload)) {
+            $this->error(sprintf(
+                'Index %s doesn\'t exist',
+                $indexName
+            ));
+
             return;
         }
 
-        $indices = ElasticClient::indices();
-        $defaultParams = ['index' => $name];
-
         try {
-            $indices->close($defaultParams);
+            $indices->close($basePayload);
 
-            if ($settings) {
-                $indices->putSettings(array_merge(
-                    $defaultParams,
-                    ['body' => ['settings' => $settings]]
-                ));
+            if ($settingsPayload = $this->buildSettingsPayload()) {
+                $indices->putSettings($settingsPayload);
             }
 
-            if ($mappings) {
-                $indices->putMapping(array_merge(
-                    $defaultParams,
-                    ['body' => $mappings]
-                ));
+            if ($mappingsPayload = $this->buildMappingsPayload()) {
+                $indices->putMapping($mappingsPayload);
             }
 
-            $indices->open($defaultParams);
+            $indices->open($basePayload);
         } catch (Exception $exception) {
-            $indices->open($defaultParams);
+            $indices->open($basePayload);
 
             throw $exception;
         }
 
         $this->info(sprintf(
             'Index %s was updated!',
-            $name
+            $indexName
         ));
     }
 }

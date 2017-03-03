@@ -10,30 +10,39 @@ class ElasticIndexCreateCommand extends ElasticIndexCommand
 
     protected $description = 'Create an Elasticsearch index';
 
+    protected function buildPayload()
+    {
+        $configurator = $this->getConfigurator();
+
+        $body = [];
+
+        if ($settings = $configurator->getSettings()) {
+            $body['settings'] = $settings;
+        }
+
+        if ($defaultMappings = $configurator->getDefaultMapping()) {
+            $body['mappings'] = ['_default_' => $defaultMappings];
+        }
+
+        $payload = ['index' => $configurator->getName()];
+
+        if ($body) {
+            $payload['body'] = $body;
+        }
+
+        return $payload;
+    }
+
     public function fire()
     {
         $configurator = $this->getConfigurator();
 
-        $name = $configurator->getName();
-        $body = [];
-
-        if ($settings = $this->getSettings()) {
-            $body['settings'] = $settings;
-        }
-
-        if ($mappings = $this->getMappings()) {
-            $body['mappings'] = $mappings;
-        }
-
         ElasticClient::indices()
-            ->create([
-                'index' => $name,
-                'body' => $body
-            ]);
+            ->create($this->buildPayload());
 
         $this->info(sprintf(
             'Index %s was created!',
-            $name
+            $configurator->getName()
         ));
     }
 }

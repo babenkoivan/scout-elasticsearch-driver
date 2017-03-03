@@ -3,10 +3,14 @@
 namespace ScoutElastic\Console;
 
 use Illuminate\Console\Command;
+use ScoutElastic\IndexConfigurator;
 use Symfony\Component\Console\Input\InputArgument;
 
 abstract class ElasticIndexCommand extends Command
 {
+    /**
+     * @return IndexConfigurator
+     */
     protected function getConfigurator()
     {
         $configurator = $this->argument('configurator');
