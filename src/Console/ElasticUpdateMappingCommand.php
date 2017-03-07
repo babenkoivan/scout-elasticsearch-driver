@@ -43,8 +43,8 @@ class ElasticUpdateMappingCommand extends Command
 
         return [
             'index' => $configurator->getName(),
-            'type' => $model->getIndexType(),
-            'body' => [$model->getIndexType() => $mapping]
+            'type' => $model->searchableAs(),
+            'body' => [$model->searchableAs() => $mapping]
         ];
     }
 
@@ -58,7 +58,7 @@ class ElasticUpdateMappingCommand extends Command
 
         $this->info(sprintf(
             'The %s mapping was updated!',
-            $model->getIndexType()
+            $model->searchableAs()
         ));
     }
 

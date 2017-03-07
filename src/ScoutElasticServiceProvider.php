@@ -12,6 +12,7 @@ use ScoutElastic\Console\ElasticIndexUpdateCommand;
 use ScoutElastic\Console\ElasticUpdateMappingCommand;
 use ScoutElastic\Console\IndexConfiguratorMakeCommand;
 use ScoutElastic\Console\SearchableModelMakeCommand;
+use Laravel\Scout\EngineManager;
 
 class ScoutElasticServiceProvider extends ServiceProvider
 {
@@ -32,6 +33,11 @@ class ScoutElasticServiceProvider extends ServiceProvider
             ElasticIndexDropCommand::class,
             ElasticUpdateMappingCommand::class,
         ]);
+
+        resolve(EngineManager::class)
+            ->extend('elastic', function () {
+                return new ElasticEngine();
+            });
     }
 
     public function register()

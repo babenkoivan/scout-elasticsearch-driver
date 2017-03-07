@@ -2,16 +2,14 @@
 
 namespace ScoutElastic\Console;
 
-use Illuminate\Console\GeneratorCommand;
+use Illuminate\Foundation\Console\ModelMakeCommand;
 use Symfony\Component\Console\Input\InputOption;
 
-class SearchableModelMakeCommand extends GeneratorCommand
+class SearchableModelMakeCommand extends ModelMakeCommand
 {
     protected $name = 'make:searchable-model';
 
     protected $description = 'Create a new searchable model';
-
-    protected $type = 'Model';
 
     public function getStub()
     {
@@ -20,14 +18,16 @@ class SearchableModelMakeCommand extends GeneratorCommand
 
     protected function getOptions()
     {
-        return [
-            ['configurator', 'c', InputOption::VALUE_REQUIRED, 'Specify the index configurator for the model'],
-        ];
+        $options = parent::getOptions();
+
+        $options[] = ['index-configurator', 'i', InputOption::VALUE_REQUIRED, 'Specify the index configurator for the model'];
+
+        return $options;
     }
 
     protected function getConfiguratorOption()
     {
-        return trim($this->option('configurator'));
+        return trim($this->option('index-configurator'));
     }
 
     protected function buildClass($name)

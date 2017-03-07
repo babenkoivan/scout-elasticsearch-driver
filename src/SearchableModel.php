@@ -20,19 +20,14 @@ abstract class SearchableModel extends Model
      */
     public function getIndexConfigurator()
     {
-        static $configurator;
+        static $indexConfigurator;
 
-        if (!$configurator) {
-            $configuratorClass = $this->indexConfigurator;
-            $configurator = new $configuratorClass;
+        if (!$indexConfigurator) {
+            $indexConfiguratorClass = $this->indexConfigurator;
+            $indexConfigurator = new $indexConfiguratorClass;
         }
 
-        return $configurator;
-    }
-
-    public function getIndexType()
-    {
-        return $this->indexType ?: $this->getTable();
+        return $indexConfigurator;
     }
 
     public function getMapping()

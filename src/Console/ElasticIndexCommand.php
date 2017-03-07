@@ -13,14 +13,14 @@ abstract class ElasticIndexCommand extends Command
      */
     protected function getConfigurator()
     {
-        $configurator = trim($this->argument('configurator'));
+        $configurator = trim($this->argument('index-configurator'));
         return (new $configurator);
     }
 
     protected function getArguments()
     {
         return [
-            ['configurator', InputArgument::REQUIRED, 'The index configurator class'],
+            ['index-configurator', InputArgument::REQUIRED, 'The index configurator class'],
         ];
     }
 }
