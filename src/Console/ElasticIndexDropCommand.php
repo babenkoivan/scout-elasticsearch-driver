@@ -15,7 +15,7 @@ class ElasticIndexDropCommand extends ElasticIndexCommand
         $configurator = $this->getConfigurator();
 
         ElasticClient::indices()
-            ->delete(['index' => $configurator->getName()]);
+            ->delete($this->buildBasePayload());
 
         $this->info(sprintf(
             'The index %s was deleted!',

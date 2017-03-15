@@ -11,15 +11,6 @@ class ElasticIndexUpdateCommand extends ElasticIndexCommand
 
     protected $description = 'Update settings and mappings of an Elasticsearch index';
 
-    protected function buildBasePayload()
-    {
-        $configurator = $this->getConfigurator();
-
-        return [
-            'index' => $configurator->getName()
-        ];
-    }
-
     protected function buildMappingPayload()
     {
         $configurator = $this->getConfigurator();

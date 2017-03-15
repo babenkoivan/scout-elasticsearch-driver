@@ -17,6 +17,15 @@ abstract class ElasticIndexCommand extends Command
         return (new $configurator);
     }
 
+    protected function buildBasePayload()
+    {
+        $configurator = $this->getConfigurator();
+
+        return [
+            'index' => $configurator->getName()
+        ];
+    }
+
     protected function getArguments()
     {
         return [

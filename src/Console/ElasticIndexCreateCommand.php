@@ -24,7 +24,7 @@ class ElasticIndexCreateCommand extends ElasticIndexCommand
             $body['mappings'] = ['_default_' => $defaultMappings];
         }
 
-        $payload = ['index' => $configurator->getName()];
+        $payload = $this->buildBasePayload();
 
         if ($body) {
             $payload['body'] = $body;
