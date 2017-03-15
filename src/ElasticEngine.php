@@ -6,7 +6,9 @@ use Config;
 use Artisan;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine;
+use ScoutElastic\Builders\SearchBuilder;
 use ScoutElastic\Facades\ElasticClient;
+use Illuminate\Database\Eloquent\Collection;
 
 class ElasticEngine extends Engine
 {
@@ -19,17 +21,166 @@ class ElasticEngine extends Engine
 
     /**
      * @param SearchableModel $model
+     * @param mixed $bodyPayload
      * @return array
      */
-    protected function buildBasePayload($model)
+    protected function buildTypePayload($model, $bodyPayload = null)
     {
-        $configurator = $model->getIndexConfigurator();
-
-        return [
-            'index' => $configurator->getName(),
+        $payload = [
+            'index' => $model->getIndexConfigurator()->getName(),
             'type' => $model->searchableAs(),
-            'id' => $model->getKey(),
         ];
+
+        if ($bodyPayload) {
+            $payload['body'] = $bodyPayload;
+        }
+
+        return $payload;
+    }
+
+    /**
+     * @param SearchableModel $model
+     * @param mixed $bodyPayload
+     * @return array
+     */
+    protected function buildDocumentPayload($model, $bodyPayload = null)
+    {
+        return array_merge(
+            $this->buildTypePayload($model, $bodyPayload),
+            ['id' => $model->getKey()]
+        );
+    }
+
+    protected function buildFilterPayload(Builder $builder)
+    {
+        $payload = [];
+
+        foreach ($builder->wheres as $where) {
+            $must = null;
+            $mustNot = null;
+
+            /** @var string $field */
+            /** @var string $type */
+            /** @var string $operator */
+            /** @var mixed $value */
+            /** @var bool $not */
+            extract($where);
+
+            switch ($type) {
+                case 'basic':
+                    switch ($operator) {
+                        case '=':
+                            $must = ['term' => [$field => $value]];
+                            break;
+
+                        case '>':
+                            $must = ['range' => [$field => ['gt' => $value]]];
+                            break;
+
+                        case '<';
+                            $must = ['range' => [$field => ['lt' => $value]]];
+                            break;
+
+                        case '>=':
+                            $must = ['range' => [$field => ['gte' => $value]]];
+                            break;
+
+                        case '<=':
+                            $must = ['range' => [$field => ['lte' => $value]]];
+                            break;
+
+                        case '<>':
+                            $mustNot = ['term' => [$field => $value]];
+                            break;
+                    }
+                    break;
+
+                case 'in':
+                    if ($not) {
+                        $mustNot = ['terms' => [$field => $value]];
+                    } else {
+                        $must = ['terms' => [$field => $value]];
+                    }
+                    break;
+
+                case 'between':
+                    if ($not) {
+                        $must = ['range' => [$field => ['lt' => $value[0], 'gt' => $value[1]]]];
+                    } else {
+                        $must = ['range' => [$field => ['gte' => $value[0], 'lte' => $value[1]]]];
+                    }
+                    break;
+
+                case 'exists':
+                    if ($not) {
+                        $mustNot = ['exists' => ['field' => $field]];
+                    } else {
+                        $must = ['exists' => ['field' => $field]];
+                    }
+                    break;
+            }
+
+            if ($must || $mustNot) {
+                if (!isset($payload['bool'])) {
+                    $payload['bool'] = [];
+                }
+
+                if ($must) {
+                    if (!isset($payload['bool']['must'])) {
+                        $payload['bool']['must'] = [];
+                    }
+
+                    $payload['bool']['must'][] = $must;
+                }
+
+                if ($mustNot) {
+                    if (!isset($payload['bool']['must_not'])) {
+                        $payload['bool']['must_not'] = [];
+                    }
+
+                    $payload['bool']['must_not'][] = $mustNot;
+                }
+            }
+        }
+
+        return $payload;
+    }
+
+    protected function buildSearchQueryPayload(Builder $builder, $queryPayload, array $options = [])
+    {
+        $payload = [
+            'query' => [
+                'bool' => $queryPayload
+            ]
+        ];
+
+        if ($filterPayload = $this->buildFilterPayload($builder)) {
+            $payload['query']['bool'] = array_merge_recursive(
+                $payload['query']['bool'],
+                ['filter' => $filterPayload]
+            );
+        }
+
+        if ($size = isset($options['limit']) ? $options['limit'] : $builder->limit) {
+            $payload['size'] = $size;
+
+            if (isset($options['page'])) {
+                $payload['from'] = ($options['page'] - 1) * $size;
+            }
+        }
+
+        if ($orders = $builder->orders) {
+            $payload['sort'] = [];
+
+            foreach ($orders as $order) {
+                $payload['sort'][] = [$order['column'] => $order['direction']];
+            }
+        }
+
+        return $this->buildTypePayload(
+            $builder->model,
+            $payload
+        );
     }
 
     public function update($models)
@@ -42,25 +193,23 @@ class ElasticEngine extends Engine
                 );
             }
 
-            $basePayload = $this->buildBasePayload($model);
+            $documentPayload = $this->buildDocumentPayload($model);
             $searchableFields = $model->toSearchableArray();
 
-            if (ElasticClient::exists($basePayload)) {
-                ElasticClient::update(array_merge(
-                    $basePayload,
-                    [
-                        'body' => [
-                            'doc' => $searchableFields
-                        ]
-                    ]
-                ));
+            if (ElasticClient::exists($documentPayload)) {
+                $payload = $this->buildDocumentPayload(
+                    $model,
+                    ['doc' => $searchableFields]
+                );
+
+                ElasticClient::update($payload);
             } else {
-                ElasticClient::index(array_merge(
-                    $basePayload,
-                    [
-                        'body' => $searchableFields
-                    ]
-                ));
+                $payload = $this->buildDocumentPayload(
+                    $model,
+                    $searchableFields
+                );
+
+                ElasticClient::index($payload);
             }
         });
 
@@ -70,34 +219,97 @@ class ElasticEngine extends Engine
     public function delete($models)
     {
         $models->map(function ($model) {
-            $basePayload = $this->buildBasePayload($model);
+            $payload = $this->buildDocumentPayload($model);
 
-            ElasticClient::delete($basePayload);
+            ElasticClient::delete($payload);
         });
+    }
+
+    protected function performSearch(Builder $builder, array $options = []) {
+        if ($builder->callback) {
+            return call_user_func(
+                $builder->callback,
+                ElasticClient::getFacadeRoot(),
+                $builder->query,
+                $options
+            );
+        }
+
+        $results = null;
+
+        if ($builder instanceof SearchBuilder) {
+            $searchRules = $builder->rules ?: $builder->model->getSearchRules();
+
+            foreach ($searchRules as $ruleClass) {
+                /* @var \ScoutElastic\SearchRule $rule */
+                $rule = new $ruleClass($builder);
+
+                $payload = $this->buildSearchQueryPayload(
+                    $builder,
+                    $rule->buildQueryPayload()
+                );
+
+                $results = ElasticClient::search($payload);
+
+                if ($this->getTotalCount($results) > 0) {
+                    return $results;
+                }
+            }
+        } else {
+            $payload = $this->buildSearchQueryPayload(
+                $builder,
+                ['must' => ['match_all' => []]]
+            );
+
+            $results = ElasticClient::search($payload);
+        }
+
+        return $results;
     }
 
     public function search(Builder $builder)
     {
-
-    }
-
-    public function getTotalCount($results)
-    {
-
+        return $this->performSearch($builder);
     }
 
     public function paginate(Builder $builder, $perPage, $page)
     {
-
+        return $this->performSearch($builder, [
+            'limit' => $perPage,
+            'page' => $page
+        ]);
     }
 
     public function mapIds($results)
     {
-
+        return array_pluck($results['hits']['hits'], '_id');
     }
 
     public function map($results, $model)
     {
+        if ($this->getTotalCount($results) == 0) {
+            return Collection::make();
+        }
 
+        $ids = $this->mapIds($results);
+
+        $modelKey = $model->getKeyName();
+
+        $models = $model->whereIn($modelKey, $ids)
+                        ->get()
+                        ->keyBy($modelKey);
+
+        return Collection::make($results['hits']['hits'])->map(function($hit) use ($models) {
+            $id = $hit['_id'];
+
+            if (isset($models[$id])) {
+                return $models[$id];
+            }
+        });
+    }
+
+    public function getTotalCount($results)
+    {
+        return $results['hits']['total'];
     }
 }

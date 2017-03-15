@@ -4,6 +4,8 @@ namespace ScoutElastic;
 
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
+use ScoutElastic\Builders\FilterBuilder;
+use ScoutElastic\Builders\SearchBuilder;
 
 abstract class SearchableModel extends Model
 {
@@ -11,9 +13,11 @@ abstract class SearchableModel extends Model
 
     protected $indexConfigurator;
 
-    protected $indexType;
-
     protected $mapping = [];
+
+    protected $searchRules = [
+        SearchRule::class
+    ];
 
     /**
      * @return IndexConfigurator
@@ -33,5 +37,19 @@ abstract class SearchableModel extends Model
     public function getMapping()
     {
         return $this->mapping;
+    }
+
+    public function getSearchRules()
+    {
+        return $this->searchRules;
+    }
+
+    public static function search($query, $callback = null)
+    {
+        if ($query == '*') {
+            return new FilterBuilder(new static, $callback);
+        } else {
+            return new SearchBuilder(new static, $query, $callback);
+        }
     }
 }

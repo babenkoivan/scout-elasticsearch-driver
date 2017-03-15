@@ -13,6 +13,7 @@ use ScoutElastic\Console\ElasticUpdateMappingCommand;
 use ScoutElastic\Console\IndexConfiguratorMakeCommand;
 use ScoutElastic\Console\SearchableModelMakeCommand;
 use Laravel\Scout\EngineManager;
+use ScoutElastic\Console\SearchRuleMakeCommand;
 
 class ScoutElasticServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
             // make commands
             IndexConfiguratorMakeCommand::class,
             SearchableModelMakeCommand::class,
+            SearchRuleMakeCommand::class,
 
             // elastic commands
             ElasticIndexCreateCommand::class,
