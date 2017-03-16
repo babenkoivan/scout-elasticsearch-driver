@@ -105,7 +105,7 @@ class ElasticEngine extends Engine
 
                 case 'between':
                     if ($not) {
-                        $must = ['range' => [$field => ['lt' => $value[0], 'gt' => $value[1]]]];
+                        $mustNot = ['range' => [$field => ['gte' => $value[0], 'lte' => $value[1]]]];
                     } else {
                         $must = ['range' => [$field => ['gte' => $value[0], 'lte' => $value[1]]]];
                     }
