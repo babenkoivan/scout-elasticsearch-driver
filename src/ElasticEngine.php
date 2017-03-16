@@ -246,7 +246,8 @@ class ElasticEngine extends Engine
 
                 $payload = $this->buildSearchQueryPayload(
                     $builder,
-                    $rule->buildQueryPayload()
+                    $rule->buildQueryPayload(),
+                    $options
                 );
 
                 $results = ElasticClient::search($payload);
@@ -258,7 +259,8 @@ class ElasticEngine extends Engine
         } else {
             $payload = $this->buildSearchQueryPayload(
                 $builder,
-                ['must' => ['match_all' => []]]
+                ['must' => ['match_all' => []]],
+                $options
             );
 
             $results = ElasticClient::search($payload);
