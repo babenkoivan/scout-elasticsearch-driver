@@ -52,4 +52,13 @@ abstract class SearchableModel extends Model
             return new SearchBuilder(new static, $query, $callback);
         }
     }
+
+    public static function searchRaw($query)
+    {
+        $model = new static();
+
+        return $model
+            ->searchableUsing()
+            ->searchRaw($model, $query);
+    }
 }

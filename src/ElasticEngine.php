@@ -282,6 +282,12 @@ class ElasticEngine extends Engine
         ]);
     }
 
+    public function searchRaw(SearchableModel $model, $query)
+    {
+        $payload = $this->buildTypePayload($model, $query);
+        return ElasticClient::search($payload);
+    }
+
     public function mapIds($results)
     {
         return array_pluck($results['hits']['hits'], '_id');
