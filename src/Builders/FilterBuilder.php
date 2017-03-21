@@ -106,4 +106,16 @@ class FilterBuilder extends Builder {
 
         return $this;
     }
+
+    public function whereRegexp($field, $value, $flags = 'ALL')
+    {
+        $this->wheres[] = [
+            'type' => 'regexp',
+            'field' => $field,
+            'value' => $value,
+            'flags' => $flags
+        ];
+
+        return $this;
+    }
 }

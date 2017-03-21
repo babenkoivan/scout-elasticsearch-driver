@@ -64,6 +64,7 @@ class ElasticEngine extends Engine
             /** @var string $operator */
             /** @var mixed $value */
             /** @var bool $not */
+            /** @var string $flags */
             extract($where);
 
             switch ($type) {
@@ -117,6 +118,10 @@ class ElasticEngine extends Engine
                     } else {
                         $must = ['exists' => ['field' => $field]];
                     }
+                    break;
+
+                case 'regexp':
+                    $must = ['regexp' => [$field => ['value' => $value, 'flags' => $flags]]];
                     break;
             }
 
