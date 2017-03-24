@@ -36,7 +36,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
             ElasticUpdateMappingCommand::class,
         ]);
 
-        resolve(EngineManager::class)
+        App::make(EngineManager::class)
             ->extend('elastic', function () {
                 return new ElasticEngine();
             });
