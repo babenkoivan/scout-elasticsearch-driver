@@ -20,7 +20,7 @@ Check out its [features](#features)!
 
 * An easy way to [configure](#index-configurator) and [create](#console-commands) an Elasticsearch index.
 * A fully configurable mapping for each [model](#searchable-model).
-* A possibility to add a new field to an existing mapping [automatically](#installation) or using [the artisan command](#console-commands).
+* A possibility to add a new field to an existing mapping [automatically](#configuration) or using [the artisan command](#console-commands).
 * Lots of different ways to implement your search algorithm: using [search rules](#search-rules) or a [raw search](#usage).
 * [Various filter types](#available-filters) to make a search query more specific.
 
@@ -65,14 +65,14 @@ update_mapping | The option that specifies whether to update a mapping automatic
 
 ## Index configurator
 
-An index configurator class is used to determine settings for an Elasticsearch index.
+An index configurator class is used to set up settings for an Elasticsearch index.
 To create a new index configurator use the following artisan command:
 
 ```
 php artisan make:index-configurator MyIndexConfigurator
 ```
 
-It'll be created in the `app` folder of your project. 
+It'll create the file `MyIndexConfigurator.php` in the `app` folder of your project. 
 You can specify index name, settings and default mapping like in the following example:
 
 ```php
@@ -130,13 +130,11 @@ php artisan elastic:create-index App\\MyIndexConfigurator
 
 ## Searchable model
 
-To create a model with the ability to perform search request in an Elasticsearch index use the artisan command:
+To create a model with the ability to perform search requests in an Elasticsearch index use the command:
 
 ```
 php artisan make:searchable-model MyModel --index-configurator=MyIndexConfigurator
-```
-
-More information about this command and available options you will find in [the command section](#console-commands). 
+``` 
 
 After executing the command you'll find the file `MyModel.php` in you `app` folder:
 
@@ -151,7 +149,7 @@ class MyModel extends SearchableModel
 {
     protected $indexConfigurator = MyIndexConfigurator::class;
 
-    // here you can specify here mapping for model fields
+    // Here you can specify a mapping for a model fields.
     protected $mapping = [
         'properties' => [
             'text' => [
@@ -169,15 +167,15 @@ class MyModel extends SearchableModel
 ```
 
 Each searchable model represents an Elasticsearch type.
-By default a type name is the same as a table name, but you can specify any type name you want through the `searchableAs` method.
-You can also set fields which will be indexed by the driver through the `toSearchableArray` method.
+By default a type name is the same as a table name, but you can set any type name you want through the `searchableAs` method.
+You can also specify fields which will be indexed by the driver through the `toSearchableArray` method.
 More information about these options you will find in [the scout official documentation](https://laravel.com/docs/5.4/scout#configuration).
 
-The last important option you can set in `MyModel` class is property `$searchRules`. 
-It allows you to set different search algorithm for a model. 
+The last important option you can set in the `MyModel` class is the `$searchRules` property. 
+It allows you to set different search algorithms for a model. 
 We'll take a closer look at it in [the search rules section](#search-rules).
 
-After describing mapping in your model you can update an Elasticsearch type mapping using command:
+After setting up a mapping in your model you can update an Elasticsearch type mapping:
 
 ```
 php artisan elastic:update-mapping App\\MyModel
@@ -186,7 +184,7 @@ php artisan elastic:update-mapping App\\MyModel
 ## Usage
 
 Once you've created an index configurator, an Elasticsearch index itself and a searchable model, you are ready to go.
-Now you can [index](https://laravel.com/docs/5.4/scout#indexing) and [search](https://laravel.com/docs/5.4/scout#searching) your data according to the documentation.
+Now you can [index](https://laravel.com/docs/5.4/scout#indexing) and [search](https://laravel.com/docs/5.4/scout#searching) data according to the documentation.
 
 In addition to standard functionality the package offers you the possibility to filter data in Elasticsearch without specifying query string:
   
@@ -214,25 +212,43 @@ App\MyModel::search('*')
     ->get();
 ```
 
+At last, if you want to send a custom request, you can use the `searchRaw` method:
+
+```php
+App\MyModel::searchRaw([
+    'query' => [
+        'bool' => [
+            'must' => [
+                'match' => [
+                    '_all' => 'Brazil'
+                ]
+            ]
+        ]
+    ]
+]);
+```
+
+This query will return raw response.
+
 ## Console commands
 
 Available artisan commands are listed below:
 
 Command | Arguments | Description
 --- | --- | ---
-make:index-configurator | `name` - The name of the class | Create a new Elasticsearch index configurator
-make:searchable-model | `name` - The name of the class | Create a new searchable model
-make:search-rule | `name` - The name of the class | Create a new search rule
-elastic:create-index | `index-configurator` - The index configurator class | Create an Elasticsearch index
-elastic:update-index | `index-configurator` - The index configurator class | Update settings and mappings of an Elasticsearch index
-elastic:drop-index | `index-configurator` - The index configurator class | Drop an Elasticsearch index
-elastic:update-mapping | `model` - The model class | Update a model mapping
+make:index-configurator | `name` - The name of the class | Creates a new Elasticsearch index configurator.
+make:searchable-model | `name` - The name of the class | Creates a new searchable model.
+make:search-rule | `name` - The name of the class | Creates a new search rule.
+elastic:create-index | `index-configurator` - The index configurator class | Creates an Elasticsearch index.
+elastic:update-index | `index-configurator` - The index configurator class | Updates settings and mappings of an Elasticsearch index.
+elastic:drop-index | `index-configurator` - The index configurator class | Drops an Elasticsearch index.
+elastic:update-mapping | `model` - The model class | Updates a model mapping.
 
 For detailed description and all available options run `php artisan help [command]` in the command line.
 
 ## Search rules
 
-A search rule is a class that describes how the search query will be executed. 
+A search rule is a class that describes how a search query will be executed. 
 To create a search rule use the command:
 
 ```
@@ -250,7 +266,7 @@ use ScoutElastic\SearchRule;
 
 class MySearch extends SearchRule
 {
-    // This method returns an array that represents a content of bool query 
+    // This method returns an array that represents a content of bool query.
     public function buildQueryPayload()
     {
         return [
@@ -278,9 +294,9 @@ return [
 ];
 ```
 
-This means that by default when you call `search` method on your model it tries to find the query string in any field.
+This means that by default when you call `search` method on a model it tries to find the query string in any field.
 
-To specify default search rules for a model just add a property:
+To determine default search rules for a model just add a property:
 
 ```php
 <?php
@@ -313,13 +329,13 @@ You can use different types of filters:
 Method | Example | Description
 --- | --- | ---
 where($field, $value) | where('id', 1) | Checks equality to a simple value.
-where($field, $operator, $value) | where('id', '>=', 1) | Filters records according a given rule. Available operators are: =, <, >, <=, >=, <>.    
+where($field, $operator, $value) | where('id', '>=', 1) | Filters records according to a given rule. Available operators are: =, <, >, <=, >=, <>.    
 whereIn($field, $value) | where('id', [1, 2, 3]) | Checks if a value is in a set of values. 
 whereNotIn($field, $value) | whereNotIn('id', [1, 2, 3]) | Checks if a value isn't in a set of values. 
 whereBetween($field, $value) | whereBetween('price', [100, 200]) | Checks if a value is in a range.
 whereNotBetween($field, $value) | whereNotBetween('price', [100, 200]) | Checks if a value isn't in a range.
-whereExists($field) | whereExists('unemployed') | Checks if a value for a field is defined.
-whereNotExists($field) | whereNotExists('unemployed') | Checks if a value for a field isn't defined.  
-whereRegexp($field, $value, $flags = 'ALL') | whereRegexp('name.raw', 'A.+') | Filters records according a given regular expression. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/5.2/query-dsl-regexp-query.html#regexp-syntax) you can find more about syntax.
+whereExists($field) | whereExists('unemployed') | Checks if a value is defined.
+whereNotExists($field) | whereNotExists('unemployed') | Checks if a value isn't defined.  
+whereRegexp($field, $value, $flags = 'ALL') | whereRegexp('name.raw', 'A.+') | Filters records according to a given regular expression. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/5.2/query-dsl-regexp-query.html#regexp-syntax) you can find more about syntax.
 
 In most cases it's better to use raw fields to filter records, i.e. not analyzed fields.
