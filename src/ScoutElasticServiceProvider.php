@@ -2,7 +2,6 @@
 
 namespace ScoutElastic;
 
-use App;
 use Config;
 use Illuminate\Support\ServiceProvider;
 use Elasticsearch\ClientBuilder;
@@ -36,7 +35,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
             ElasticUpdateMappingCommand::class,
         ]);
 
-        App::make(EngineManager::class)
+        $this->app->make(EngineManager::class)
             ->extend('elastic', function () {
                 return new ElasticEngine();
             });
@@ -44,7 +43,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
 
     public function register()
     {
-        App::singleton('scout_elastic.client', function() {
+        $this->app->singleton('scout_elastic.client', function() {
             $config = Config::get('scout_elastic.client');
             return ClientBuilder::fromConfig($config);
         });

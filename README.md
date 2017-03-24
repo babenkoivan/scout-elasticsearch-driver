@@ -1,6 +1,6 @@
 # Scout Elasticsearch Driver
 
-This package offers an advanced functionality for searching and filtering data in Elasticsearch.
+This package offers advanced functionality for searching and filtering data in Elasticsearch.
 Check out its [features](#features)!
 
 ## Contents
@@ -26,7 +26,7 @@ Check out its [features](#features)!
 
 ## Requirements
 
-The package has been tested on following configuration: 
+The package has been tested in the following configuration: 
 
 * PHP version &gt;= 7.0
 * Laravel Framework version &gt;= 5.4
@@ -194,7 +194,7 @@ App\MyModel::search('*')
     ->get();
 ```
 
-Also you can use different [search rules](#search-rules) on the fly:
+Also you can override model [search rules](#search-rules):
 
 ```php
 App\MyModel::search('Brazil')
@@ -202,7 +202,7 @@ App\MyModel::search('Brazil')
     ->get();
 ```
 
-And a [variety](#available-filters) of `where` conditions: 
+And use [variety](#available-filters) of `where` conditions: 
 
 ```php
 App\MyModel::search('*')
