@@ -317,8 +317,22 @@ class MyModel extends SearchableModel
 You can also set a search rule in a query builder:
 
 ```php
+// You can set either a SearchRule class
 App\MyModel::search('Brazil')
     ->rule(App\MySearchRule::class)
+    ->get();
+    
+// or a callable
+App\MyModel::search('Brazil')
+    ->rule(function($builder) {
+        return [
+            'must' => [
+                'match' => [
+                    'Country' => $builder->query
+                ]
+            ]
+        ];
+    })
     ->get();
 ```
 

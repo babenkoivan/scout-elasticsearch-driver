@@ -245,13 +245,16 @@ class ElasticEngine extends Engine
         if ($builder instanceof SearchBuilder) {
             $searchRules = $builder->rules ?: $builder->model->getSearchRules();
 
-            foreach ($searchRules as $ruleClass) {
-                /* @var \ScoutElastic\SearchRule $rule */
-                $rule = new $ruleClass($builder);
+            foreach ($searchRules as $rule) {
+                if (is_callable($rule)) {
+                    $queryPayload = call_user_func($rule, $builder);
+                } else {
+                    $queryPayload = (new $rule($builder))->buildQueryPayload();
+                }
 
                 $payload = $this->buildSearchQueryPayload(
                     $builder,
-                    $rule->buildQueryPayload(),
+                    $queryPayload,
                     $options
                 );
 
