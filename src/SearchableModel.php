@@ -57,8 +57,7 @@ abstract class SearchableModel extends Model
     {
         $model = new static();
 
-        return $model
-            ->searchableUsing()
+        return $model->searchableUsing()
             ->searchRaw($model, $query);
     }
 }
