@@ -1,5 +1,8 @@
 # Scout Elasticsearch Driver
 
+[![Packagist](https://img.shields.io/packagist/v/babenkoivan/scout-elasticsearch-driver.svg)](https://packagist.org/packages/babenkoivan/scout-elasticsearch-driver)
+[![Packagist](https://img.shields.io/packagist/dt/babenkoivan/scout-elasticsearch-driver.svg)](https://packagist.org/packages/babenkoivan/scout-elasticsearch-driver)
+
 This package offers advanced functionality for searching and filtering data in Elasticsearch.
 Check out its [features](#features)!
 
