@@ -55,17 +55,9 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
             ->getMock();
     }
 
-    public function test_if_the_update_method_of_non_existing_model_builds_correct_payload()
+    public function test_if_the_update_method_builds_correct_payload()
     {
         $this->initClient()
-            ->shouldReceive('exists')
-            ->with([
-                'index' => 'test_index',
-                'type' => 'test_type',
-                'id' => 1
-            ])
-            ->andReturn(false)
-            ->getMock()
             ->shouldReceive('index')
             ->with([
                 'index' => 'test_index',
@@ -74,38 +66,6 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 'body' => [
                     'id' => 1,
                     'name' => 'test model'
-                ]
-            ]);
-
-        $model = $this->initModel([
-            'id' => 1,
-            'name' => 'test model'
-        ]);
-
-        $this->initEngine()->update(Collection::make([$model]));
-    }
-
-    public function test_if_the_update_method_of_existing_model_builds_correct_payload()
-    {
-        $this->initClient()
-            ->shouldReceive('exists')
-            ->with([
-                'index' => 'test_index',
-                'type' => 'test_type',
-                'id' => 1
-            ])
-            ->andReturn(true)
-            ->getMock()
-            ->shouldReceive('update')
-            ->with([
-                'index' => 'test_index',
-                'type' => 'test_type',
-                'id' => 1,
-                'body' => [
-                    'doc' => [
-                        'id' => 1,
-                        'name' => 'test model'
-                    ]
                 ]
             ]);
 

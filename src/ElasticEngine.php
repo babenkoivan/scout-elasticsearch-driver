@@ -198,24 +198,12 @@ class ElasticEngine extends Engine
                 );
             }
 
-            $documentPayload = $this->buildDocumentPayload($model);
-            $searchableFields = $model->toSearchableArray();
+            $payload = $this->buildDocumentPayload(
+                $model,
+                $model->toSearchableArray()
+            );
 
-            if (ElasticClient::exists($documentPayload)) {
-                $payload = $this->buildDocumentPayload(
-                    $model,
-                    ['doc' => $searchableFields]
-                );
-
-                ElasticClient::update($payload);
-            } else {
-                $payload = $this->buildDocumentPayload(
-                    $model,
-                    $searchableFields
-                );
-
-                ElasticClient::index($payload);
-            }
+            ElasticClient::index($payload);
         });
 
         $this->updateMapping = false;
