@@ -13,6 +13,11 @@ class SearchRule
         $this->builder = $builder;
     }
 
+    public function isApplicable()
+    {
+        return true;
+    }
+
     public function buildQueryPayload()
     {
         return [

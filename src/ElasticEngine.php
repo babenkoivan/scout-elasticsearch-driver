@@ -237,7 +237,14 @@ class ElasticEngine extends Engine
                 if (is_callable($rule)) {
                     $queryPayload = call_user_func($rule, $builder);
                 } else {
-                    $queryPayload = (new $rule($builder))->buildQueryPayload();
+                    /** @var SearchRule $ruleEntity */
+                    $ruleEntity = new $rule($builder);
+
+                    if ($ruleEntity->isApplicable()) {
+                        $queryPayload = $ruleEntity->buildQueryPayload();
+                    } else {
+                        continue;
+                    }
                 }
 
                 $payload = $this->buildSearchQueryPayload(
