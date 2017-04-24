@@ -68,7 +68,7 @@ class SearchableModelMakeCommand extends ModelMakeCommand
     {
         $indexConfigurator = $this->getIndexConfigurator();
 
-        if (!$this->alreadyExists($indexConfigurator)) {
+        if ($indexConfigurator && !$this->alreadyExists($indexConfigurator)) {
             $this->call('make:index-configurator', [
                 'name' => $indexConfigurator
             ]);
@@ -77,7 +77,7 @@ class SearchableModelMakeCommand extends ModelMakeCommand
 
         $searchRule = $this->getSearchRule();
 
-        if (!$this->alreadyExists($searchRule)) {
+        if ($searchRule && !$this->alreadyExists($searchRule)) {
             $this->call('make:search-rule', [
                 'name' => $searchRule
             ]);
