@@ -262,7 +262,7 @@ class ElasticEngine extends Engine
         } else {
             $payload = $this->buildSearchQueryPayload(
                 $builder,
-                ['must' => ['match_all' => []]],
+                ['must' => ['match_all' => new \stdClass()]],
                 $options
             );
 
