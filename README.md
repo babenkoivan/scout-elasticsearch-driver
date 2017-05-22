@@ -8,6 +8,7 @@ Check out its [features](#features)!
 
 ## Contents
 
+* [Tutorial](#tutorial)
 * [Features](#features)
 * [Requirements](#requirements)
 * [Installation](#installation)
@@ -18,6 +19,11 @@ Check out its [features](#features)!
 * [Console commands](#console-commands)
 * [Search rules](#search-rules)
 * [Available filters](#available-filters)
+
+## Tutorial
+
+For your convenience I wrote step-by-step tutorial - [How to make Laravel and Elasticsearch become friends](https://medium.com/@babenko.i.a/how-to-make-laravel-and-elasticsearch-become-friends-55ed7690331c). 
+There are information about Elasticsearch installation and the package usage examples, don't miss it!    
 
 ## Features
 

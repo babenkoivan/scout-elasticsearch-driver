@@ -583,9 +583,7 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match_all' => [
-
-                                ]
+                                'match_all' => new \stdClass()
                             ]
                         ]
                     ]
