@@ -267,7 +267,7 @@ To create a search rule use the command:
 php artisan make:search-rule MySearchRule
 ```
 
-In the file `app/MySaerchRule.php` you will find a class definition:
+In the file `app/MySearchRule.php` you will find a class definition:
 
 ```php
 <?php
