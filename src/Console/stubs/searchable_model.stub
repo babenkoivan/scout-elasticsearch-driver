@@ -2,13 +2,18 @@
 
 namespace DummyNamespace;
 
-use ScoutElastic\SearchableModel;
+use ScoutElastic\Searchable;
+use Illuminate\Database\Eloquent\Model;
 
-class DummyClass extends SearchableModel
+class DummyClass extends Model
 {
-    DummyIndexConfigurator
+    use Searchable;
 
-    DummySearchRules
+    protected $indexConfigurator = DummyIndexConfigurator;
+
+    protected $searchRules = [
+        DummySearchRule
+    ];
 
     protected $mapping = [
         //

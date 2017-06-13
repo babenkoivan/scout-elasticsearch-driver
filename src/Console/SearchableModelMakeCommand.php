@@ -43,23 +43,11 @@ class SearchableModelMakeCommand extends ModelMakeCommand
     {
         $stub = parent::buildClass($name);
 
-
         $indexConfigurator = $this->getIndexConfigurator();
-
-        if ($indexConfigurator) {
-            $stub = str_replace('DummyIndexConfigurator', "protected \$indexConfigurator = {$indexConfigurator}::class;", $stub);
-        } else {
-            $stub = preg_replace('#DummyIndexConfigurator\s+#', '', $stub);
-        }
-
+        $stub = str_replace('DummyIndexConfigurator', $indexConfigurator ? "{$indexConfigurator}::class" : 'null', $stub);
 
         $searchRule = $this->getSearchRule();
-
-        if ($searchRule) {
-            $stub = str_replace('DummySearchRules', "protected \$searchRules = [\n        {$searchRule}::class\n    ];", $stub);
-        } else {
-            $stub = preg_replace('#DummySearchRules\s+#', '', $stub);
-        }
+        $stub = str_replace('DummySearchRule', $searchRule ? "{$searchRule}::class" : '//', $stub);
 
         return $stub;
     }

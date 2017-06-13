@@ -155,11 +155,18 @@ After executing the command you'll find the file `MyModel.php` in you `app` fold
 
 namespace App;
 
-use ScoutElastic\SearchableModel;
+use ScoutElastic\Searchable;
+use Illuminate\Database\Eloquent\Model;
 
-class MyModel extends SearchableModel
+class MyModel extends Model
 {
+    use Searchable;
+
     protected $indexConfigurator = MyIndexConfigurator::class;
+
+    protected $searchRules = [
+        //
+    ];
 
     // Here you can specify a mapping for a model fields.
     protected $mapping = [
@@ -315,10 +322,13 @@ To determine default search rules for a model just add a property:
 
 namespace App;
 
-use ScoutElastic\SearchableModel;
+use ScoutElastic\Searchable;
+use Illuminate\Database\Eloquent\Model;
 
-class MyModel extends SearchableModel
+class MyModel extends Model
 {
+    use Searchable;
+    
     // You can set several rules for one model. In this case, the first not empty result will be returned.
     protected $searchRules = [
         MySearchRule::class
