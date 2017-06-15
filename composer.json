@@ -26,6 +26,7 @@
   },
   "autoload": {
     "psr-4": {
+      "ScoutElastic\\Tests\\": "tests/",
       "ScoutElastic\\": "src/"
     }
   }

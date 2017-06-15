@@ -10,7 +10,6 @@ use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
 use ScoutElastic\ElasticEngine;
 use ScoutElastic\IndexConfigurator;
-use ScoutElastic\SearchableModel;
 use ScoutElastic\Facades\ElasticClient;
 
 class ElasticEngineTest extends PHPUnit_Framework_TestCase
@@ -44,7 +43,7 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
             ->andReturn('test_index')
             ->getMock();
 
-        return Mockery::mock(SearchableModel::class)
+        return Mockery::mock(ModelStub::class)
             ->makePartial()
             ->forceFill($fields)
             ->shouldReceive('getIndexConfigurator')

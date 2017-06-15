@@ -9,6 +9,7 @@ use Laravel\Scout\Engines\Engine;
 use ScoutElastic\Builders\SearchBuilder;
 use ScoutElastic\Facades\ElasticClient;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class ElasticEngine extends Engine
 {
@@ -285,7 +286,7 @@ class ElasticEngine extends Engine
         ]);
     }
 
-    public function searchRaw(SearchableModel $model, $query)
+    public function searchRaw(Model $model, $query)
     {
         $payload = $this->buildTypePayload($model, $query);
         return ElasticClient::search($payload);
