@@ -2,6 +2,9 @@
 
 [![Packagist](https://img.shields.io/packagist/v/babenkoivan/scout-elasticsearch-driver.svg)](https://packagist.org/packages/babenkoivan/scout-elasticsearch-driver)
 [![Packagist](https://img.shields.io/packagist/dt/babenkoivan/scout-elasticsearch-driver.svg)](https://packagist.org/packages/babenkoivan/scout-elasticsearch-driver)
+[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/scout-elasticsearch-driver/Lobby)
+
+:exclamation: The project has a [chat room](https://gitter.im/scout-elasticsearch-driver/Lobby) on Gitter!
 
 This package offers advanced functionality for searching and filtering data in Elasticsearch.
 Check out its [features](#features)!
