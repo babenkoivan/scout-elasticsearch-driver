@@ -183,8 +183,10 @@ class ElasticEngine extends Engine
             }
         }
 
-        if ($builder->explain) {
-            $payload['explain'] = true;
+        foreach (['explain', 'profile'] as $key) {
+            if (isset($options[$key])) {
+                $payload[$key] = $options[$key];
+            }
         }
 
         return $this->buildTypePayload(
@@ -290,6 +292,20 @@ class ElasticEngine extends Engine
         ]);
     }
 
+    public function explain(Builder $builder)
+    {
+        return $this->performSearch($builder, [
+            'explain' => true
+        ]);
+    }
+
+    public function profile(Builder $builder)
+    {
+        return $this->performSearch($builder, [
+            'profile' => true
+        ]);
+    }
+
     public function searchRaw(Model $model, $query)
     {
         $payload = $this->buildTypePayload($model, $query);
@@ -319,14 +335,7 @@ class ElasticEngine extends Engine
             $id = $hit['_id'];
 
             if (isset($models[$id])) {
-                /** @var Searchable $model */
-                $model = $models[$id];
-
-                if (isset($hit['_explanation'])) {
-                    $model->setExplanation($hit['_explanation']);
-                }
-
-                return $model;
+                return $models[$id];
             }
         })->filter();
     }

@@ -6,8 +6,6 @@ use Laravel\Scout\Builder;
 
 class FilterBuilder extends Builder
 {
-    public $explain = false;
-
     public function __construct($model, $callback = null)
     {
         $this->model = $model;
@@ -122,10 +120,13 @@ class FilterBuilder extends Builder
         return $this;
     }
 
-    public function explain($bool)
+    public function explain()
     {
-        $this->explain = $bool;
+        return $this->engine()->explain($this);
+    }
 
-        return $this;
+    public function profile()
+    {
+        return $this->engine()->profile($this);
     }
 }

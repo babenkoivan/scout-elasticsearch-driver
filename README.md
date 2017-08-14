@@ -382,11 +382,22 @@ In most cases it's better to use raw fields to filter records, i.e. not analyzed
 
 ## Debug
 
-To analyze results of a search query you can set the `explain` flag to true and get explanation from received models:
+There are two methods that can help you to analyze results of a search query:
+
+* [explain](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-explain.html)
  
-```php
-App\MyModel::search('Brazil')
-    ->explain(true)
-    ->first()
-    ->getExplanation();
-```
+    ```php
+    App\MyModel::search('Brazil')
+        ->first()
+        ->explain();
+    ```
+    
+* [profile](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-profile.html)
+
+    ```php
+    App\MyModel::search('Brazil')
+        ->first()
+        ->profile();
+    ```
+    
+Both methods return raw data from ES.
