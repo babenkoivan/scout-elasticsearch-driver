@@ -2,7 +2,8 @@
 
 namespace ScoutElastic\Builders;
 
-class SearchBuilder extends FilterBuilder {
+class SearchBuilder extends FilterBuilder
+{
     public $rules = [];
 
     public function __construct($model, $query, $callback = null)

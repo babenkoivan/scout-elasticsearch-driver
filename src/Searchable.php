@@ -6,9 +6,11 @@ use Laravel\Scout\Searchable as ScoutSearchable;
 use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
 use \Exception;
+use ScoutElastic\Features\HasExplanation;
 
 trait Searchable {
-    use ScoutSearchable;
+    use ScoutSearchable,
+        HasExplanation;
 
     /**
      * @return IndexConfigurator

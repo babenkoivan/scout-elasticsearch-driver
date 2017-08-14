@@ -19,6 +19,7 @@ Check out its [features](#features)!
 * [Console commands](#console-commands)
 * [Search rules](#search-rules)
 * [Available filters](#available-filters)
+* [Debug](#debug)
 
 ## Tutorial
 
@@ -375,3 +376,14 @@ whereNotExists($field) | whereNotExists('unemployed') | Checks if a value isn't 
 whereRegexp($field, $value, $flags = 'ALL') | whereRegexp('name.raw', 'A.+') | Filters records according to a given regular expression. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/5.2/query-dsl-regexp-query.html#regexp-syntax) you can find more about syntax.
 
 In most cases it's better to use raw fields to filter records, i.e. not analyzed fields.
+
+## Debug
+
+To analyze results of a search query you can set the `explain` flag to true and get explanation from received models:
+ 
+```php
+App\MyModel::search('Brazil')
+    ->explain(true)
+    ->first()
+    ->getExplanation();
+```

@@ -4,7 +4,10 @@ namespace ScoutElastic\Builders;
 
 use Laravel\Scout\Builder;
 
-class FilterBuilder extends Builder {
+class FilterBuilder extends Builder
+{
+    public $explain = false;
+
     public function __construct($model, $callback = null)
     {
         $this->model = $model;
@@ -115,6 +118,13 @@ class FilterBuilder extends Builder {
             'value' => $value,
             'flags' => $flags
         ];
+
+        return $this;
+    }
+
+    public function explain($bool)
+    {
+        $this->explain = $bool;
 
         return $this;
     }

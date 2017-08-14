@@ -183,6 +183,10 @@ class ElasticEngine extends Engine
             }
         }
 
+        if ($builder->explain) {
+            $payload['explain'] = true;
+        }
+
         return $this->buildTypePayload(
             $builder->model,
             $payload
@@ -315,7 +319,14 @@ class ElasticEngine extends Engine
             $id = $hit['_id'];
 
             if (isset($models[$id])) {
-                return $models[$id];
+                /** @var Searchable $model */
+                $model = $models[$id];
+
+                if (isset($hit['_explanation'])) {
+                    $model->setExplanation($hit['_explanation']);
+                }
+
+                return $model;
             }
         })->filter();
     }
