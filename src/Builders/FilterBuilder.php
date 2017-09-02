@@ -139,4 +139,9 @@ class FilterBuilder extends Builder
     {
         return $this->engine()->profile($this);
     }
+
+    public function buildPayload()
+    {
+        return $this->engine()->buildSearchQueryPayloadCollection($this);
+    }
 }

@@ -22,36 +22,6 @@ class ElasticEngine extends Engine
         $this->updateMapping = config('scout_elastic.update_mapping');
     }
 
-    protected function buildSearchQueryPayload(Builder $builder, $queryPayload, array $options = [])
-    {
-        foreach ($builder->wheres as $clause => $filters) {
-            if (count($filters) == 0) {
-                continue;
-            }
-
-            $queryPayload = array_merge_recursive(
-                $queryPayload,
-                ['filter' => ['bool' => [$clause => $filters]]]
-            );
-        }
-
-        $payload = (new TypePayload($builder->model))
-            ->setIfNotEmpty('body.query.bool', $queryPayload)
-            ->setIfNotEmpty('body.sort', $builder->orders)
-            ->setIfNotEmpty('body.explain', isset($options['explain']) ? $options['explain'] : null)
-            ->setIfNotEmpty('body.profile', isset($options['profile']) ? $options['profile'] : null);
-
-        if ($size = isset($options['limit']) ? $options['limit'] : $builder->limit) {
-            $payload->set('body.size', $size);
-
-            if (isset($options['page'])) {
-                $payload->set('body.from', ($options['page'] - 1) * $size);
-            }
-        }
-
-        return $payload->get();
-    }
-
     public function update($models)
     {
         $models->map(function ($model) {
@@ -82,17 +52,39 @@ class ElasticEngine extends Engine
         });
     }
 
-    protected function performSearch(Builder $builder, array $options = []) {
-        if ($builder->callback) {
-            return call_user_func(
-                $builder->callback,
-                ElasticClient::getFacadeRoot(),
-                $builder->query,
-                $options
+    protected function buildSearchQueryPayload(Builder $builder, $queryPayload, array $options = [])
+    {
+        foreach ($builder->wheres as $clause => $filters) {
+            if (count($filters) == 0) {
+                continue;
+            }
+
+            $queryPayload = array_merge_recursive(
+                $queryPayload,
+                ['filter' => ['bool' => [$clause => $filters]]]
             );
         }
 
-        $results = null;
+        $payload = (new TypePayload($builder->model))
+            ->setIfNotEmpty('body.query.bool', $queryPayload)
+            ->setIfNotEmpty('body.sort', $builder->orders)
+            ->setIfNotEmpty('body.explain', isset($options['explain']) ? $options['explain'] : null)
+            ->setIfNotEmpty('body.profile', isset($options['profile']) ? $options['profile'] : null);
+
+        if ($size = isset($options['limit']) ? $options['limit'] : $builder->limit) {
+            $payload->set('body.size', $size);
+
+            if (isset($options['page'])) {
+                $payload->set('body.from', ($options['page'] - 1) * $size);
+            }
+        }
+
+        return $payload->get();
+    }
+
+    public function buildSearchQueryPayloadCollection(Builder $builder, array $options = [])
+    {
+        $payloadCollection = collect();
 
         if ($builder instanceof SearchBuilder) {
             $searchRules = $builder->rules ?: $builder->model->getSearchRules();
@@ -117,11 +109,7 @@ class ElasticEngine extends Engine
                     $options
                 );
 
-                $results = ElasticClient::search($payload);
-
-                if ($this->getTotalCount($results) > 0) {
-                    return $results;
-                }
+                $payloadCollection->push($payload);
             }
         } else {
             $payload = $this->buildSearchQueryPayload(
@@ -130,10 +118,33 @@ class ElasticEngine extends Engine
                 $options
             );
 
-            $results = ElasticClient::search($payload);
+            $payloadCollection->push($payload);
         }
 
-        return $results;
+        return $payloadCollection;
+    }
+
+    protected function performSearch(Builder $builder, array $options = []) {
+        if ($builder->callback) {
+            return call_user_func(
+                $builder->callback,
+                ElasticClient::getFacadeRoot(),
+                $builder->query,
+                $options
+            );
+        }
+
+        $result = null;
+
+        $this->buildSearchQueryPayloadCollection($builder, $options)->each(function($payload) use (&$result) {
+            $result = ElasticClient::search($payload);
+
+            if ($this->getTotalCount($result) > 0) {
+                return false;
+            }
+        });
+
+        return $result;
     }
 
     public function search(Builder $builder)
