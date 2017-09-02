@@ -2,95 +2,69 @@
 
 namespace ScoutElastic\Console;
 
+use Illuminate\Console\Command;
+use ScoutElastic\Console\Features\requiresIndexConfiguratorArgument;
 use ScoutElastic\Facades\ElasticClient;
 use Exception;
+use ScoutElastic\Payloads\IndexPayload;
 
-class ElasticIndexUpdateCommand extends ElasticIndexCommand
+class ElasticIndexUpdateCommand extends Command
 {
+    use requiresIndexConfiguratorArgument;
+
     protected $name = 'elastic:update-index';
 
     protected $description = 'Update settings and mappings of an Elasticsearch index';
 
-    protected function buildMappingPayload()
-    {
-        $configurator = $this->getConfigurator();
-
-        $defaultMapping = $configurator->getDefaultMapping();
-
-        if (!$defaultMapping) {
-            return null;
-        }
-
-        return array_merge(
-            $this->buildBasePayload(),
-            [
-                'type' => '_default_',
-                'body' => [
-                    '_default_' => $defaultMapping
-                ]
-            ]
-        );
-    }
-
-    protected function buildSettingsPayload()
-    {
-        $configurator = $this->getConfigurator();
-
-        $settings = $configurator->getSettings();
-
-        if (!$settings) {
-            return null;
-        }
-
-        return array_merge(
-            $this->buildBasePayload(),
-            [
-                'body' => [
-                    'settings' => $settings
-                ]
-            ]
-        );
-    }
-
     public function fire()
     {
-        $configurator = $this->getConfigurator();
+        if (!$configurator = $this->getIndexConfigurator()) {
+            return;
+        }
 
-        $indexName = $configurator->getName();
-        $basePayload = $this->buildBasePayload();
+        $indexPayload = (new IndexPayload($configurator))->get();
 
         $indices = ElasticClient::indices();
 
-        if (!$indices->exists($basePayload)) {
+        if (!$indices->exists($indexPayload)) {
             $this->error(sprintf(
                 'Index %s doesn\'t exist',
-                $indexName
+                $configurator->getName()
             ));
 
             return;
         }
 
         try {
-            $indices->close($basePayload);
+            $indices->close($indexPayload);
 
-            if ($settingsPayload = $this->buildSettingsPayload()) {
-                $indices->putSettings($settingsPayload);
+            if ($settings = $configurator->getSettings()) {
+                $indexSettingsPayload = (new IndexPayload($configurator))
+                    ->set('body.settings', $settings)
+                    ->get();
+
+                $indices->putSettings($indexSettingsPayload);
             }
 
-            if ($mappingPayload = $this->buildMappingPayload()) {
-                $indices->putMapping($mappingPayload);
+            if ($defaultMapping = $configurator->getDefaultMapping()) {
+                $indexMappingPayload = (new IndexPayload($configurator))
+                    ->set('type', '_default_')
+                    ->set('body._default_', $defaultMapping)
+                    ->get();
+
+                $indices->putMapping($indexMappingPayload);
             }
 
-            $indices->open($basePayload);
+            $indices->open($indexPayload);
         } catch (Exception $exception) {
-            $indices->open($basePayload);
+            $indices->open($indexPayload);
 
             throw $exception;
         }
 
         $this->info(sprintf(
             'The index %s was updated!',
-            $indexName
+            $configurator->getName()
         ));
     }
 }

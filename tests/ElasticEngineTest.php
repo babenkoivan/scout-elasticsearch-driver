@@ -2,102 +2,67 @@
 
 namespace ScoutElastic\Tests;
 
-use PHPUnit_Framework_TestCase;
 use Mockery;
-use Config;
 use Illuminate\Database\Eloquent\Collection;
 use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
 use ScoutElastic\ElasticEngine;
-use ScoutElastic\IndexConfigurator;
-use ScoutElastic\Facades\ElasticClient;
+use ScoutElastic\Tests\Stubs\ModelStub;
+use stdClass;
 
-class ElasticEngineTest extends PHPUnit_Framework_TestCase
+class ElasticEngineTest extends TestCase
 {
-    public function tearDown()
+    protected function mockModel($fields = [])
     {
-        Mockery::close();
-
-        parent::tearDown();
-    }
-
-    protected function initClient()
-    {
-        return Mockery::mock('alias:' . ElasticClient::class);
-    }
-
-    protected function initEngine()
-    {
-        Mockery::mock('alias:' . Config::class)
-            ->shouldReceive('get')
-            ->with('scout_elastic.update_mapping')
-            ->andReturn(false);
-
-        return new ElasticEngine();
-    }
-
-    protected function initModel($fields = [])
-    {
-        $indexConfigurator = Mockery::mock(IndexConfigurator::class)
-            ->shouldReceive('getName')
-            ->andReturn('test_index')
-            ->getMock();
-
         return Mockery::mock(ModelStub::class)
             ->makePartial()
-            ->forceFill($fields)
-            ->shouldReceive('getIndexConfigurator')
-            ->andReturn($indexConfigurator)
-            ->getMock()
-            ->shouldReceive('searchableAs')
-            ->andReturn('test_type')
-            ->getMock();
+            ->forceFill($fields);
     }
 
     public function test_if_the_update_method_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('index')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'id' => 1,
                 'body' => [
                     'id' => 1,
-                    'name' => 'test model'
+                    'test_field' => 'test text'
                 ]
             ]);
 
-        $model = $this->initModel([
+        $model = $this->mockModel([
             'id' => 1,
-            'name' => 'test model'
+            'test_field' => 'test text'
         ]);
 
-        $this->initEngine()->update(Collection::make([$model]));
+        (new ElasticEngine())->update(Collection::make([$model]));
     }
 
     public function test_if_the_delete_method_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('delete')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'id' => 1
             ]);
 
-        $model = $this->initModel(['id' => 1]);
+        $model = $this->mockModel(['id' => 1]);
 
-        $this->initEngine()->delete(Collection::make([$model]));
+        (new ElasticEngine())->delete(Collection::make([$model]));
     }
 
     public function test_if_the_search_method_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
@@ -111,20 +76,20 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
         $builder = new SearchBuilder($model, 'test query');
 
-        $this->initEngine()->search($builder);
+        (new ElasticEngine())->search($builder);
     }
 
     public function test_if_the_search_method_with_specified_limit_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
@@ -139,20 +104,20 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
         $builder = (new SearchBuilder($model, 'test query'))->take(10);
 
-        $this->initEngine()->search($builder);
+        (new ElasticEngine())->search($builder);
     }
 
     public function test_if_the_search_method_with_specified_order_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
@@ -169,20 +134,20 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
         $builder = (new SearchBuilder($model, 'test query'))->orderBy('name', 'asc');
 
-        $this->initEngine()->search($builder);
+        (new ElasticEngine())->search($builder);
     }
 
     public function test_if_the_search_method_with_specified_where_clause_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
@@ -247,7 +212,7 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
         $builder = (new SearchBuilder($model, 'phone'))
             ->where('brand', 'apple')
@@ -258,16 +223,16 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
             ->where('price', '<=', 700)
             ->where('used', '<>', 'yes');
 
-        $this->initEngine()->search($builder);
+        (new ElasticEngine())->search($builder);
     }
 
     public function test_if_the_search_method_with_specified_whereIn_clause_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
@@ -292,20 +257,20 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
         $builder = (new SearchBuilder($model, 'test query'))->whereIn('id', [1, 2, 3, 4, 5]);
 
-        $this->initEngine()->search($builder);
+        (new ElasticEngine())->search($builder);
     }
 
     public function test_if_the_search_method_with_specified_whereNotIn_clause_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
@@ -330,20 +295,20 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
         $builder = (new SearchBuilder($model, 'test query'))->whereNotIn('id', [1, 2, 3, 4, 5]);
 
-        $this->initEngine()->search($builder);
+        (new ElasticEngine())->search($builder);
     }
 
     public function test_if_the_search_method_with_specified_whereBetween_clause_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
@@ -371,20 +336,20 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
         $builder = (new SearchBuilder($model, 'test query'))->whereBetween('price', [100, 300]);
 
-        $this->initEngine()->search($builder);
+        (new ElasticEngine())->search($builder);
     }
 
     public function test_if_the_search_method_with_specified_whereNotBetween_clause_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
@@ -412,20 +377,20 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
         $builder = (new SearchBuilder($model, 'test query'))->whereNotBetween('price', [100, 300]);
 
-        $this->initEngine()->search($builder);
+        (new ElasticEngine())->search($builder);
     }
 
     public function test_if_the_search_method_with_specified_whereExists_clause_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
@@ -450,20 +415,20 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
         $builder = (new SearchBuilder($model, 'test query'))->whereExists('sale');
 
-        $this->initEngine()->search($builder);
+        (new ElasticEngine())->search($builder);
     }
 
     public function test_if_the_search_method_with_specified_whereNotExists_clause_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
@@ -488,20 +453,20 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
         $builder = (new SearchBuilder($model, 'test query'))->whereNotExists('sale');
 
-        $this->initEngine()->search($builder);
+        (new ElasticEngine())->search($builder);
     }
 
     public function test_if_the_search_method_with_specified_whereRegexp_clause_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
@@ -529,20 +494,20 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
         $builder = (new SearchBuilder($model, 'phone'))->whereRegexp('brand', 'a[a-z]+', 'ALL');
 
-        $this->initEngine()->search($builder);
+        (new ElasticEngine())->search($builder);
     }
 
     public function test_if_the_search_method_with_specified_rule_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
@@ -556,7 +521,7 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
         $builder = (new SearchBuilder($model, 'John'))->rule(function($builder) {
             return [
@@ -568,41 +533,41 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
             ];
         });
 
-        $this->initEngine()->search($builder);
+        (new ElasticEngine())->search($builder);
     }
 
     public function test_if_the_search_method_with_an_asterisk_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match_all' => new \stdClass()
+                                'match_all' => new stdClass()
                             ]
                         ]
                     ]
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
         $builder = new FilterBuilder($model);
 
-        $this->initEngine()->search($builder);
+        (new ElasticEngine())->search($builder);
     }
 
     public function test_if_the_searchRaw_method_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
@@ -616,9 +581,9 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
-        $this->initEngine()->searchRaw($model, [
+        (new ElasticEngine())->searchRaw($model, [
             'query' => [
                 'bool' => [
                     'must' => [
@@ -633,11 +598,11 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
 
     public function test_if_the_paginate_method_builds_correct_payload()
     {
-        $this->initClient()
+        $this->mockClient()
             ->shouldReceive('search')
             ->with([
                 'index' => 'test_index',
-                'type' => 'test_type',
+                'type' => 'test_table',
                 'body' => [
                     'query' => [
                         'bool' => [
@@ -653,11 +618,11 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 ]
             ]);
 
-        $model = $this->initModel();
+        $model = $this->mockModel();
 
         $builder = new SearchBuilder($model, 'test query');
 
-        $this->initEngine()->paginate($builder, 8, 3);
+        (new ElasticEngine())->paginate($builder, 8, 3);
     }
 
     protected function getElasticSearchResponse()
@@ -676,22 +641,22 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
                 'hits' => [
                     [
                         '_index' => 'test_index',
-                        '_type' => 'test_type',
+                        '_type' => 'test_table',
                         '_id' => '1',
                         '_score' => 2.3862944,
                         '_source' => [
                             'id' => 1,
-                            'name' => 'Eduardo',
+                            'test_field' => 'the first item content',
                         ],
                     ],
                     [
                         '_index' => 'test_index',
-                        '_type' => 'test_type',
+                        '_type' => 'test_table',
                         '_id' => '3',
                         '_score' => 2.3862944,
                         '_source' => [
                             'id' => 3,
-                            'name' => 'Roberto'
+                            'test_field' => 'the second item content'
                         ],
                     ]
                 ]
@@ -704,7 +669,7 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
         $results = $this->getElasticSearchResponse();
 
         $this->assertEquals(
-            $this->initEngine()->mapIds($results),
+            (new ElasticEngine())->mapIds($results),
             ['1', '3']
         );
     }
@@ -713,14 +678,14 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
     {
         $results = $this->getElasticSearchResponse();
 
-        $this->assertEquals($this->initEngine()->getTotalCount($results), 2);
+        $this->assertEquals((new ElasticEngine())->getTotalCount($results), 2);
     }
 
     public function test_if_the_map_method_returns_the_same_results_from_database_as_in_search_result()
     {
         $searchResults = $this->getElasticSearchResponse();
 
-        $model = $this->initModel()
+        $model = $this->mockModel()
 
             ->shouldReceive('whereIn')
             ->with('id', [1, 3])
@@ -729,22 +694,72 @@ class ElasticEngineTest extends PHPUnit_Framework_TestCase
 
             ->shouldReceive('get')
             ->andReturn(Collection::make([
-                $this->initModel([
-                    'id' => 1,
-                    'name' => 'Eduardo'
-                ]),
-                $this->initModel([
-                    'id' => 3,
-                    'name' => 'Roberto'
-                ])
+                $this->mockModel(['id' => 1]),
+                $this->mockModel(['id' => 3])
             ]))
             ->getMock();
 
-        $databaseResult = $this->initEngine()->map($searchResults, $model);
+        $databaseResult = (new ElasticEngine())->map($searchResults, $model);
 
         $this->assertEquals(
             array_pluck($searchResults['hits']['hits'], '_id'),
             $databaseResult->pluck('id')->all()
         );
+    }
+
+    public function test_if_the_explain_method_builds_correct_payload()
+    {
+        $this->mockClient()
+            ->shouldReceive('search')
+            ->with([
+                'index' => 'test_index',
+                'type' => 'test_table',
+                'body' => [
+                    'query' => [
+                        'bool' => [
+                            'must' => [
+                                'match' => [
+                                    '_all' => 'test query'
+                                ]
+                            ]
+                        ]
+                    ],
+                    'explain' => true
+                ]
+            ]);
+
+        $model = $this->mockModel();
+
+        $builder = new SearchBuilder($model, 'test query');
+
+        (new ElasticEngine())->explain($builder);
+    }
+
+    public function test_if_the_profile_method_builds_correct_payload()
+    {
+        $this->mockClient()
+            ->shouldReceive('search')
+            ->with([
+                'index' => 'test_index',
+                'type' => 'test_table',
+                'body' => [
+                    'query' => [
+                        'bool' => [
+                            'must' => [
+                                'match' => [
+                                    '_all' => 'test query'
+                                ]
+                            ]
+                        ]
+                    ],
+                    'profile' => true
+                ]
+            ]);
+
+        $model = $this->mockModel();
+
+        $builder = new SearchBuilder($model, 'test query');
+
+        (new ElasticEngine())->profile($builder);
     }
 }

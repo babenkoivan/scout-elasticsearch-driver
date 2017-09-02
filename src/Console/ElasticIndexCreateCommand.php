@@ -2,43 +2,32 @@
 
 namespace ScoutElastic\Console;
 
+use Illuminate\Console\Command;
+use ScoutElastic\Console\Features\requiresIndexConfiguratorArgument;
 use ScoutElastic\Facades\ElasticClient;
+use ScoutElastic\Payloads\IndexPayload;
 
-class ElasticIndexCreateCommand extends ElasticIndexCommand
+class ElasticIndexCreateCommand extends Command
 {
+    use requiresIndexConfiguratorArgument;
+
     protected $name = 'elastic:create-index';
 
     protected $description = 'Create an Elasticsearch index';
 
-    protected function buildPayload()
-    {
-        $configurator = $this->getConfigurator();
-
-        $body = [];
-
-        if ($settings = $configurator->getSettings()) {
-            $body['settings'] = $settings;
-        }
-
-        if ($defaultMappings = $configurator->getDefaultMapping()) {
-            $body['mappings'] = ['_default_' => $defaultMappings];
-        }
-
-        $payload = $this->buildBasePayload();
-
-        if ($body) {
-            $payload['body'] = $body;
-        }
-
-        return $payload;
-    }
-
     public function fire()
     {
-        $configurator = $this->getConfigurator();
+        if (!$configurator = $this->getIndexConfigurator()) {
+            return;
+        }
+
+        $payload = (new IndexPayload($configurator))
+            ->setIfNotEmpty('body.settings', $configurator->getSettings())
+            ->setIfNotEmpty('body.mappings._default_', $configurator->getDefaultMapping())
+            ->get();
 
         ElasticClient::indices()
-            ->create($this->buildPayload());
+            ->create($payload);
 
         $this->info(sprintf(
             'The index %s was created!',

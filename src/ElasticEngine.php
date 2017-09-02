@@ -17,7 +17,7 @@ class ElasticEngine extends Engine
 
     public function __construct()
     {
-        $this->updateMapping = Config::get('scout_elastic.update_mapping');
+        $this->updateMapping = config('scout_elastic.update_mapping');
     }
 
     /**
