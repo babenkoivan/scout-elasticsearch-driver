@@ -6,6 +6,11 @@ use Laravel\Scout\Builder;
 
 class FilterBuilder extends Builder
 {
+    public $wheres = [
+        'must' => [],
+        'must_not' => []
+    ];
+
     public function __construct($model, $callback = null)
     {
         $this->model = $model;
@@ -28,81 +33,77 @@ class FilterBuilder extends Builder
             $operator = '=';
         }
 
-        $this->wheres[] = [
-            'type' => 'basic',
-            'field' => $field,
-            'operator' => $operator,
-            'value' => $value
-        ];
+        switch ($operator) {
+            case '=':
+                $this->wheres['must'][] = ['term' => [$field => $value]];
+                break;
+
+            case '>':
+                $this->wheres['must'][] = ['range' => [$field => ['gt' => $value]]];
+                break;
+
+            case '<';
+                $this->wheres['must'][] = ['range' => [$field => ['lt' => $value]]];
+                break;
+
+            case '>=':
+                $this->wheres['must'][] = ['range' => [$field => ['gte' => $value]]];
+                break;
+
+            case '<=':
+                $this->wheres['must'][] = ['range' => [$field => ['lte' => $value]]];
+                break;
+
+            case '!=':
+            case '<>':
+                $this->wheres['must_not'][] = ['term' => [$field => $value]];
+                break;
+        }
 
         return $this;
     }
 
     public function whereIn($field, array $value)
     {
-        $this->wheres[] = [
-            'type' => 'in',
-            'field' => $field,
-            'not' => false,
-            'value' => $value
-        ];
+        $this->wheres['must'][] = ['terms' => [$field => $value]];
 
         return $this;
     }
 
     public function whereNotIn($field, array $value)
     {
-        $this->wheres[] = [
-            'type' => 'in',
-            'field' => $field,
-            'not' => true,
-            'value' => $value
-        ];
+        $this->wheres['must_not'][] = ['terms' => [$field => $value]];
 
         return $this;
     }
 
     public function whereBetween($field, array $value)
     {
-        $this->wheres[] = [
-            'type' => 'between',
-            'field' => $field,
-            'not' => false,
-            'value' => $value
-        ];
+        $this->wheres['must'][] = ['range' => [$field => ['gte' => $value[0], 'lte' => $value[1]]]];
 
         return $this;
     }
 
     public function whereNotBetween($field, array $value)
     {
-        $this->wheres[] = [
-            'type' => 'between',
-            'field' => $field,
-            'not' => true,
-            'value' => $value
-        ];
+        $this->wheres['must_not'][] = ['range' => [$field => ['gte' => $value[0], 'lte' => $value[1]]]];
 
         return $this;
     }
 
     public function whereExists($field)
     {
-        $this->wheres[] = [
-            'type' => 'exists',
-            'field' => $field,
-            'not' => false
-        ];
+        $this->wheres['must'][] = ['exists' => ['field' => $field]];
 
         return $this;
     }
 
     public function whereNotExists($field)
     {
-        $this->wheres[] = [
-            'type' => 'exists',
-            'field' => $field,
-            'not' => true
+        $this->wheres['must_not'][] = [
+            'exists' => [
+                'field' => $field
+            ]
         ];
 
         return $this;
@@ -110,12 +111,21 @@ class FilterBuilder extends Builder
 
     public function whereRegexp($field, $value, $flags = 'ALL')
     {
-        $this->wheres[] = [
-            'type' => 'regexp',
-            'field' => $field,
-            'value' => $value,
-            'flags' => $flags
+        $this->wheres['must'][] = [
+            'regexp' => [
+                $field => [
+                    'value' => $value,
+                    'flags' => $flags
+                ]
+            ]
         ];
+
+        return $this;
+    }
+
+    public function orderBy($column, $direction = 'asc')
+    {
+        $this->orders[] = [$column => strtolower($direction) == 'asc' ? 'asc' : 'desc'];
 
         return $this;
     }
