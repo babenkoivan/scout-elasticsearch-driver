@@ -401,3 +401,12 @@ There are two methods that can help you to analyze results of a search query:
     ```
     
 Both methods return raw data from ES.
+
+Besides, you can get a query payload that will be sent to ES, by calling the `buildPayload` method.
+
+```php
+App\MyModel::search('Brazil')
+    ->buildPayload();
+```
+
+Note, that this method returns a collection of payloads, because of possibility of using multiple search rules in one query. 
