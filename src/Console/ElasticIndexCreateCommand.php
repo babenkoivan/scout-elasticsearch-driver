@@ -3,6 +3,7 @@
 namespace ScoutElastic\Console;
 
 use Illuminate\Console\Command;
+use ScoutElastic\Console\Features\CompatibilityTrait;
 use ScoutElastic\Console\Features\requiresIndexConfiguratorArgument;
 use ScoutElastic\Facades\ElasticClient;
 use ScoutElastic\Payloads\IndexPayload;
@@ -10,12 +11,13 @@ use ScoutElastic\Payloads\IndexPayload;
 class ElasticIndexCreateCommand extends Command
 {
     use requiresIndexConfiguratorArgument;
+    use CompatibilityTrait;
 
     protected $name = 'elastic:create-index';
 
     protected $description = 'Create an Elasticsearch index';
 
-    public function fire()
+    public function handleCommand()
     {
         if (!$configurator = $this->getIndexConfigurator()) {
             return;

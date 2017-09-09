@@ -3,10 +3,13 @@
 namespace ScoutElastic\Console;
 
 use Illuminate\Foundation\Console\ModelMakeCommand;
+use ScoutElastic\Console\Features\CompatibilityTrait;
 use Symfony\Component\Console\Input\InputOption;
 
 class SearchableModelMakeCommand extends ModelMakeCommand
 {
+    use CompatibilityTrait;
+
     protected $name = 'make:searchable-model';
 
     protected $description = 'Create a new searchable model';
@@ -52,7 +55,7 @@ class SearchableModelMakeCommand extends ModelMakeCommand
         return $stub;
     }
 
-    public function fire()
+    public function handleCommand()
     {
         $indexConfigurator = $this->getIndexConfigurator();
 
@@ -70,8 +73,7 @@ class SearchableModelMakeCommand extends ModelMakeCommand
                 'name' => $searchRule
             ]);
         }
-
         
-        parent::fire();
+        $this->callParentHandler();
     }
 }

@@ -3,6 +3,7 @@
 namespace ScoutElastic\Console;
 
 use Illuminate\Console\Command;
+use ScoutElastic\Console\Features\CompatibilityTrait;
 use ScoutElastic\Console\Features\requiresIndexConfiguratorArgument;
 use ScoutElastic\Facades\ElasticClient;
 use Exception;
@@ -11,12 +12,13 @@ use ScoutElastic\Payloads\IndexPayload;
 class ElasticIndexUpdateCommand extends Command
 {
     use requiresIndexConfiguratorArgument;
+    use CompatibilityTrait;
 
     protected $name = 'elastic:update-index';
 
     protected $description = 'Update settings and mappings of an Elasticsearch index';
 
-    public function fire()
+    public function handleCommand()
     {
         if (!$configurator = $this->getIndexConfigurator()) {
             return;
