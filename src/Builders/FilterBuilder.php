@@ -100,25 +100,14 @@ class FilterBuilder extends Builder
 
     public function whereNotExists($field)
     {
-        $this->wheres['must_not'][] = [
-            'exists' => [
-                'field' => $field
-            ]
-        ];
+        $this->wheres['must_not'][] = ['exists' => ['field' => $field]];
 
         return $this;
     }
 
     public function whereRegexp($field, $value, $flags = 'ALL')
     {
-        $this->wheres['must'][] = [
-            'regexp' => [
-                $field => [
-                    'value' => $value,
-                    'flags' => $flags
-                ]
-            ]
-        ];
+        $this->wheres['must'][] = ['regexp' => [$field => ['value' => $value, 'flags' => $flags]]];
 
         return $this;
     }

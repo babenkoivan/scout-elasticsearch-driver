@@ -59,17 +59,21 @@ class ElasticEngine extends Engine
                 continue;
             }
 
-            $queryPayload = array_merge_recursive(
-                $queryPayload,
-                ['filter' => ['bool' => [$clause => $filters]]]
+            if (!array_has($queryPayload, 'filter.bool.'.$clause)) {
+                array_set($queryPayload, 'filter.bool.'.$clause, []);
+            }
+
+            $queryPayload['filter']['bool'][$clause] = array_merge(
+                $queryPayload['filter']['bool'][$clause],
+                $filters
             );
         }
 
         $payload = (new TypePayload($builder->model))
             ->setIfNotEmpty('body.query.bool', $queryPayload)
             ->setIfNotEmpty('body.sort', $builder->orders)
-            ->setIfNotEmpty('body.explain', isset($options['explain']) ? $options['explain'] : null)
-            ->setIfNotEmpty('body.profile', isset($options['profile']) ? $options['profile'] : null);
+            ->setIfNotEmpty('body.explain', $options['explain'] ?? null)
+            ->setIfNotEmpty('body.profile', $options['profile'] ?? null);
 
         if ($size = isset($options['limit']) ? $options['limit'] : $builder->limit) {
             $payload->set('body.size', $size);
