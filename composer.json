@@ -29,5 +29,12 @@
       "ScoutElastic\\Tests\\": "tests/",
       "ScoutElastic\\": "src/"
     }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "ScoutElastic\\ScoutElasticServiceProvider"
+      ]
+    }
   }
 }

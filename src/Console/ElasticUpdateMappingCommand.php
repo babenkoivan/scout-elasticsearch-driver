@@ -3,6 +3,7 @@
 namespace ScoutElastic\Console;
 
 use Illuminate\Console\Command;
+use ScoutElastic\Console\Features\CompatibilityTrait;
 use ScoutElastic\Console\Features\requiresModelArgument;
 use ScoutElastic\Facades\ElasticClient;
 use ScoutElastic\Payloads\TypePayload;
@@ -10,12 +11,13 @@ use ScoutElastic\Payloads\TypePayload;
 class ElasticUpdateMappingCommand extends Command
 {
     use requiresModelArgument;
+    use CompatibilityTrait;
 
     protected $name = 'elastic:update-mapping';
 
     protected $description = 'Update a model mapping';
 
-    public function fire() {
+    public function handleCommand() {
         $model = $this->getModel();
 
         $configurator = $model->getIndexConfigurator();

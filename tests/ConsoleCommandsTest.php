@@ -27,7 +27,9 @@ class ConsoleCommandsTest extends TestCase
                 ->getMock();
         }
 
-        $command->fire();
+        $command->handleCommand();
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_create_index_command_builds_correct_response()
@@ -68,6 +70,7 @@ class ConsoleCommandsTest extends TestCase
         $this->fireCommand(ElasticIndexCreateCommand::class, [
             'index-configurator' => IndexConfiguratorStub::class
         ]);
+
     }
 
     public function test_if_the_update_index_command_builds_correct_response()
