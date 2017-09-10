@@ -42,8 +42,8 @@ There are information about Elasticsearch installation and the package usage exa
 The package has been tested in the following configuration: 
 
 * PHP version &gt;= 7.0
-* Laravel Framework version &gt;= 5.4
-* Elasticsearch version &gt;= 5.2
+* Laravel Framework version &gt;= 5.5
+* Elasticsearch version &gt;= 5.5
 
 ## Installation
 
@@ -52,15 +52,6 @@ Use composer to install the package:
 ```
 composer require babenkoivan/scout-elasticsearch-driver
 ```
-
-Once you've installed the package, you need to register service providers in the `config/app.php` file:
-
-```php
-'providers' => [
-    Laravel\Scout\ScoutServiceProvider::class,
-    ScoutElastic\ScoutElasticServiceProvider::class    
-]
-``` 
 
 ## Configuration
 

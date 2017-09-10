@@ -1,33 +1,40 @@
 {
-  "name": "babenkoivan/scout-elasticsearch-driver",
-  "type": "library",
-  "description": "The Elasticsearch Driver for Laravel Scout",
-  "keywords": [
-    "elastic",
-    "elasticsearch",
-    "driver",
-    "engine",
-    "laravel",
-    "scout",
-    "search"
-  ],
-  "homepage": "https://babenkoivan.github.io/scout-elasticsearch-driver/",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Babenko Ivan",
-      "email": "babenko.i.a@gmail.com",
-      "role": "Developer"
+    "name": "babenkoivan/scout-elasticsearch-driver",
+    "type": "library",
+    "description": "The Elasticsearch Driver for Laravel Scout",
+    "keywords": [
+        "elastic",
+        "elasticsearch",
+        "driver",
+        "engine",
+        "laravel",
+        "scout",
+        "search"
+    ],
+    "homepage": "https://babenkoivan.github.io/scout-elasticsearch-driver/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Babenko Ivan",
+            "email": "babenko.i.a@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "elasticsearch/elasticsearch": "^5.1",
+        "laravel/scout": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ScoutElastic\\Tests\\": "tests/",
+            "ScoutElastic\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ScoutElastic\\ScoutElasticServiceProvider"
+            ]
+        }
     }
-  ],
-  "require": {
-    "elasticsearch/elasticsearch": "^5.1",
-    "laravel/scout": "^3.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "ScoutElastic\\Tests\\": "tests/",
-      "ScoutElastic\\": "src/"
-    }
-  }
 }
