@@ -16,7 +16,7 @@ class ElasticIndexUpdateCommand extends Command
 
     protected $description = 'Update settings and mappings of an Elasticsearch index';
 
-    public function fire()
+    public function handle()
     {
         if (!$configurator = $this->getIndexConfigurator()) {
             return;

@@ -52,7 +52,7 @@ class SearchableModelMakeCommand extends ModelMakeCommand
         return $stub;
     }
 
-    public function fire()
+    public function handle()
     {
         $indexConfigurator = $this->getIndexConfigurator();
 
@@ -72,6 +72,6 @@ class SearchableModelMakeCommand extends ModelMakeCommand
         }
 
         
-        parent::fire();
+        parent::handle();
     }
 }

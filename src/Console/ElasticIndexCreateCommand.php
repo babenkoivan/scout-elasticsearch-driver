@@ -15,7 +15,7 @@ class ElasticIndexCreateCommand extends Command
 
     protected $description = 'Create an Elasticsearch index';
 
-    public function fire()
+    public function handle()
     {
         if (!$configurator = $this->getIndexConfigurator()) {
             return;

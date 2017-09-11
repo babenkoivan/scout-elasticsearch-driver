@@ -15,7 +15,7 @@ class ElasticUpdateMappingCommand extends Command
 
     protected $description = 'Update a model mapping';
 
-    public function fire() {
+    public function handle() {
         $model = $this->getModel();
 
         $configurator = $model->getIndexConfigurator();

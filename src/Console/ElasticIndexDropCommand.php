@@ -15,7 +15,7 @@ class ElasticIndexDropCommand extends Command
 
     protected $description = 'Drop an Elasticsearch index';
 
-    public function fire()
+    public function handle()
     {
         if (!$configurator = $this->getIndexConfigurator()) {
             return;
