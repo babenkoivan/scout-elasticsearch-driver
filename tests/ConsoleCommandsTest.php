@@ -27,7 +27,7 @@ class ConsoleCommandsTest extends TestCase
                 ->getMock();
         }
 
-        $command->fire();
+        $command->handle();
     }
 
     public function test_if_the_create_index_command_builds_correct_response()
@@ -68,6 +68,8 @@ class ConsoleCommandsTest extends TestCase
         $this->fireCommand(ElasticIndexCreateCommand::class, [
             'index-configurator' => IndexConfiguratorStub::class
         ]);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_update_index_command_builds_correct_response()
@@ -126,6 +128,8 @@ class ConsoleCommandsTest extends TestCase
         $this->fireCommand(ElasticIndexUpdateCommand::class, [
             'index-configurator' => IndexConfiguratorStub::class
         ]);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_drop_index_command_builds_correct_response()
@@ -144,6 +148,8 @@ class ConsoleCommandsTest extends TestCase
         $this->fireCommand(ElasticIndexDropCommand::class, [
             'index-configurator' => IndexConfiguratorStub::class
         ]);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_update_mapping_command_builds_correct_response()
@@ -181,5 +187,7 @@ class ConsoleCommandsTest extends TestCase
         $this->fireCommand(ElasticUpdateMappingCommand::class, [
             'model' => ModelStub::class
         ]);
+
+        $this->addToAssertionCount(1);
     }
 }

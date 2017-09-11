@@ -39,6 +39,8 @@ class ElasticEngineTest extends TestCase
         ]);
 
         (new ElasticEngine())->update(Collection::make([$model]));
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_delete_method_builds_correct_payload()
@@ -54,6 +56,8 @@ class ElasticEngineTest extends TestCase
         $model = $this->mockModel(['id' => 1]);
 
         (new ElasticEngine())->delete(Collection::make([$model]));
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_search_method_builds_correct_payload()
@@ -81,6 +85,8 @@ class ElasticEngineTest extends TestCase
         $builder = new SearchBuilder($model, 'test query');
 
         (new ElasticEngine())->search($builder);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_search_method_with_specified_limit_builds_correct_payload()
@@ -109,6 +115,8 @@ class ElasticEngineTest extends TestCase
         $builder = (new SearchBuilder($model, 'test query'))->take(10);
 
         (new ElasticEngine())->search($builder);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_search_method_with_specified_order_builds_correct_payload()
@@ -139,6 +147,8 @@ class ElasticEngineTest extends TestCase
         $builder = (new SearchBuilder($model, 'test query'))->orderBy('name', 'asc');
 
         (new ElasticEngine())->search($builder);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_search_method_with_specified_where_clause_builds_correct_payload()
@@ -224,6 +234,8 @@ class ElasticEngineTest extends TestCase
             ->where('used', '<>', 'yes');
 
         (new ElasticEngine())->search($builder);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_search_method_with_specified_whereIn_clause_builds_correct_payload()
@@ -262,6 +274,8 @@ class ElasticEngineTest extends TestCase
         $builder = (new SearchBuilder($model, 'test query'))->whereIn('id', [1, 2, 3, 4, 5]);
 
         (new ElasticEngine())->search($builder);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_search_method_with_specified_whereNotIn_clause_builds_correct_payload()
@@ -300,6 +314,8 @@ class ElasticEngineTest extends TestCase
         $builder = (new SearchBuilder($model, 'test query'))->whereNotIn('id', [1, 2, 3, 4, 5]);
 
         (new ElasticEngine())->search($builder);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_search_method_with_specified_whereBetween_clause_builds_correct_payload()
@@ -341,6 +357,8 @@ class ElasticEngineTest extends TestCase
         $builder = (new SearchBuilder($model, 'test query'))->whereBetween('price', [100, 300]);
 
         (new ElasticEngine())->search($builder);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_search_method_with_specified_whereNotBetween_clause_builds_correct_payload()
@@ -382,6 +400,8 @@ class ElasticEngineTest extends TestCase
         $builder = (new SearchBuilder($model, 'test query'))->whereNotBetween('price', [100, 300]);
 
         (new ElasticEngine())->search($builder);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_search_method_with_specified_whereExists_clause_builds_correct_payload()
@@ -420,6 +440,8 @@ class ElasticEngineTest extends TestCase
         $builder = (new SearchBuilder($model, 'test query'))->whereExists('sale');
 
         (new ElasticEngine())->search($builder);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_search_method_with_specified_whereNotExists_clause_builds_correct_payload()
@@ -458,6 +480,8 @@ class ElasticEngineTest extends TestCase
         $builder = (new SearchBuilder($model, 'test query'))->whereNotExists('sale');
 
         (new ElasticEngine())->search($builder);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_search_method_with_specified_whereRegexp_clause_builds_correct_payload()
@@ -499,6 +523,8 @@ class ElasticEngineTest extends TestCase
         $builder = (new SearchBuilder($model, 'phone'))->whereRegexp('brand', 'a[a-z]+', 'ALL');
 
         (new ElasticEngine())->search($builder);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_search_method_with_specified_rule_builds_correct_payload()
@@ -534,6 +560,8 @@ class ElasticEngineTest extends TestCase
         });
 
         (new ElasticEngine())->search($builder);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_search_method_with_an_asterisk_builds_correct_payload()
@@ -559,6 +587,8 @@ class ElasticEngineTest extends TestCase
         $builder = new FilterBuilder($model);
 
         (new ElasticEngine())->search($builder);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_searchRaw_method_builds_correct_payload()
@@ -594,6 +624,8 @@ class ElasticEngineTest extends TestCase
                 ]
             ]
         ]);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_paginate_method_builds_correct_payload()
@@ -623,6 +655,8 @@ class ElasticEngineTest extends TestCase
         $builder = new SearchBuilder($model, 'test query');
 
         (new ElasticEngine())->paginate($builder, 8, 3);
+
+        $this->addToAssertionCount(1);
     }
 
     protected function getElasticSearchResponse()
@@ -733,6 +767,8 @@ class ElasticEngineTest extends TestCase
         $builder = new SearchBuilder($model, 'test query');
 
         (new ElasticEngine())->explain($builder);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_if_the_profile_method_builds_correct_payload()
@@ -761,5 +797,7 @@ class ElasticEngineTest extends TestCase
         $builder = new SearchBuilder($model, 'test query');
 
         (new ElasticEngine())->profile($builder);
+
+        $this->addToAssertionCount(1);
     }
 }
