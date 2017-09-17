@@ -63,6 +63,12 @@ class ConsoleCommandsTest extends TestCase
                         ]
                     ]
                 ]
+            ])
+
+            ->shouldReceive('putAlias')
+            ->with([
+                'index' => 'test_index',
+                'name' => 'test_index_write'
             ]);
 
         $this->fireCommand(ElasticIndexCreateCommand::class, [
@@ -108,6 +114,7 @@ class ConsoleCommandsTest extends TestCase
                     ]
                 ]
             ])
+            ->getMock()
 
             ->shouldReceive('putMapping')
             ->with([
@@ -123,6 +130,20 @@ class ConsoleCommandsTest extends TestCase
                         ]
                     ]
                 ]
+            ])
+            ->getMock()
+
+            ->shouldReceive('existsAlias')
+            ->with([
+                'name' => 'test_index_write'
+            ])
+            ->andReturn(false)
+            ->getMock()
+
+            ->shouldReceive('putAlias')
+            ->with([
+                'index' => 'test_index',
+                'name' => 'test_index_write'
             ]);
 
         $this->fireCommand(ElasticIndexUpdateCommand::class, [

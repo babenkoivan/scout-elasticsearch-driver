@@ -15,11 +15,9 @@ class ElasticIndexCreateCommand extends Command
 
     protected $description = 'Create an Elasticsearch index';
 
-    public function handle()
+    protected function createIndex()
     {
-        if (!$configurator = $this->getIndexConfigurator()) {
-            return;
-        }
+        $configurator = $this->getIndexConfigurator();
 
         $payload = (new IndexPayload($configurator))
             ->setIfNotEmpty('body.settings', $configurator->getSettings())
@@ -33,5 +31,34 @@ class ElasticIndexCreateCommand extends Command
             'The index %s was created!',
             $configurator->getName()
         ));
+    }
+
+    protected function createWriteAlias()
+    {
+        $configurator = $this->getIndexConfigurator();
+
+        if (!method_exists($configurator, 'getWriteAlias')) {
+            return;
+        }
+
+        $payload = (new IndexPayload($configurator))
+            ->set('name', $configurator->getWriteAlias())
+            ->get();
+
+        ElasticClient::indices()
+            ->putAlias($payload);
+
+        $this->info(sprintf(
+            'The %s alias for the %s index was created!',
+            $configurator->getWriteAlias(),
+            $configurator->getName()
+        ));
+    }
+
+    public function handle()
+    {
+        $this->createIndex();
+
+        $this->createWriteAlias();
     }
 }

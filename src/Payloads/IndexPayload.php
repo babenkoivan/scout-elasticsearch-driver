@@ -2,6 +2,7 @@
 
 namespace ScoutElastic\Payloads;
 
+use Exception;
 use ScoutElastic\IndexConfigurator;
 
 class IndexPayload
@@ -12,11 +13,30 @@ class IndexPayload
         'index'
     ];
 
+    protected $indexConfigurator;
+
     public function __construct(IndexConfigurator $indexConfigurator)
     {
-        $this->payload = [
-            'index' => $indexConfigurator->getName()
-        ];
+        $this->indexConfigurator = $indexConfigurator;
+
+        $this->payload['index'] = $indexConfigurator->getName();
+    }
+
+    public function useAlias($alias)
+    {
+        $aliasGetter = 'get'.ucfirst($alias).'Alias';
+
+        if (!method_exists($this->indexConfigurator, $aliasGetter)) {
+            throw new Exception(sprintf(
+                'The index configurator %s doesn\'t have getter for the %s alias.',
+                get_class($this->indexConfigurator),
+                $alias
+            ));
+        }
+
+        $this->payload['index'] = call_user_func([$this->indexConfigurator, $aliasGetter]);
+
+        return $this;
     }
 
     public function set($key, $value)
@@ -40,12 +60,5 @@ class IndexPayload
     public function get($key = null)
     {
         return array_get($this->payload, $key);
-    }
-
-    public function __call($method, array $args)
-    {
-        if (strpos('set', $method) === 0) {
-
-        }
     }
 }

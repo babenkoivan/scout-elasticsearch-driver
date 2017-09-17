@@ -2,13 +2,14 @@
 
 namespace ScoutElastic\Console\Features;
 
+use InvalidArgumentException;
 use ScoutElastic\IndexConfigurator;
 use Symfony\Component\Console\Input\InputArgument;
 
 trait requiresIndexConfiguratorArgument
 {
     /**
-     * @return IndexConfigurator
+     * @return IndexConfigurator|null
      */
     protected function getIndexConfigurator()
     {
@@ -17,13 +18,11 @@ trait requiresIndexConfiguratorArgument
         $configuratorInstance = new $configuratorClass;
 
         if (!($configuratorInstance instanceof IndexConfigurator)) {
-            $this->error(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'The class %s must extend %s.',
                 $configuratorClass,
                 IndexConfigurator::class
             ));
-
-            return null;
         }
 
         return (new $configuratorClass);

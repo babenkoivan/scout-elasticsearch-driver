@@ -32,11 +32,16 @@ class ElasticEngine extends Engine
                 );
             }
 
-            $payload = (new DocumentPayload($model))
-                ->setIfNotEmpty('body', $model->toSearchableArray())
-                ->get();
+            $indexConfigurator = $model->getIndexConfigurator();
 
-            ElasticClient::index($payload);
+            $payload = (new DocumentPayload($model))
+                ->setIfNotEmpty('body', $model->toSearchableArray());
+
+            if (method_exists($indexConfigurator, 'getWriteAlias')) {
+                $payload->useAlias('write');
+            }
+
+            ElasticClient::index($payload->get());
         });
 
         $this->updateMapping = false;

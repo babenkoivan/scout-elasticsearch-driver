@@ -3,8 +3,17 @@
 namespace DummyNamespace;
 
 use ScoutElastic\IndexConfigurator;
+use ScoutElastic\Migratable;
 
 class DummyClass extends IndexConfigurator
 {
-    //
+    use Migratable;
+
+    protected $settings = [
+        //
+    ];
+
+    protected $defaultMapping = [
+        //
+    ];
 }
