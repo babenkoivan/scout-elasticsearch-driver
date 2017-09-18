@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use ScoutElastic\Console\Features\requiresIndexConfiguratorArgument;
 use ScoutElastic\Facades\ElasticClient;
 use ScoutElastic\Payloads\IndexPayload;
+use ScoutElastic\Payloads\RawPayload;
 
 class ElasticIndexUpdateCommand extends Command
 {
@@ -75,15 +76,19 @@ class ElasticIndexUpdateCommand extends Command
 
         $indices = ElasticClient::indices();
 
-        if ($indices->existsAlias(['name' => $configurator->getWriteAlias()])) {
-            return;
-        }
-
-        $payload = (new IndexPayload($configurator))
+        $existsPayload = (new RawPayload())
             ->set('name', $configurator->getWriteAlias())
             ->get();
 
-        $indices->putAlias($payload);
+        if ($indices->existsAlias($existsPayload)) {
+            return;
+        }
+
+        $putPayload = (new IndexPayload($configurator))
+            ->set('name', $configurator->getWriteAlias())
+            ->get();
+
+        $indices->putAlias($putPayload);
 
         $this->info(sprintf(
             'The %s alias for the %s index was created!',

@@ -5,10 +5,8 @@ namespace ScoutElastic\Payloads;
 use Exception;
 use ScoutElastic\IndexConfigurator;
 
-class IndexPayload
+class IndexPayload extends RawPayload
 {
-    protected $payload = [];
-
     protected $protectedKeys = [
         'index'
     ];
@@ -41,24 +39,10 @@ class IndexPayload
 
     public function set($key, $value)
     {
-        if (!is_null($key) && !in_array($key, $this->protectedKeys)) {
-            array_set($this->payload, $key, $value);
-        }
-
-        return $this;
-    }
-
-    public function setIfNotEmpty($key, $value)
-    {
-        if (empty($value)) {
+        if (in_array($key, $this->protectedKeys)) {
             return $this;
         }
 
-        return $this->set($key, $value);
-    }
-
-    public function get($key = null)
-    {
-        return array_get($this->payload, $key);
+        return parent::set($key, $value);
     }
 }
