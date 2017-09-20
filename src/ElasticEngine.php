@@ -24,7 +24,7 @@ class ElasticEngine extends Engine
 
     public function update($models)
     {
-        $models->map(function ($model) {
+        $models->each(function ($model) {
             if ($this->updateMapping) {
                 Artisan::call(
                     'elastic:update-mapping',
@@ -32,8 +32,14 @@ class ElasticEngine extends Engine
                 );
             }
 
+            $array = $model->toSearchableArray();
+
+            if (empty($array)) {
+                return true;
+            }
+
             $payload = (new DocumentPayload($model))
-                ->setIfNotEmpty('body', $model->toSearchableArray())
+                ->set('body', $array)
                 ->get();
 
             ElasticClient::index($payload);
@@ -44,7 +50,7 @@ class ElasticEngine extends Engine
 
     public function delete($models)
     {
-        $models->map(function ($model) {
+        $models->each(function ($model) {
             $payload = (new DocumentPayload($model))
                 ->get();
 

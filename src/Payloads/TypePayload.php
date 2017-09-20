@@ -15,7 +15,7 @@ class TypePayload extends IndexPayload
 
     public function __construct(Model $model)
     {
-        if (!method_exists($model, 'getIndexConfigurator')) {
+        if (!in_array(Searchable::class, class_uses_recursive($model))) {
             throw new Exception(sprintf(
                 'The %s model must use the %s trait.',
                 get_class($model),

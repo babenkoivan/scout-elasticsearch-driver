@@ -8,7 +8,22 @@ use ScoutElastic\Builders\SearchBuilder;
 use \Exception;
 
 trait Searchable {
-    use ScoutSearchable;
+    use ScoutSearchable {
+        ScoutSearchable::bootSearchable as bootScoutSearchable;
+    }
+
+    private static $isSearchableTraitBooted = false;
+
+    public static function bootSearchable()
+    {
+        if (self::$isSearchableTraitBooted) {
+            return;
+        }
+
+        self::bootScoutSearchable();
+
+        self::$isSearchableTraitBooted = true;
+    }
 
     /**
      * @return IndexConfigurator
