@@ -5,7 +5,8 @@
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/scout-elasticsearch-driver/Lobby)
 [![Donate](https://img.shields.io/badge/donate-PayPal-blue.svg)](https://www.paypal.me/ivanbabenko)
 
-:coffee: If you like my package, it'd be nice of you [to buy me a cup of coffee](https://www.paypal.me/ivanbabenko). 
+:coffee: If you like my package, it'd be nice of you [to buy me a cup of coffee](https://www.paypal.me/ivanbabenko).
+ 
 :octocat: The project has a [chat room on Gitter](https://gitter.im/scout-elasticsearch-driver/Lobby)!
 
 ---
