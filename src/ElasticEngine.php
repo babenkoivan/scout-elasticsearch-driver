@@ -37,7 +37,7 @@ class ElasticEngine extends Engine
             $payload = (new DocumentPayload($model))
                 ->setIfNotEmpty('body', $model->toSearchableArray());
 
-            if (method_exists($indexConfigurator, 'getWriteAlias')) {
+            if (in_array(Migratable::class, class_uses_recursive($indexConfigurator))) {
                 $payload->useAlias('write');
             }
 

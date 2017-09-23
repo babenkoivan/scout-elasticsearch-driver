@@ -5,6 +5,7 @@ namespace ScoutElastic\Console;
 use Illuminate\Console\Command;
 use ScoutElastic\Console\Features\requiresIndexConfiguratorArgument;
 use ScoutElastic\Facades\ElasticClient;
+use ScoutElastic\Migratable;
 use ScoutElastic\Payloads\IndexPayload;
 
 class ElasticIndexCreateCommand extends Command
@@ -37,7 +38,7 @@ class ElasticIndexCreateCommand extends Command
     {
         $configurator = $this->getIndexConfigurator();
 
-        if (!method_exists($configurator, 'getWriteAlias')) {
+        if (!in_array(Migratable::class, class_uses_recursive($configurator))) {
             return;
         }
 

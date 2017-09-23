@@ -18,7 +18,7 @@ trait requiresModelArgument
 
         $modelInstance = new $modelClass;
 
-        if (!($modelInstance instanceof Model) || !method_exists($modelInstance, 'getIndexConfigurator')) {
+        if (!($modelInstance instanceof Model) || !in_array(Searchable::class, class_uses_recursive($modelClass))) {
             throw new InvalidArgumentException(sprintf(
                 'The %s class must extend %s and use the %s trait.',
                 $modelClass,
