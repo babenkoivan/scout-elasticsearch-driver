@@ -29,7 +29,7 @@ class ElasticIndexCreateCommand extends Command
             ->create($payload);
 
         $this->info(sprintf(
-            'The index %s was created!',
+            'The %s index was created!',
             $configurator->getName()
         ));
     }

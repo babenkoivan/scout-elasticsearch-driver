@@ -60,7 +60,7 @@ class ElasticMigrateCommand extends Command
             ->create($payload);
 
         $this->info(sprintf(
-            'The index %s was created!',
+            'The %s index was created.',
             $targetIndex
         ));
     }
@@ -108,7 +108,7 @@ class ElasticMigrateCommand extends Command
         }
 
         $this->info(sprintf(
-            'The index %s was updated!',
+            'The index %s was updated.',
             $targetIndex
         ));
     }
@@ -145,7 +145,7 @@ class ElasticMigrateCommand extends Command
             ->putMapping($payload);
 
         $this->info(sprintf(
-            'The %s mapping was updated!',
+            'The %s mapping was updated.',
             $targetIndex
         ));
     }
@@ -217,7 +217,7 @@ class ElasticMigrateCommand extends Command
     {
         $sourceModel = $this->getModel();
 
-        Artisan::call(
+        $this->call(
             'scout:import',
             ['model' => get_class($sourceModel)]
         );
