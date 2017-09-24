@@ -390,13 +390,13 @@ This is how the artisan `elastic:migrate` command works.
 Before you run the command, make sure that your index configurator uses the `ScoutElastic\Migratable` trait.
 If it's not, add the trait and run the artisan `elastic:update-index` command using your index configurator class name as an argument:
 
-```php
+```
 php artisan elastic:update-index App\\MyIndexConfigurator
 ```
 
 When you are ready, make changes in the model mapping and run the `elastic:migrate` command using the model class as the first argument and desired index name as the second argument:
 
-```php
+```
 php artisan elastic:migrate App\\MyModel my_index_v2
 ``` 
 
