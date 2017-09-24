@@ -2,14 +2,12 @@
 
 namespace ScoutElastic\Tests;
 
-use Illuminate\Support\Facades\Artisan;
 use Mockery;
 use ScoutElastic\Console\ElasticIndexCreateCommand;
 use ScoutElastic\Console\ElasticIndexDropCommand;
 use ScoutElastic\Console\ElasticIndexUpdateCommand;
 use ScoutElastic\Console\ElasticMigrateCommand;
 use ScoutElastic\Console\ElasticUpdateMappingCommand;
-use ScoutElastic\ElasticEngine;
 use ScoutElastic\Tests\Stubs\IndexConfiguratorStub;
 use ScoutElastic\Tests\Stubs\ModelStub;
 
@@ -19,8 +17,11 @@ class ConsoleCommandsTest extends TestCase
     {
         $command = Mockery::mock($class)
             ->makePartial()
+
             ->shouldReceive('line')
-            ->andReturnNull()
+            ->getMock()
+
+            ->shouldReceive('call')
             ->getMock();
 
         foreach ($arguments as $key => $value) {
@@ -217,14 +218,6 @@ class ConsoleCommandsTest extends TestCase
 
     public function test_if_the_migrate_command_builds_correct_payload_for_new_target_index()
     {
-        Mockery::mock('alias:' . Artisan::class)
-            ->makePartial()
-            ->shouldReceive('call')
-            ->with(
-                'scout:import',
-                ['model' => ModelStub::class]
-            );
-
         $this->mockClient()
 
             ->shouldReceive('indices')
@@ -356,14 +349,6 @@ class ConsoleCommandsTest extends TestCase
 
     public function test_if_the_migrate_command_builds_correct_payload_for_existing_target_index()
     {
-        Mockery::mock('alias:' . Artisan::class)
-            ->makePartial()
-            ->shouldReceive('call')
-            ->with(
-                'scout:import',
-                ['model' => ModelStub::class]
-            );
-
         $this->mockClient()
 
             ->shouldReceive('indices')
