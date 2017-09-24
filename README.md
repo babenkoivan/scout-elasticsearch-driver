@@ -27,6 +27,7 @@ Check out its [features](#features)!
 * [Console commands](#console-commands)
 * [Search rules](#search-rules)
 * [Available filters](#available-filters)
+* [Zero downtime migration](#zero-downtime-migration)
 * [Debug](#debug)
 
 ## Tutorial
@@ -41,6 +42,7 @@ There are information about Elasticsearch installation and the package usage exa
 * A possibility to add a new field to an existing mapping [automatically](#configuration) or using [the artisan command](#console-commands).
 * Lots of different ways to implement your search algorithm: using [search rules](#search-rules) or a [raw search](#usage).
 * [Various filter types](#available-filters) to make a search query more specific.
+* [Zero downtime migration](#zero-downtime-migration) from an old index to a new index.
 
 ## Requirements
 
@@ -262,6 +264,7 @@ elastic:create-index | `index-configurator` - The index configurator class | Cre
 elastic:update-index | `index-configurator` - The index configurator class | Updates settings and mappings of an Elasticsearch index.
 elastic:drop-index | `index-configurator` - The index configurator class | Drops an Elasticsearch index.
 elastic:update-mapping | `model` - The model class | Updates a model mapping.
+elastic:migrate | `model` - The model class, `target-index` - The index name to migrate | Migrates model to another index.
 
 For detailed description and all available options run `php artisan help [command]` in the command line.
 
@@ -375,6 +378,29 @@ whereNotExists($field) | whereNotExists('unemployed') | Checks if a value isn't 
 whereRegexp($field, $value, $flags = 'ALL') | whereRegexp('name.raw', 'A.+') | Filters records according to a given regular expression. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/5.2/query-dsl-regexp-query.html#regexp-syntax) you can find more about syntax.
 
 In most cases it's better to use raw fields to filter records, i.e. not analyzed fields.
+
+## Zero downtime migration
+
+As you might know, you can't change the type of already created field in Elasticsearch. 
+The only choice in such case is to create a new index with necessary mapping and import your models into the new index.      
+A migration can take quite a long time, so to avoid downtime during the process the driver reads from the old index and writes to the new one.
+As soon as migration is over it starts reading from the new index and removes the old index.
+This is how the artisan `elastic:migrate` command works.  
+
+Before you run the command, make sure that your index configurator uses the `ScoutElastic\Migratable` trait.
+If it's not, add the trait and run the artisan `elastic:update-index` command using your index configurator class name as an argument:
+
+```php
+php artisan elastic:update-index App\\MyIndexConfigurator
+```
+
+When you are ready, make changes in the model mapping and run the `elastic:migrate` command using the model class as the first argument and desired index name as the second argument:
+
+```php
+php artisan elastic:migrate App\\MyModel my_index_v2
+``` 
+
+Note, that if you need just to add new fields in your mapping, use the `elastic:update-mapping` command.
 
 ## Debug
 
