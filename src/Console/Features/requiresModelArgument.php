@@ -2,14 +2,16 @@
 
 namespace ScoutElastic\Console\Features;
 
-use Exception;
+use InvalidArgumentException;
 use Illuminate\Database\Eloquent\Model;
 use ScoutElastic\Searchable;
-use ScoutElastic\SearchableModel;
 use Symfony\Component\Console\Input\InputArgument;
 
 trait requiresModelArgument
 {
+    /**
+     * @return Model|null
+     */
     protected function getModel()
     {
         $modelClass = trim($this->argument('model'));
@@ -17,14 +19,12 @@ trait requiresModelArgument
         $modelInstance = new $modelClass;
 
         if (!($modelInstance instanceof Model) || !in_array(Searchable::class, class_uses_recursive($modelClass))) {
-            $this->error(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'The %s class must extend %s and use the %s trait.',
                 $modelClass,
                 Model::class,
                 Searchable::class
             ));
-
-            return null;
         }
 
         return $modelInstance;

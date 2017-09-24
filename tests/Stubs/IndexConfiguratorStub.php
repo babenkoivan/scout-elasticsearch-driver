@@ -3,9 +3,12 @@
 namespace ScoutElastic\Tests\Stubs;
 
 use ScoutElastic\IndexConfigurator;
+use ScoutElastic\Migratable;
 
 class IndexConfiguratorStub extends IndexConfigurator
 {
+    use Migratable;
+
     protected $name = 'test_index';
 
     protected $settings = [

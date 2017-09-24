@@ -2,11 +2,14 @@
 
 namespace ScoutElastic\Console;
 
+use Exception;
+use LogicException;
 use Illuminate\Console\Command;
 use ScoutElastic\Console\Features\requiresIndexConfiguratorArgument;
 use ScoutElastic\Facades\ElasticClient;
-use Exception;
+use ScoutElastic\Migratable;
 use ScoutElastic\Payloads\IndexPayload;
+use ScoutElastic\Payloads\RawPayload;
 
 class ElasticIndexUpdateCommand extends Command
 {
@@ -16,23 +19,19 @@ class ElasticIndexUpdateCommand extends Command
 
     protected $description = 'Update settings and mappings of an Elasticsearch index';
 
-    public function handle()
+    protected function updateIndex()
     {
-        if (!$configurator = $this->getIndexConfigurator()) {
-            return;
-        }
+        $configurator = $this->getIndexConfigurator();
 
         $indexPayload = (new IndexPayload($configurator))->get();
 
         $indices = ElasticClient::indices();
 
         if (!$indices->exists($indexPayload)) {
-            $this->error(sprintf(
+            throw new LogicException(sprintf(
                 'Index %s doesn\'t exist',
                 $configurator->getName()
             ));
-
-            return;
         }
 
         try {
@@ -66,5 +65,43 @@ class ElasticIndexUpdateCommand extends Command
             'The index %s was updated!',
             $configurator->getName()
         ));
+    }
+
+    protected function createWriteAlias()
+    {
+        $configurator = $this->getIndexConfigurator();
+
+        if (!in_array(Migratable::class, class_uses_recursive($configurator))) {
+            return;
+        }
+
+        $indices = ElasticClient::indices();
+
+        $existsPayload = (new RawPayload())
+            ->set('name', $configurator->getWriteAlias())
+            ->get();
+
+        if ($indices->existsAlias($existsPayload)) {
+            return;
+        }
+
+        $putPayload = (new IndexPayload($configurator))
+            ->set('name', $configurator->getWriteAlias())
+            ->get();
+
+        $indices->putAlias($putPayload);
+
+        $this->info(sprintf(
+            'The %s alias for the %s index was created!',
+            $configurator->getWriteAlias(),
+            $configurator->getName()
+        ));
+    }
+
+    public function handle()
+    {
+        $this->updateIndex();
+
+        $this->createWriteAlias();
     }
 }

@@ -24,7 +24,7 @@ class ElasticEngineTest extends TestCase
         $this->mockClient()
             ->shouldReceive('index')
             ->with([
-                'index' => 'test_index',
+                'index' => 'test_index_write',
                 'type' => 'test_table',
                 'id' => 1,
                 'body' => [

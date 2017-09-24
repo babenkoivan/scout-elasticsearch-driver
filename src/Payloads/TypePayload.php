@@ -13,6 +13,8 @@ class TypePayload extends IndexPayload
         'type'
     ];
 
+    protected $model;
+
     public function __construct(Model $model)
     {
         if (!in_array(Searchable::class, class_uses_recursive($model))) {
@@ -22,6 +24,8 @@ class TypePayload extends IndexPayload
                 Searchable::class
             ));
         }
+
+        $this->model = $model;
 
         parent::__construct($model->getIndexConfigurator());
 

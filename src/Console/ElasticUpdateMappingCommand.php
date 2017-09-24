@@ -2,6 +2,7 @@
 
 namespace ScoutElastic\Console;
 
+use LogicException;
 use Illuminate\Console\Command;
 use ScoutElastic\Console\Features\requiresModelArgument;
 use ScoutElastic\Facades\ElasticClient;
@@ -25,9 +26,7 @@ class ElasticUpdateMappingCommand extends Command
         $mapping = array_merge_recursive($configurator->getDefaultMapping(), $model->getMapping());
 
         if (empty($mapping)) {
-            $this->error('Nothing to update: the mapping is not specified.');
-
-            return;
+            throw new LogicException('Nothing to update: the mapping is not specified.');
         }
 
         $payload = (new TypePayload($model))

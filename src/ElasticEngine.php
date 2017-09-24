@@ -38,11 +38,16 @@ class ElasticEngine extends Engine
                 return true;
             }
 
-            $payload = (new DocumentPayload($model))
-                ->set('body', $array)
-                ->get();
+            $indexConfigurator = $model->getIndexConfigurator();
 
-            ElasticClient::index($payload);
+            $payload = (new DocumentPayload($model))
+                ->set('body', $array);
+
+            if (in_array(Migratable::class, class_uses_recursive($indexConfigurator))) {
+                $payload->useAlias('write');
+            }
+
+            ElasticClient::index($payload->get());
         });
 
         $this->updateMapping = false;

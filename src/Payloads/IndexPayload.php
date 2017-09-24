@@ -2,50 +2,47 @@
 
 namespace ScoutElastic\Payloads;
 
+use Exception;
 use ScoutElastic\IndexConfigurator;
 
-class IndexPayload
+class IndexPayload extends RawPayload
 {
-    protected $payload = [];
-
     protected $protectedKeys = [
         'index'
     ];
 
+    protected $indexConfigurator;
+
     public function __construct(IndexConfigurator $indexConfigurator)
     {
-        $this->payload = [
-            'index' => $indexConfigurator->getName()
-        ];
+        $this->indexConfigurator = $indexConfigurator;
+
+        $this->payload['index'] = $indexConfigurator->getName();
     }
 
-    public function set($key, $value)
+    public function useAlias($alias)
     {
-        if (!is_null($key) && !in_array($key, $this->protectedKeys)) {
-            array_set($this->payload, $key, $value);
+        $aliasGetter = 'get'.ucfirst($alias).'Alias';
+
+        if (!method_exists($this->indexConfigurator, $aliasGetter)) {
+            throw new Exception(sprintf(
+                'The index configurator %s doesn\'t have getter for the %s alias.',
+                get_class($this->indexConfigurator),
+                $alias
+            ));
         }
+
+        $this->payload['index'] = call_user_func([$this->indexConfigurator, $aliasGetter]);
 
         return $this;
     }
 
-    public function setIfNotEmpty($key, $value)
+    public function set($key, $value)
     {
-        if (empty($value)) {
+        if (in_array($key, $this->protectedKeys)) {
             return $this;
         }
 
-        return $this->set($key, $value);
-    }
-
-    public function get($key = null)
-    {
-        return array_get($this->payload, $key);
-    }
-
-    public function __call($method, array $args)
-    {
-        if (strpos('set', $method) === 0) {
-
-        }
+        return parent::set($key, $value);
     }
 }

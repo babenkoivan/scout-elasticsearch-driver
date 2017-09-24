@@ -17,9 +17,7 @@ class ElasticIndexDropCommand extends Command
 
     public function handle()
     {
-        if (!$configurator = $this->getIndexConfigurator()) {
-            return;
-        }
+        $configurator = $this->getIndexConfigurator();
 
         $payload = (new IndexPayload($configurator))
             ->get();

@@ -8,6 +8,7 @@ use Elasticsearch\ClientBuilder;
 use ScoutElastic\Console\ElasticIndexCreateCommand;
 use ScoutElastic\Console\ElasticIndexDropCommand;
 use ScoutElastic\Console\ElasticIndexUpdateCommand;
+use ScoutElastic\Console\ElasticMigrateCommand;
 use ScoutElastic\Console\ElasticUpdateMappingCommand;
 use ScoutElastic\Console\IndexConfiguratorMakeCommand;
 use ScoutElastic\Console\SearchableModelMakeCommand;
@@ -33,6 +34,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
             ElasticIndexUpdateCommand::class,
             ElasticIndexDropCommand::class,
             ElasticUpdateMappingCommand::class,
+            ElasticMigrateCommand::class
         ]);
 
         $this->app->make(EngineManager::class)
