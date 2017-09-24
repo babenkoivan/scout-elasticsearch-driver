@@ -14,6 +14,7 @@ use ScoutElastic\Console\IndexConfiguratorMakeCommand;
 use ScoutElastic\Console\SearchableModelMakeCommand;
 use Laravel\Scout\EngineManager;
 use ScoutElastic\Console\SearchRuleMakeCommand;
+use ScoutElastic\DataCollector\ElasticsearchDataCollector;
 
 class ScoutElasticServiceProvider extends ServiceProvider
 {
@@ -49,5 +50,10 @@ class ScoutElasticServiceProvider extends ServiceProvider
             $config = Config::get('scout_elastic.client');
             return ClientBuilder::fromConfig($config);
         });
+
+        if($this->app->has('debugbar')) {
+            $debugbar = $this->app->make('debugbar');
+            $debugbar->addCollector($this->app->make(ElasticsearchDataCollector::class));
+        }
     }
 }

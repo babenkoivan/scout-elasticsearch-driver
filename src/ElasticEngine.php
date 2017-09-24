@@ -17,6 +17,10 @@ class ElasticEngine extends Engine
 {
     protected $updateMapping = false;
 
+    protected $query;
+
+    protected $result;
+
     public function __construct()
     {
         $this->updateMapping = config('scout_elastic.update_mapping');
@@ -140,8 +144,10 @@ class ElasticEngine extends Engine
     }
 
     protected function performSearch(Builder $builder, array $options = []) {
+
         if ($builder->callback) {
-            return call_user_func(
+            $this->query = $builder->query;
+            return $this->result = call_user_func(
                 $builder->callback,
                 ElasticClient::getFacadeRoot(),
                 $builder->query,
@@ -154,10 +160,15 @@ class ElasticEngine extends Engine
         $this->buildSearchQueryPayloadCollection($builder, $options)->each(function($payload) use (&$result) {
             $result = ElasticClient::search($payload);
 
+            $this->query  = array_get($payload, 'body.query');
+            $this->result = $result;
+
             if ($this->getTotalCount($result) > 0) {
                 return false;
             }
         });
+
+        $this->result = $result;
 
         return $result;
     }
@@ -229,5 +240,21 @@ class ElasticEngine extends Engine
     public function getTotalCount($results)
     {
         return $results['hits']['total'];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return $this->result;
     }
 }
