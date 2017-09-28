@@ -2,65 +2,59 @@
 
 namespace ScoutElastic;
 
-use Artisan;
+use Illuminate\Support\Facades\Artisan;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine;
 use ScoutElastic\Builders\SearchBuilder;
 use ScoutElastic\Facades\ElasticClient;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use ScoutElastic\Payloads\DocumentPayload;
+use ScoutElastic\Indexers\IndexerInterface;
 use ScoutElastic\Payloads\TypePayload;
 use stdClass;
 
 class ElasticEngine extends Engine
 {
-    protected $updateMapping = false;
+    protected $indexer;
 
-    public function __construct()
+    protected $updateMapping;
+
+    static protected $updatedMappings = [];
+
+    public function __construct(IndexerInterface $indexer, $updateMapping)
     {
-        $this->updateMapping = config('scout_elastic.update_mapping');
+        $this->indexer = $indexer;
+
+        $this->updateMapping = $updateMapping;
     }
 
     public function update($models)
     {
-        $models->each(function ($model) {
-            if ($this->updateMapping) {
+        if ($this->updateMapping) {
+            $self = $this;
+
+            $models->each(function ($model) use ($self) {
+                $modelClass = get_class($model);
+
+                if (in_array($modelClass, $self::$updatedMappings)) {
+                    return true;
+                }
+
                 Artisan::call(
                     'elastic:update-mapping',
-                    ['model' => get_class($model)]
+                    ['model' => $modelClass]
                 );
-            }
 
-            $array = $model->toSearchableArray();
+                $self::$updatedMappings[] = $modelClass;
+            });
+        }
 
-            if (empty($array)) {
-                return true;
-            }
-
-            $indexConfigurator = $model->getIndexConfigurator();
-
-            $payload = (new DocumentPayload($model))
-                ->set('body', $array);
-
-            if (in_array(Migratable::class, class_uses_recursive($indexConfigurator))) {
-                $payload->useAlias('write');
-            }
-
-            ElasticClient::index($payload->get());
-        });
-
-        $this->updateMapping = false;
+        $this->indexer->update($models);
     }
 
     public function delete($models)
     {
-        $models->each(function ($model) {
-            $payload = (new DocumentPayload($model))
-                ->get();
-
-            ElasticClient::delete($payload);
-        });
+        $this->indexer->delete($models);
     }
 
     protected function buildSearchQueryPayload(Builder $builder, $queryPayload, array $options = [])

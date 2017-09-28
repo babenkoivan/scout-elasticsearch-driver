@@ -5,6 +5,7 @@ namespace ScoutElastic;
 use Config;
 use Illuminate\Support\ServiceProvider;
 use Elasticsearch\ClientBuilder;
+use InvalidArgumentException;
 use ScoutElastic\Console\ElasticIndexCreateCommand;
 use ScoutElastic\Console\ElasticIndexDropCommand;
 use ScoutElastic\Console\ElasticIndexUpdateCommand;
@@ -39,7 +40,19 @@ class ScoutElasticServiceProvider extends ServiceProvider
 
         $this->app->make(EngineManager::class)
             ->extend('elastic', function () {
-                return new ElasticEngine();
+                $indexerType = config('scout_elastic.indexer', 'single');
+                $updateMapping = config('scout_elastic.update_mapping', true);
+
+                $indexerClass = '\\ScoutElastic\\Indexers\\'.ucfirst($indexerType).'Indexer';
+
+                if (!class_exists($indexerClass)) {
+                    throw new InvalidArgumentException(sprintf(
+                        'The %s indexer doesn\'t exist.',
+                        $indexerType
+                    ));
+                }
+
+                return new ElasticEngine(new $indexerClass(), $updateMapping);
             });
     }
 

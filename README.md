@@ -43,6 +43,7 @@ There are information about Elasticsearch installation and the package usage exa
 * Lots of different ways to implement your search algorithm: using [search rules](#search-rules) or a [raw search](#usage).
 * [Various filter types](#available-filters) to make a search query more specific.
 * [Zero downtime migration](#zero-downtime-migration) from an old index to a new index.
+* Bulk indexing, see [the configuration section](#configuration).
 
 ## Requirements
 
@@ -70,12 +71,15 @@ php artisan vendor:publish --provider="ScoutElastic\ScoutElasticServiceProvider"
 ```
 
 Then, set the driver setting to `elastic` in the `config/scout.php` file and configure the driver itself in the `config/scout_elastic.php` file.
-There are two available options:
+The available options are:
 
 Option | Description
 --- | ---
 client | A setting hash to build Elasticsearch client. More information you can find [here](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/_configuration.html#_building_the_client_from_a_configuration_hash). By default the host is set to `localhost:9200`.
 update_mapping | The option that specifies whether to update a mapping automatically or not. By default it is set to `true`.
+indexer | Set to `single` for the single document indexing and to `bulk` for the bulk document indexing. By default is set to `true`.
+
+Note, that if you use the bulk document indexing you'll probably want to change the chunk size, you can do that in the `config/scout.php` file.
 
 ## Index configurator
 
@@ -190,7 +194,7 @@ class MyModel extends Model
 Each searchable model represents an Elasticsearch type.
 By default a type name is the same as a table name, but you can set any type name you want through the `searchableAs` method.
 You can also specify fields which will be indexed by the driver through the `toSearchableArray` method.
-More information about these options you will find in [the scout official documentation](https://laravel.com/docs/5.4/scout#configuration).
+More information about these options you will find in [the scout official documentation](https://laravel.com/docs/5.5/scout#configuration).
 
 The last important option you can set in the `MyModel` class is the `$searchRules` property. 
 It allows you to set different search algorithms for a model. 
@@ -205,9 +209,19 @@ php artisan elastic:update-mapping App\\MyModel
 ## Usage
 
 Once you've created an index configurator, an Elasticsearch index itself and a searchable model, you are ready to go.
-Now you can [index](https://laravel.com/docs/5.4/scout#indexing) and [search](https://laravel.com/docs/5.4/scout#searching) data according to the documentation.
+Now you can [index](https://laravel.com/docs/5.5/scout#indexing) and [search](https://laravel.com/docs/5.5/scout#searching) data according to the documentation.
 
-In addition to standard functionality the package offers you the possibility to filter data in Elasticsearch without specifying query string:
+Basic search usage example:
+
+```php
+App\MyModel::search('phone') 
+    ->where('color', 'red')
+    ->orderBy('price', 'asc')
+    ->take(10)
+    ->get();
+```
+
+In addition to standard functionality the package offers you the possibility to filter data in Elasticsearch without specifying a query string:
   
 ```php
 App\MyModel::search('*')

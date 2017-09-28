@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Collection;
 use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
 use ScoutElastic\ElasticEngine;
+use ScoutElastic\Indexers\BulkIndexer;
+use ScoutElastic\Indexers\SingleIndexer;
 use ScoutElastic\Tests\Stubs\ModelStub;
 use stdClass;
 
@@ -19,7 +21,16 @@ class ElasticEngineTest extends TestCase
             ->forceFill($fields);
     }
 
-    public function test_if_the_update_method_builds_correct_payload()
+    protected function buildEngine($indexer = null, $updateMapping = false)
+    {
+        if (is_null($indexer)) {
+            $indexer = new SingleIndexer();
+        }
+
+        return new ElasticEngine($indexer, $updateMapping);
+    }
+
+    public function test_if_the_update_method_with_single_indexer_builds_correct_payload()
     {
         $this->mockClient()
             ->shouldReceive('index')
@@ -38,12 +49,13 @@ class ElasticEngineTest extends TestCase
             'test_field' => 'test text'
         ]);
 
-        (new ElasticEngine())->update(Collection::make([$model]));
+        $this->buildEngine()
+            ->update(Collection::make([$model]));
 
         $this->addToAssertionCount(1);
     }
 
-    public function test_if_the_delete_method_builds_correct_payload()
+    public function test_if_the_delete_method_with_single_indexer_builds_correct_payload()
     {
         $this->mockClient()
             ->shouldReceive('delete')
@@ -55,7 +67,63 @@ class ElasticEngineTest extends TestCase
 
         $model = $this->mockModel(['id' => 1]);
 
-        (new ElasticEngine())->delete(Collection::make([$model]));
+        $this->buildEngine()
+            ->delete(Collection::make([$model]));
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function test_if_the_update_method_with_bulk_indexer_builds_correct_payload()
+    {
+        $this->mockClient()
+            ->shouldReceive('bulk')
+            ->with([
+                'body' => [
+                    [
+                        'index' => [
+                            '_index' => 'test_index_write',
+                            '_type' => 'test_table',
+                            '_id' => 1
+                        ]
+                    ],
+                    [
+                        'id' => 1,
+                        'test_field' => 'test text'
+                    ]
+                ]
+            ]);
+
+        $model = $this->mockModel([
+            'id' => 1,
+            'test_field' => 'test text'
+        ]);
+
+        $this->buildEngine(new BulkIndexer())
+            ->update(Collection::make([$model]));
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function test_if_the_delete_method_with_bulk_indexer_builds_correct_payload()
+    {
+        $this->mockClient()
+            ->shouldReceive('bulk')
+            ->with([
+                'body' => [
+                    [
+                        'delete' => [
+                            '_index' => 'test_index',
+                            '_type' => 'test_table',
+                            '_id' => 1
+                        ]
+                    ]
+                ]
+            ]);
+
+        $model = $this->mockModel(['id' => 1]);
+
+        $this->buildEngine(new BulkIndexer())
+            ->delete(Collection::make([$model]));
 
         $this->addToAssertionCount(1);
     }
@@ -84,7 +152,8 @@ class ElasticEngineTest extends TestCase
 
         $builder = new SearchBuilder($model, 'test query');
 
-        (new ElasticEngine())->search($builder);
+        $this->buildEngine()
+            ->search($builder);
 
         $this->addToAssertionCount(1);
     }
@@ -114,7 +183,8 @@ class ElasticEngineTest extends TestCase
 
         $builder = (new SearchBuilder($model, 'test query'))->take(10);
 
-        (new ElasticEngine())->search($builder);
+        $this->buildEngine()
+            ->search($builder);
 
         $this->addToAssertionCount(1);
     }
@@ -146,7 +216,8 @@ class ElasticEngineTest extends TestCase
 
         $builder = (new SearchBuilder($model, 'test query'))->orderBy('name', 'asc');
 
-        (new ElasticEngine())->search($builder);
+        $this->buildEngine()
+            ->search($builder);
 
         $this->addToAssertionCount(1);
     }
@@ -233,7 +304,8 @@ class ElasticEngineTest extends TestCase
             ->where('price', '<=', 700)
             ->where('used', '<>', 'yes');
 
-        (new ElasticEngine())->search($builder);
+        $this->buildEngine()
+            ->search($builder);
 
         $this->addToAssertionCount(1);
     }
@@ -273,7 +345,8 @@ class ElasticEngineTest extends TestCase
 
         $builder = (new SearchBuilder($model, 'test query'))->whereIn('id', [1, 2, 3, 4, 5]);
 
-        (new ElasticEngine())->search($builder);
+        $this->buildEngine()
+            ->search($builder);
 
         $this->addToAssertionCount(1);
     }
@@ -313,7 +386,8 @@ class ElasticEngineTest extends TestCase
 
         $builder = (new SearchBuilder($model, 'test query'))->whereNotIn('id', [1, 2, 3, 4, 5]);
 
-        (new ElasticEngine())->search($builder);
+        $this->buildEngine()
+            ->search($builder);
 
         $this->addToAssertionCount(1);
     }
@@ -356,7 +430,8 @@ class ElasticEngineTest extends TestCase
 
         $builder = (new SearchBuilder($model, 'test query'))->whereBetween('price', [100, 300]);
 
-        (new ElasticEngine())->search($builder);
+        $this->buildEngine()
+            ->search($builder);
 
         $this->addToAssertionCount(1);
     }
@@ -399,7 +474,8 @@ class ElasticEngineTest extends TestCase
 
         $builder = (new SearchBuilder($model, 'test query'))->whereNotBetween('price', [100, 300]);
 
-        (new ElasticEngine())->search($builder);
+        $this->buildEngine()
+            ->search($builder);
 
         $this->addToAssertionCount(1);
     }
@@ -439,7 +515,8 @@ class ElasticEngineTest extends TestCase
 
         $builder = (new SearchBuilder($model, 'test query'))->whereExists('sale');
 
-        (new ElasticEngine())->search($builder);
+        $this->buildEngine()
+            ->search($builder);
 
         $this->addToAssertionCount(1);
     }
@@ -479,7 +556,8 @@ class ElasticEngineTest extends TestCase
 
         $builder = (new SearchBuilder($model, 'test query'))->whereNotExists('sale');
 
-        (new ElasticEngine())->search($builder);
+        $this->buildEngine()
+            ->search($builder);
 
         $this->addToAssertionCount(1);
     }
@@ -522,7 +600,8 @@ class ElasticEngineTest extends TestCase
 
         $builder = (new SearchBuilder($model, 'phone'))->whereRegexp('brand', 'a[a-z]+', 'ALL');
 
-        (new ElasticEngine())->search($builder);
+        $this->buildEngine()
+            ->search($builder);
 
         $this->addToAssertionCount(1);
     }
@@ -559,7 +638,8 @@ class ElasticEngineTest extends TestCase
             ];
         });
 
-        (new ElasticEngine())->search($builder);
+        $this->buildEngine()
+            ->search($builder);
 
         $this->addToAssertionCount(1);
     }
@@ -586,7 +666,8 @@ class ElasticEngineTest extends TestCase
 
         $builder = new FilterBuilder($model);
 
-        (new ElasticEngine())->search($builder);
+        $this->buildEngine()
+            ->search($builder);
 
         $this->addToAssertionCount(1);
     }
@@ -613,17 +694,18 @@ class ElasticEngineTest extends TestCase
 
         $model = $this->mockModel();
 
-        (new ElasticEngine())->searchRaw($model, [
-            'query' => [
-                'bool' => [
-                    'must' => [
-                        'match' => [
-                            'phone' => 'iphone'
+        $this->buildEngine()
+            ->searchRaw($model, [
+                'query' => [
+                    'bool' => [
+                        'must' => [
+                            'match' => [
+                                'phone' => 'iphone'
+                            ]
                         ]
                     ]
                 ]
-            ]
-        ]);
+            ]);
 
         $this->addToAssertionCount(1);
     }
@@ -654,7 +736,8 @@ class ElasticEngineTest extends TestCase
 
         $builder = new SearchBuilder($model, 'test query');
 
-        (new ElasticEngine())->paginate($builder, 8, 3);
+        $this->buildEngine()
+            ->paginate($builder, 8, 3);
 
         $this->addToAssertionCount(1);
     }
@@ -703,7 +786,7 @@ class ElasticEngineTest extends TestCase
         $results = $this->getElasticSearchResponse();
 
         $this->assertEquals(
-            (new ElasticEngine())->mapIds($results),
+            $this->buildEngine()->mapIds($results),
             ['1', '3']
         );
     }
@@ -712,7 +795,7 @@ class ElasticEngineTest extends TestCase
     {
         $results = $this->getElasticSearchResponse();
 
-        $this->assertEquals((new ElasticEngine())->getTotalCount($results), 2);
+        $this->assertEquals($this->buildEngine()->getTotalCount($results), 2);
     }
 
     public function test_if_the_map_method_returns_the_same_results_from_database_as_in_search_result()
@@ -733,7 +816,7 @@ class ElasticEngineTest extends TestCase
             ]))
             ->getMock();
 
-        $databaseResult = (new ElasticEngine())->map($searchResults, $model);
+        $databaseResult = $this->buildEngine()->map($searchResults, $model);
 
         $this->assertEquals(
             array_pluck($searchResults['hits']['hits'], '_id'),
@@ -766,7 +849,8 @@ class ElasticEngineTest extends TestCase
 
         $builder = new SearchBuilder($model, 'test query');
 
-        (new ElasticEngine())->explain($builder);
+        $this->buildEngine()
+            ->explain($builder);
 
         $this->addToAssertionCount(1);
     }
@@ -796,7 +880,8 @@ class ElasticEngineTest extends TestCase
 
         $builder = new SearchBuilder($model, 'test query');
 
-        (new ElasticEngine())->profile($builder);
+        $this->buildEngine()
+            ->profile($builder);
 
         $this->addToAssertionCount(1);
     }
