@@ -424,7 +424,6 @@ There are two methods that can help you to analyze results of a search query:
  
     ```php
     App\MyModel::search('Brazil')
-        ->first()
         ->explain();
     ```
     
@@ -432,7 +431,6 @@ There are two methods that can help you to analyze results of a search query:
 
     ```php
     App\MyModel::search('Brazil')
-        ->first()
         ->profile();
     ```
     
