@@ -221,6 +221,14 @@ App\MyModel::search('phone')
     ->get();
 ```
 
+If you need to load relations you can use the `with` method:
+
+```php
+App\MyModel::search('phone') 
+    ->with('makers')
+    ->get();
+```
+
 In addition to standard functionality the package offers you the possibility to filter data in Elasticsearch without specifying a query string:
   
 ```php

@@ -224,4 +224,18 @@ class ElasticEngine extends Engine
     {
         return $results['hits']['total'];
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function get(Builder $builder)
+    {
+        $collection = parent::get($builder);
+
+        if (isset($builder->with) && $collection->count() > 0) {
+            $collection->load($builder->with);
+        }
+
+        return $collection;
+    }
 }

@@ -11,6 +11,8 @@ class FilterBuilder extends Builder
         'must_not' => []
     ];
 
+    public $with;
+
     public function __construct($model, $callback = null)
     {
         $this->model = $model;
@@ -132,5 +134,12 @@ class FilterBuilder extends Builder
     public function buildPayload()
     {
         return $this->engine()->buildSearchQueryPayloadCollection($this);
+    }
+
+    public function with($relations)
+    {
+        $this->with = $relations;
+
+        return $this;
     }
 }
