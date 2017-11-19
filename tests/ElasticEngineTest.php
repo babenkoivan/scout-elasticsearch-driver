@@ -2,8 +2,8 @@
 
 namespace ScoutElastic\Tests;
 
-use Mockery;
 use Illuminate\Database\Eloquent\Collection;
+use Mockery;
 use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
 use ScoutElastic\ElasticEngine;
@@ -606,6 +606,163 @@ class ElasticEngineTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+
+    public function test_if_the_search_method_with_specified_whereGeoDistance_clause_builds_correct_payload()
+    {
+        $this->mockClient()
+            ->shouldReceive('search')
+            ->with([
+                'index' => 'test_index',
+                'type' => 'test_table',
+                'body' => [
+                    'query' => [
+                        'bool' => [
+                            'must' => [
+                                'match' => [
+                                    '_all' => 'flat'
+                                ]
+                            ],
+                            'filter' => [
+                                'bool' => [
+                                    'must' => [
+                                        [
+                                            [
+                                                'geo_distance' => [
+                                                    'distance' => 1000,
+                                                    'location' => [-70, 40]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+        $model = $this->mockModel();
+
+        $builder = (new SearchBuilder($model, 'flat'))->whereGeoDistance(
+            'location',
+            [-70, 40],
+            1000
+        );
+
+        $this->buildEngine()
+            ->search($builder);
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function test_if_the_search_method_with_specified_whereGeoBoundingBox_clause_builds_correct_payload()
+    {
+        $this->mockClient()
+            ->shouldReceive('search')
+            ->with([
+                'index' => 'test_index',
+                'type' => 'test_table',
+                'body' => [
+                    'query' => [
+                        'bool' => [
+                            'must' => [
+                                'match' => [
+                                    '_all' => 'flat'
+                                ]
+                            ],
+                            'filter' => [
+                                'bool' => [
+                                    'must' => [
+                                        [
+                                            [
+                                                'geo_bounding_box' => [
+                                                    'location' => [
+                                                        "top_left" => [-74.1, 40.73],
+                                                        "bottom_right" => [-71.12, 40.01]
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+        $model = $this->mockModel();
+
+        $builder = (new SearchBuilder($model, 'flat'))->whereGeoBoundingBox(
+            'location',
+            [
+                "top_left" => [-74.1, 40.73],
+                "bottom_right" => [-71.12, 40.01]
+            ]
+        );
+
+        $this->buildEngine()
+            ->search($builder);
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function test_if_the_search_method_with_specified_whereGeoPolygon_clause_builds_correct_payload()
+    {
+        $this->mockClient()
+            ->shouldReceive('search')
+            ->with([
+                'index' => 'test_index',
+                'type' => 'test_table',
+                'body' => [
+                    'query' => [
+                        'bool' => [
+                            'must' => [
+                                'match' => [
+                                    '_all' => 'flat'
+                                ]
+                            ],
+                            'filter' => [
+                                'bool' => [
+                                    'must' => [
+                                        [
+                                            [
+                                                'geo_polygon' => [
+                                                    'location' => [
+                                                        'points' => [
+                                                            [-70, 40],
+                                                            [-80, 30],
+                                                            [-90, 20]
+                                                        ]
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+        $model = $this->mockModel();
+
+        $builder = (new SearchBuilder($model, 'flat'))->whereGeoPolygon(
+            'location',
+            [
+                [-70, 40],
+                [-80, 30],
+                [-90, 20]
+            ]
+        );
+
+        $this->buildEngine()
+            ->search($builder);
+
+        $this->addToAssertionCount(1);
+    }
+
     public function test_if_the_search_method_with_specified_rule_builds_correct_payload()
     {
         $this->mockClient()
@@ -628,7 +785,7 @@ class ElasticEngineTest extends TestCase
 
         $model = $this->mockModel();
 
-        $builder = (new SearchBuilder($model, 'John'))->rule(function($builder) {
+        $builder = (new SearchBuilder($model, 'John'))->rule(function ($builder) {
             return [
                 'must' => [
                     'match' => [
@@ -803,12 +960,10 @@ class ElasticEngineTest extends TestCase
         $searchResults = $this->getElasticSearchResponse();
 
         $model = $this->mockModel()
-
             ->shouldReceive('whereIn')
             ->with('id', [1, 3])
             ->andReturnSelf()
             ->getMock()
-
             ->shouldReceive('get')
             ->andReturn(Collection::make([
                 $this->mockModel(['id' => 1]),
