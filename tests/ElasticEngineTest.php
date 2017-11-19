@@ -606,7 +606,6 @@ class ElasticEngineTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-
     public function test_if_the_search_method_with_specified_whereGeoDistance_clause_builds_correct_payload()
     {
         $this->mockClient()
@@ -626,11 +625,9 @@ class ElasticEngineTest extends TestCase
                                 'bool' => [
                                     'must' => [
                                         [
-                                            [
-                                                'geo_distance' => [
-                                                    'distance' => 1000,
-                                                    'location' => [-70, 40]
-                                                ]
+                                            'geo_distance' => [
+                                                'distance' => 1000,
+                                                'location' => [-70, 40]
                                             ]
                                         ]
                                     ]
@@ -674,12 +671,10 @@ class ElasticEngineTest extends TestCase
                                 'bool' => [
                                     'must' => [
                                         [
-                                            [
-                                                'geo_bounding_box' => [
-                                                    'location' => [
-                                                        "top_left" => [-74.1, 40.73],
-                                                        "bottom_right" => [-71.12, 40.01]
-                                                    ]
+                                            'geo_bounding_box' => [
+                                                'location' => [
+                                                    "top_left" => [-74.1, 40.73],
+                                                    "bottom_right" => [-71.12, 40.01]
                                                 ]
                                             ]
                                         ]
@@ -726,14 +721,12 @@ class ElasticEngineTest extends TestCase
                                 'bool' => [
                                     'must' => [
                                         [
-                                            [
-                                                'geo_polygon' => [
-                                                    'location' => [
-                                                        'points' => [
-                                                            [-70, 40],
-                                                            [-80, 30],
-                                                            [-90, 20]
-                                                        ]
+                                            'geo_polygon' => [
+                                                'location' => [
+                                                    'points' => [
+                                                        [-70, 40],
+                                                        [-80, 30],
+                                                        [-90, 20]
                                                     ]
                                                 ]
                                             ]
