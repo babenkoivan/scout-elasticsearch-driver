@@ -44,7 +44,7 @@ class FilterBuilder extends Builder
                 $this->wheres['must'][] = ['range' => [$field => ['gt' => $value]]];
                 break;
 
-            case '<';
+            case '<':
                 $this->wheres['must'][] = ['range' => [$field => ['lt' => $value]]];
                 break;
 
@@ -110,6 +110,17 @@ class FilterBuilder extends Builder
     public function whereRegexp($field, $value, $flags = 'ALL')
     {
         $this->wheres['must'][] = ['regexp' => [$field => ['value' => $value, 'flags' => $flags]]];
+
+        return $this;
+    }
+
+    public function when($value, callable $callback, callable $default = null)
+    {
+        if ($value) {
+            return $callback($this);
+        } elseif ($default) {
+            return $default($this);
+        }
 
         return $this;
     }
