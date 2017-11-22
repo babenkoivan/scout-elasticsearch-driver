@@ -21,12 +21,16 @@ class FilterBuilder extends Builder
 
     /**
      * Supported operators are =, &gt;, &lt;, &gt;=, &lt;=, &lt;&gt;
-     * @param string $field Field name
+     * @param string|array $field Field name or where array
      * @param mixed $value Scalar value or an array
      * @return $this
      */
     public function where($field, $value)
     {
+        if (is_array($field)) {
+            return $this->addArrayOfWheres($field);
+        }
+
         $args = func_get_args();
 
         if (count($args) == 3) {
@@ -152,5 +156,19 @@ class FilterBuilder extends Builder
         $this->with = $relations;
 
         return $this;
+    }
+
+    protected function addArrayOfWheres($field)
+    {
+        foreach ($field as $key => $value) {
+            if (is_numeric($key) && is_array($value)) {
+                $this->where(...array_values($value));
+            } else {
+                $this->where($key, '=', $value);
+            }
+        }
+
+        return $this;
+
     }
 }
