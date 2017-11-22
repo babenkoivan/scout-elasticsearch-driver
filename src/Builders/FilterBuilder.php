@@ -25,7 +25,7 @@ class FilterBuilder extends Builder
      * @param mixed $value Scalar value or an array
      * @return $this
      */
-    public function where($field, $value)
+    public function where($field, $value = null)
     {
         if (is_array($field)) {
             return $this->addArrayOfWheres($field);
