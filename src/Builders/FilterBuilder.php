@@ -125,6 +125,49 @@ class FilterBuilder extends Builder
         return $this;
     }
 
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html
+     *
+     * @param string $field
+     * @param string|array $value
+     * @param int|string $distance
+     * @return $this
+     */
+    public function whereGeoDistance($field, $value, $distance)
+    {
+        $this->wheres['must'][] = ['geo_distance' => ['distance' => $distance, $field => $value]];
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html
+     *
+     * @param string $field
+     * @param array $value
+     * @return $this
+     */
+    public function whereGeoBoundingBox($field, array $value)
+    {
+        $this->wheres['must'][] = ['geo_bounding_box' => [$field => $value]];
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-query.html
+     *
+     * @param string $field
+     * @param array $points
+     * @return $this
+     */
+    public function whereGeoPolygon($field, array $points)
+    {
+        $this->wheres['must'][] = ['geo_polygon' => [$field => ['points' => $points]]];
+
+        return $this;
+    }
+
     public function orderBy($column, $direction = 'asc')
     {
         $this->orders[] = [$column => strtolower($direction) == 'asc' ? 'asc' : 'desc'];
