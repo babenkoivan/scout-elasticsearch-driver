@@ -78,11 +78,11 @@ class ElasticEngineTest extends TestCase
         $this->mockClient()
             ->shouldReceive('bulk')
             ->with([
+                'index' => 'test_index_write',
+                'type' => 'test_table',
                 'body' => [
                     [
                         'index' => [
-                            '_index' => 'test_index_write',
-                            '_type' => 'test_table',
                             '_id' => 1
                         ]
                     ],
@@ -109,11 +109,11 @@ class ElasticEngineTest extends TestCase
         $this->mockClient()
             ->shouldReceive('bulk')
             ->with([
+                'index' => 'test_index',
+                'type' => 'test_table',
                 'body' => [
                     [
                         'delete' => [
-                            '_index' => 'test_index',
-                            '_type' => 'test_table',
                             '_id' => 1
                         ]
                     ]

@@ -24,6 +24,11 @@ class RawPayload
         return $this->set($key, $value);
     }
 
+    public function has($key)
+    {
+        return array_has($this->payload, $key);
+    }
+
     public function add($key, $value)
     {
         if (!is_null($key)) {
