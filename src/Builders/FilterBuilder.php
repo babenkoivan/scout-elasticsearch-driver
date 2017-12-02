@@ -126,10 +126,11 @@ class FilterBuilder extends Builder
     }
 
     /**
-     * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html
+     *
      * @param string $field
-     * @param string $value
-     * @param array|string $distance
+     * @param string|array $value
+     * @param int|string $distance
      * @return $this
      */
     public function whereGeoDistance($field, $value, $distance)
@@ -140,7 +141,8 @@ class FilterBuilder extends Builder
     }
 
     /**
-     * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html
+     *
      * @param string $field
      * @param array $value
      * @return $this
@@ -153,7 +155,8 @@ class FilterBuilder extends Builder
     }
 
     /**
-     * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-query.html
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-query.html
+     *
      * @param string $field
      * @param array $points
      * @return $this

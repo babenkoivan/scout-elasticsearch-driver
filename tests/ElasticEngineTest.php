@@ -673,8 +673,8 @@ class ElasticEngineTest extends TestCase
                                         [
                                             'geo_bounding_box' => [
                                                 'location' => [
-                                                    "top_left" => [-74.1, 40.73],
-                                                    "bottom_right" => [-71.12, 40.01]
+                                                    'top_left' => [-74.1, 40.73],
+                                                    'bottom_right' => [-71.12, 40.01]
                                                 ]
                                             ]
                                         ]
@@ -691,8 +691,8 @@ class ElasticEngineTest extends TestCase
         $builder = (new SearchBuilder($model, 'flat'))->whereGeoBoundingBox(
             'location',
             [
-                "top_left" => [-74.1, 40.73],
-                "bottom_right" => [-71.12, 40.01]
+                'top_left' => [-74.1, 40.73],
+                'bottom_right' => [-71.12, 40.01]
             ]
         );
 
