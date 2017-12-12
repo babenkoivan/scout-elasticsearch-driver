@@ -12,8 +12,4 @@ class DummyClass extends IndexConfigurator
     protected $settings = [
         //
     ];
-
-    protected $defaultMapping = [
-        //
-    ];
 }

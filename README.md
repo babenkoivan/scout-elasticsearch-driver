@@ -91,7 +91,7 @@ php artisan make:index-configurator MyIndexConfigurator
 ```
 
 It'll create the file `MyIndexConfigurator.php` in the `app` folder of your project. 
-You can specify index name, settings and default mapping like in the following example:
+You can specify index name and settings like in the following example:
 
 ```php
 <?php
@@ -116,29 +116,10 @@ class MyIndexConfigurator extends IndexConfigurator
             ]    
         ]
     ];
-
-    // Common mapping for all types.
-    protected $defaultMapping = [
-        '_all' => [
-            'enabled' => true
-        ],
-        'dynamic_templates' => [
-            [
-                'es' => [
-                    'match' => '*_es',
-                    'match_mapping_type' => 'string',
-                    'mapping' => [
-                        'type' => 'string',
-                        'analyzer' => 'es_std'
-                    ]
-                ]    
-            ]
-        ]
-    ];
 }
 ```
 
-More about index settings and default mapping you can find in the [index management section](https://www.elastic.co/guide/en/elasticsearch/guide/current/index-management.html) of Elasticsearch documentation.
+More about index settings you can find in the [index management section](https://www.elastic.co/guide/en/elasticsearch/guide/current/index-management.html) of Elasticsearch documentation.
 
 To create an index just run the artisan command:
  
