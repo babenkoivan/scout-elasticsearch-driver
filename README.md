@@ -159,10 +159,10 @@ class MyModel extends Model
     protected $mapping = [
         'properties' => [
             'text' => [
-                'type' => 'string',
+                'type' => 'text',
                 'fields' => [
                     'raw' => [
-                        'type' => 'string',
+                        'type' => 'text',
                         'index' => 'not_analyzed',
                     ]
                 ]
