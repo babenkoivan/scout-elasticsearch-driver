@@ -139,8 +139,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'test query'
+                                'query_string' => [
+                                    'query' => 'test query'
                                 ]
                             ]
                         ]
@@ -169,8 +169,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'test query'
+                                'query_string' => [
+                                    'query' => 'test query'
                                 ]
                             ]
                         ]
@@ -200,8 +200,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'test query'
+                                'query_string' => [
+                                    'query' => 'test query'
                                 ]
                             ]
                         ]
@@ -233,8 +233,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'phone'
+                                'query_string' => [
+                                    'query' => 'phone'
                                 ]
                             ],
                             'filter' => [
@@ -321,8 +321,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'test query'
+                                'query_string' => [
+                                    'query' => 'test query'
                                 ]
                             ],
                             'filter' => [
@@ -362,8 +362,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'test query'
+                                'query_string' => [
+                                    'query' => 'test query'
                                 ]
                             ],
                             'filter' => [
@@ -403,8 +403,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'test query'
+                                'query_string' => [
+                                    'query' => 'test query'
                                 ]
                             ],
                             'filter' => [
@@ -447,8 +447,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'test query'
+                                'query_string' => [
+                                    'query' => 'test query'
                                 ]
                             ],
                             'filter' => [
@@ -491,8 +491,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'test query'
+                                'query_string' => [
+                                    'query' => 'test query'
                                 ]
                             ],
                             'filter' => [
@@ -532,8 +532,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'test query'
+                                'query_string' => [
+                                    'query' => 'test query'
                                 ]
                             ],
                             'filter' => [
@@ -573,8 +573,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'phone'
+                                'query_string' => [
+                                    'query' => 'phone'
                                 ]
                             ],
                             'filter' => [
@@ -617,8 +617,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'flat'
+                                'query_string' => [
+                                    'query' => 'flat'
                                 ]
                             ],
                             'filter' => [
@@ -663,8 +663,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'flat'
+                                'query_string' => [
+                                    'query' => 'flat'
                                 ]
                             ],
                             'filter' => [
@@ -713,8 +713,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'flat'
+                                'query_string' => [
+                                    'query' => 'flat'
                                 ]
                             ],
                             'filter' => [
@@ -871,8 +871,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'test query'
+                                'query_string' => [
+                                    'query' => 'test query'
                                 ]
                             ]
                         ]
@@ -983,8 +983,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'test query'
+                                'query_string' => [
+                                    'query' => 'test query'
                                 ]
                             ]
                         ]
@@ -1014,8 +1014,8 @@ class ElasticEngineTest extends TestCase
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match' => [
-                                    '_all' => 'test query'
+                                'query_string' => [
+                                    'query' => 'test query'
                                 ]
                             ]
                         ]
