@@ -22,8 +22,8 @@ class SearchRule
     {
         return [
             'must' => [
-                'match' => [
-                    '_all' => $this->builder->query
+                'query_string' => [
+                    'query' => $this->builder->query
                 ]
             ]
         ];
