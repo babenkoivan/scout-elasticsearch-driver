@@ -19,13 +19,17 @@ class ElasticEngine extends Engine
 
     protected $updateMapping;
 
+    protected $trackScores;
+
     static protected $updatedMappings = [];
 
-    public function __construct(IndexerInterface $indexer, $updateMapping)
+    public function __construct(IndexerInterface $indexer, $updateMapping, $trackScores)
     {
         $this->indexer = $indexer;
 
         $this->updateMapping = $updateMapping;
+
+        $this->trackScores = $trackScores;
     }
 
     public function update($models)
@@ -77,10 +81,13 @@ class ElasticEngine extends Engine
         $payload = (new TypePayload($builder->model))
             ->setIfNotEmpty('body.query.bool', $queryPayload)
             ->setIfNotEmpty('body.sort', $builder->orders)
+            ->setIfNotEmpty('body.aggs', $builder->aggregates)
+            ->setIfNotEmpty('body.suggest', $builder->suggesters)
             ->setIfNotEmpty('body.explain', $options['explain'] ?? null)
-            ->setIfNotEmpty('body.profile', $options['profile'] ?? null);
+            ->setIfNotEmpty('body.profile', $options['profile'] ?? null)
+            ->setIfNotEmpty('body.track_scores', $this->trackScores);
 
-        if ($size = isset($options['limit']) ? $options['limit'] : $builder->limit) {
+        if (($size = isset($options['limit']) ? $options['limit'] : $builder->limit) || $builder->aggregates || $builder->suggesters) {
             $payload->set('body.size', $size);
 
             if (isset($options['page'])) {
@@ -215,7 +222,9 @@ class ElasticEngine extends Engine
             $id = $hit['_id'];
 
             if (isset($models[$id])) {
-                return $models[$id];
+                $model = $models[$id];
+                $model->_score = $hit['_score'];
+                return $model;
             }
         })->filter();
     }

@@ -55,6 +55,16 @@ trait Searchable {
         return isset($this->searchRules) && count($this->searchRules) > 0 ? $this->searchRules : [SearchRule::class];
     }
 
+    public function getAggregateRules()
+    {
+        return isset($this->aggregateRules) && count($this->aggregateRules) > 0 ? $this->aggregateRules : [AggregateRule::class];
+    }
+
+    public function getSuggestRules()
+    {
+        return isset($this->suggestRules) && count($this->suggestRules) > 0 ? $this->suggestRules : [SuggestRule::class];
+    }
+
     public static function search($query, $callback = null)
     {
         if ($query == '*') {

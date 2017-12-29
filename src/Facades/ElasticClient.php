@@ -8,6 +8,6 @@ class ElasticClient extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'scout_elastic.client';
+        return 'scout.es.client';
     }
 }

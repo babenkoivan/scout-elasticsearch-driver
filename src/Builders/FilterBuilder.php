@@ -13,6 +13,10 @@ class FilterBuilder extends Builder
 
     public $with;
 
+    public $aggregates;
+
+    public $suggesters;
+
     public function __construct($model, $callback = null)
     {
         $this->model = $model;
@@ -195,5 +199,49 @@ class FilterBuilder extends Builder
         $this->with = $relations;
 
         return $this;
+    }
+
+    public function aggregate($size = 0)
+    {
+        $this->take($size);
+        $payloadCollection = [];
+
+        $aggregateRules = $this->model->getAggregateRules();
+
+        foreach ($aggregateRules as $rule) {
+
+            $ruleEntity = new $rule;
+
+            if ($aggregatePayload = $ruleEntity->buildAggregatePayload()) {
+                $payloadCollection[] = $aggregatePayload;
+            }
+        }
+
+        $this->aggregates = array_reduce($payloadCollection, 'array_merge', []);
+
+        return $this->engine()->search($this);
+    }
+
+    public function suggest($size = 0)
+    {
+        if ($this instanceof SearchBuilder) {
+            $this->take($size);
+            $payloadCollection = [];
+            
+            $suggestRules = $this->model->getSuggestRules();
+
+            foreach ($suggestRules as $rule) {
+
+                $ruleEntity = new $rule($this);
+
+                if ($suggestPayload = $ruleEntity->buildSuggestPayload()) {
+                    $payloadCollection[] = $suggestPayload;
+                }
+            }
+
+            $this->suggesters = array_reduce($payloadCollection, 'array_merge', []);
+            
+            return $this->engine()->search($this);
+        }
     }
 }
