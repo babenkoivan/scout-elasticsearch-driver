@@ -3,18 +3,22 @@
 namespace ScoutElastic;
 
 use Config;
-use Illuminate\Support\ServiceProvider;
-use Elasticsearch\ClientBuilder;
 use InvalidArgumentException;
+use Elasticsearch\ClientBuilder;
+use Laravel\Scout\EngineManager;
+use Illuminate\Support\ServiceProvider;
+
 use ScoutElastic\Console\ElasticIndexCreateCommand;
 use ScoutElastic\Console\ElasticIndexDropCommand;
 use ScoutElastic\Console\ElasticIndexUpdateCommand;
 use ScoutElastic\Console\ElasticMigrateCommand;
 use ScoutElastic\Console\ElasticUpdateMappingCommand;
+
 use ScoutElastic\Console\IndexConfiguratorMakeCommand;
 use ScoutElastic\Console\SearchableModelMakeCommand;
-use Laravel\Scout\EngineManager;
 use ScoutElastic\Console\SearchRuleMakeCommand;
+use ScoutElastic\Console\AggregateRuleMakeCommand;
+use ScoutElastic\Console\SuggestRuleMakeCommand;
 
 class ScoutElasticServiceProvider extends ServiceProvider
 {
