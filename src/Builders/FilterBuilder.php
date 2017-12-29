@@ -179,6 +179,15 @@ class FilterBuilder extends Builder
         return $this;
     }
 
+    public function orderByScript($script)
+    {
+        $this->orders[] = [
+            '_script' => $script
+        ];
+
+        return $this;
+    }
+
     public function explain()
     {
         return $this->engine()->explain($this);
