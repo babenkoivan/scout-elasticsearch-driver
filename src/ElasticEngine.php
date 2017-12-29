@@ -160,6 +160,8 @@ class ElasticEngine extends Engine
             }
         });
 
+        $result['builder'] = $builder;
+
         return $result;
     }
 
@@ -218,7 +220,7 @@ class ElasticEngine extends Engine
                         ->get()
                         ->keyBy($modelKey);
 
-        return Collection::make($results['hits']['hits'])->map(function($hit) use ($models) {
+        $collection = Collection::make($results['hits']['hits'])->map(function($hit) use ($models) {
             $id = $hit['_id'];
 
             if (isset($models[$id])) {
@@ -227,6 +229,14 @@ class ElasticEngine extends Engine
                 return $model;
             }
         })->filter();
+
+        $builder = $results['builder'];
+
+        if (isset($builder->with) && $collection->count() > 0) {
+            $collection->load($builder->with);
+        }
+
+        return $collection;
     }
 
     public function getTotalCount($results)
