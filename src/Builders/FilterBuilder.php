@@ -179,6 +179,12 @@ class FilterBuilder extends Builder
         return $this;
     }
 
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting-security.html
+     *
+     * @param array $script
+     * @return $this
+     */
     public function orderByScript($script)
     {
         $this->orders[] = [
@@ -203,6 +209,12 @@ class FilterBuilder extends Builder
         return $this->engine()->buildSearchQueryPayloadCollection($this);
     }
 
+    /**
+     * @see https://laravel.com/docs/master/eloquent-relationships#eager-loading
+     *
+     * @param array $relations
+     * @return $this
+     */
     public function with($relations)
     {
         $this->with = $relations;
@@ -210,6 +222,12 @@ class FilterBuilder extends Builder
         return $this;
     }
 
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/returning-only-agg-results.html
+     *
+     * @param int $size
+     * @return $this
+     */
     public function aggregate($size = 0)
     {
         $this->take($size);
@@ -231,6 +249,12 @@ class FilterBuilder extends Builder
         return $this->engine()->search($this);
     }
 
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-phrase.html
+     *
+     * @param int $size
+     * @return $this
+     */
     public function suggest($size = 0)
     {
         if ($this instanceof SearchBuilder) {

@@ -209,6 +209,14 @@ App\MyModel::search('phone')
     ->get();
 ```
 
+If you need to load multiple relations you can use the `with` method:
+
+```php
+App\MyModel::search('phone') 
+    ->with(['makers', 'company'])
+    ->paginate();
+```
+
 In addition to standard functionality the package offers you the possibility to filter data in Elasticsearch without specifying a query string:
   
 ```php
@@ -233,6 +241,28 @@ App\MyModel::search('*')
     ->where('age', '>=', 30)
     ->whereExists('unemployed')
     ->get();
+```
+
+
+If you want to send a custom sort, you can use the `orderByScript` method:
+
+```php
+App\MyModel::search('*')->orderByScript([
+    'script' => [
+        'lang' => 'groovy',
+        'inline' => "
+            def rank = 1;
+            if (doc['price'].value) {
+                rank += doc['total_view'].value*1+doc['total_like'].value*4+doc['total_download'].value*64;
+            } else {
+                rank += doc['total_view'].value*1+doc['total_like'].value*8+doc['total_download'].value*16;
+            }
+            return rank;
+        "
+    ],
+    'type' => 'number',
+    'order' => 'desc'
+])->paginate();
 ```
 
 At last, if you want to send a custom request, you can use the `searchRaw` method:
@@ -261,7 +291,7 @@ App\MyModel::search('*')
 In addition to standard functionality the package offers you the possibility to suggest data in Elasticsearch without specifying a query string:
   
 ```php
-App\MyModel::search('home')
+App\MyModel::search('phone')
     ->suggest();
 ```
 
