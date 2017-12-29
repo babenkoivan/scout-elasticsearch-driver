@@ -40,6 +40,8 @@ class ScoutElasticServiceProvider extends ServiceProvider
             ElasticMigrateCommand::class
         ]);
 
+        require_once __DIR__.'/Macros.php';
+
         $this->app->make(EngineManager::class)
             ->extend('elastic', function () {
                 $indexerType = config('scout.es.indexer', 'single');
