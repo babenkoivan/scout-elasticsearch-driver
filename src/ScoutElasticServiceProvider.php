@@ -21,7 +21,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/scout_elastic.php' => config_path('scout_elastic.php'),
+            __DIR__ . '/../config/scout.php' => config_path('scout.php'),
         ]);
 
         $this->commands([
@@ -29,6 +29,8 @@ class ScoutElasticServiceProvider extends ServiceProvider
             IndexConfiguratorMakeCommand::class,
             SearchableModelMakeCommand::class,
             SearchRuleMakeCommand::class,
+            AggregateRuleMakeCommand::class,
+            SuggestRuleMakeCommand::class,
 
             // elastic commands
             ElasticIndexCreateCommand::class,
@@ -40,8 +42,9 @@ class ScoutElasticServiceProvider extends ServiceProvider
 
         $this->app->make(EngineManager::class)
             ->extend('elastic', function () {
-                $indexerType = config('scout_elastic.indexer', 'single');
-                $updateMapping = config('scout_elastic.update_mapping', true);
+                $indexerType = config('scout.es.indexer', 'single');
+                $updateMapping = config('scout.es.update_mapping', true);
+                $trackScores = config('scout.es.track_scores', true);
 
                 $indexerClass = '\\ScoutElastic\\Indexers\\'.ucfirst($indexerType).'Indexer';
 
@@ -52,14 +55,14 @@ class ScoutElasticServiceProvider extends ServiceProvider
                     ));
                 }
 
-                return new ElasticEngine(new $indexerClass(), $updateMapping);
+                return new ElasticEngine(new $indexerClass(), $updateMapping, $trackScores);
             });
     }
 
     public function register()
     {
-        $this->app->singleton('scout_elastic.client', function() {
-            $config = Config::get('scout_elastic.client');
+        $this->app->singleton('scout.es.client', function() {
+            $config = Config::get('scout.es.client');
             return ClientBuilder::fromConfig($config);
         });
     }
