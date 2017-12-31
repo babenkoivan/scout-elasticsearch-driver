@@ -288,12 +288,20 @@ App\MyModel::search('*')
     ->aggregate();
 ```
 
-In addition to standard functionality the package offers you the possibility to suggest data in Elasticsearch without specifying a query string:
+In addition to standard functionality the package offers you the possibility to suggest data in Elasticsearch with specifying a query string:
   
 ```php
 App\MyModel::search('phone')
     ->suggest();
 ```
+
+In addition to standard functionality the package offers you the possibility to highlight data in Elasticsearch with specifying a query string:
+  
+```php
+App\MyModel::search('phone')
+    ->highlight();
+```
+
 
 This query will return raw response.
 
@@ -308,6 +316,7 @@ make:searchable-model | `name` - The name of the class | Creates a new searchabl
 make:search-rule | `name` - The name of the class | Creates a new search rule.
 make:aggregate-rule | `name` - The name of the class | Creates a new aggregate rule.
 make:suggest-rule | `name` - The name of the class | Creates a new suggest rule.
+make:highlight-rule | `name` - The name of the class | Creates a new highlight rule.
 elastic:create-index | `index-configurator` - The index configurator class | Creates an Elasticsearch index.
 elastic:update-index | `index-configurator` - The index configurator class | Updates settings and mappings of an Elasticsearch index.
 elastic:drop-index | `index-configurator` - The index configurator class | Drops an Elasticsearch index.
@@ -456,7 +465,7 @@ class MyAggregate extends AggregateRule
 }
 ```
 
-You can read more about bool queries [here](https://www.elastic.co/guide/en/elasticsearch/reference/5.2/returning-only-agg-results.html).
+You can read more about aggregation queries [here](https://www.elastic.co/guide/en/elasticsearch/reference/5.2/returning-only-agg-results.html).
 
 To determine default aggregate rules for a model just add a property:
 
@@ -544,7 +553,7 @@ class MySuggestRule extends SuggestRule
 }
 ```
 
-You can read more about bool queries [here](https://www.elastic.co/guide/en/elasticsearch/reference/5.2/search-suggesters-phrase.html).
+You can read more about suggestion queries [here](https://www.elastic.co/guide/en/elasticsearch/reference/5.2/search-suggesters-phrase.html).
 
 To determine default suggest rules for a model just add a property:
 
@@ -563,6 +572,63 @@ class MyModel extends Model
     // You can set several rules for one model. In this case, the first not empty result will be returned.
     protected $suggestRules = [
         MySuggestRule::class
+    ];
+}
+```
+
+## Hightlight rules
+
+A hightlight rule is a class that describes how a hightlight query will be executed. 
+To create a hightlight rule use the command:
+
+```
+php artisan make:hightlight-rule MyHightlightRule
+```
+
+In the file `app/MyHightlightRule.php` you will find a class definition:
+
+```php
+<?php
+
+namespace App;
+
+use ScoutElastic\HightlightRule;
+
+class MyHightlight extends HightlightRule
+{
+    // This method returns an array that represents a content of bool query.
+    public function buildHightlightPayload()
+    {
+        return [
+            'fields' => [
+                'name' => [
+                    'force_source' => true
+                ]
+            ]
+        ];
+    }
+}
+```
+
+You can read more about hightlighter queries [here](https://www.elastic.co/guide/en/elasticsearch/reference/5.2/search-request-highlighting.html).
+
+To determine default hightlight rules for a model just add a property:
+
+```php
+<?php
+
+namespace App;
+
+use ScoutElastic\Searchable;
+use Illuminate\Database\Eloquent\Model;
+
+class MyModel extends Model
+{
+    use Searchable;
+    
+    // You can set several rules for one model. In this case, the first not empty result will be returned.
+    protected $hightlightRules = [
+        MyHightlightRule::class
     ];
 }
 ```
