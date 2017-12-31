@@ -17,6 +17,8 @@ class FilterBuilder extends Builder
 
     public $suggesters;
 
+    public $highlighter;
+
     public function __construct($model, $callback = null)
     {
         $this->model = $model;
@@ -273,6 +275,33 @@ class FilterBuilder extends Builder
             }
 
             $this->suggesters = array_reduce($payloadCollection, 'array_merge', []);
+            
+            return $this->engine()->search($this);
+        }
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-highlighting.html
+     *
+     * @return $this
+     */
+    public function highlight()
+    {
+        if ($this instanceof SearchBuilder) {
+            $payloadCollection = [];
+            
+            $highlightRules = $this->model->getHighlightRules();
+
+            foreach ($highlightRules as $rule) {
+
+                $ruleEntity = new $rule($this);
+
+                if ($highlightPayload = $ruleEntity->buildHighlightPayload()) {
+                    $payloadCollection[] = $highlightPayload;
+                }
+            }
+
+            $this->highlighters = array_reduce($payloadCollection, 'array_merge', []);
             
             return $this->engine()->search($this);
         }

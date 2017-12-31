@@ -19,6 +19,7 @@ use ScoutElastic\Console\SearchableModelMakeCommand;
 use ScoutElastic\Console\SearchRuleMakeCommand;
 use ScoutElastic\Console\AggregateRuleMakeCommand;
 use ScoutElastic\Console\SuggestRuleMakeCommand;
+use ScoutElastic\Console\HighlightRuleMakeCommand;
 
 class ScoutElasticServiceProvider extends ServiceProvider
 {
@@ -35,6 +36,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
             SearchRuleMakeCommand::class,
             AggregateRuleMakeCommand::class,
             SuggestRuleMakeCommand::class,
+            HighlightRuleMakeCommand::class,
 
             // elastic commands
             ElasticIndexCreateCommand::class,
