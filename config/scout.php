@@ -41,7 +41,35 @@ return [
     |
     */
 
-    'queue' => true,
+    'queue' => env('SCOUT_QUEUE', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Chunk Sizes
+    |--------------------------------------------------------------------------
+    |
+    | These options allow you to control the maximum chunk size when you are
+    | mass importing data into the search engine. This allows you to fine
+    | tune these chunk sizes based on the capabilites of your machines.
+    |
+    */
+
+    'chunk' => [
+        'searchable' => env('SCOUT_CHUNK_SEARCHABLE', 500),
+        'unsearchable' => env('SCOUT_CHUNK_UNSEARCHABLE', 500)
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Soft Delete
+    |--------------------------------------------------------------------------
+    |
+    | By default data will be remove from the search index upon it being deleted,
+    | even if that model is soft deleted.
+    |
+    */
+
+    'soft_delete' => env('SCOUT_SOFT_DELETE', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -82,6 +110,6 @@ return [
         'indexer' => env('ES_INDEXER', 'single'),
 
         'track_scores' => env('ES_TRACK_SCORES', true)
-    ],
+    ]
 
 ];
