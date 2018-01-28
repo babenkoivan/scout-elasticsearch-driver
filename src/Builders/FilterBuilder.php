@@ -13,6 +13,8 @@ class FilterBuilder extends Builder
 
     public $with;
 
+    public $offset;
+
     public function __construct($model, $callback = null)
     {
         $this->model = $model;
@@ -193,6 +195,13 @@ class FilterBuilder extends Builder
     public function with($relations)
     {
         $this->with = $relations;
+
+        return $this;
+    }
+
+    public function from($offset)
+    {
+        $this->offset = $offset;
 
         return $this;
     }

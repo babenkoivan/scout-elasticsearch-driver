@@ -80,12 +80,12 @@ class ElasticEngine extends Engine
             ->setIfNotEmpty('body.explain', $options['explain'] ?? null)
             ->setIfNotEmpty('body.profile', $options['profile'] ?? null);
 
-        if ($size = isset($options['limit']) ? $options['limit'] : $builder->limit) {
-            $payload->set('body.size', $size);
+        if (isset($builder->offset)) {
+            $payload->set('body.from', $builder->offset);
+        }
 
-            if (isset($options['page'])) {
-                $payload->set('body.from', ($options['page'] - 1) * $size);
-            }
+        if (isset($builder->limit)) {
+            $payload->set('body.size', $builder->limit);
         }
 
         return $payload->get();
@@ -163,10 +163,11 @@ class ElasticEngine extends Engine
 
     public function paginate(Builder $builder, $perPage, $page)
     {
-        return $this->performSearch($builder, [
-            'limit' => $perPage,
-            'page' => $page
-        ]);
+        $builder
+            ->from(($page - 1) * $perPage)
+            ->take($perPage);
+
+        return $this->performSearch($builder);
     }
 
     public function explain(Builder $builder)

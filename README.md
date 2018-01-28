@@ -195,10 +195,17 @@ Now you can [index](https://laravel.com/docs/5.5/scout#indexing) and [search](ht
 Basic search usage example:
 
 ```php
-App\MyModel::search('phone') 
+// set query string
+App\MyModel::search('phone')
+    // filter 
     ->where('color', 'red')
+    // sort
     ->orderBy('price', 'asc')
+    // set offset
+    ->from(0)
+    // set limit
     ->take(10)
+    // get results
     ->get();
 ```
 
