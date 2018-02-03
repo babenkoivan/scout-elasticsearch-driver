@@ -205,4 +205,34 @@ class FilterBuilder extends Builder
 
         return $this;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function get()
+    {
+        $collection = parent::get();
+
+        if (isset($this->with) && $collection->count() > 0) {
+            $collection->load($this->with);
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function paginate($perPage = null, $pageName = 'page', $page = null)
+    {
+        $paginator = parent::paginate($perPage, $pageName, $page);
+
+        if (isset($this->with) && $paginator->total() > 0) {
+            $paginator
+                ->getCollection()
+                ->load($this->with);
+        }
+
+        return $paginator;
+    }
 }
