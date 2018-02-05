@@ -189,6 +189,39 @@ class ElasticEngineTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    public function test_if_the_search_method_with_specified_offset_builds_correct_payload()
+    {
+        $this
+            ->mockClient()
+            ->shouldReceive('search')
+            ->with([
+                'index' => 'test_index',
+                'type' => 'test_table',
+                'body' => [
+                    'query' => [
+                        'bool' => [
+                            'must' => [
+                                'query_string' => [
+                                    'query' => 'test query'
+                                ]
+                            ]
+                        ]
+                    ],
+                    'from' => 10
+                ]
+            ]);
+
+        $model = $this->mockModel();
+
+        $builder = (new SearchBuilder($model, 'test query'))->from(10);
+
+        $this
+            ->buildEngine()
+            ->search($builder);
+
+        $this->addToAssertionCount(1);
+    }
+
     public function test_if_the_search_method_with_specified_order_builds_correct_payload()
     {
         $this->mockClient()

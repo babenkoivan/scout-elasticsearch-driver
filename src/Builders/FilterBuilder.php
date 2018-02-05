@@ -19,6 +19,8 @@ class FilterBuilder extends Builder
 
     public $highlighter;
 
+    public $offset;
+
     public function __construct($model, $callback = null)
     {
         $this->model = $model;
@@ -305,5 +307,42 @@ class FilterBuilder extends Builder
             
             return $this->engine()->search($this);
         }
+    }
+
+    public function from($offset)
+    {
+        $this->offset = $offset;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function get()
+    {
+        $collection = parent::get();
+
+        if (isset($this->with) && $collection->count() > 0) {
+            $collection->load($this->with);
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function paginate($perPage = null, $pageName = 'page', $page = null)
+    {
+        $paginator = parent::paginate($perPage, $pageName, $page);
+
+        if (isset($this->with) && $paginator->total() > 0) {
+            $paginator
+                ->getCollection()
+                ->load($this->with);
+        }
+
+        return $paginator;
     }
 }

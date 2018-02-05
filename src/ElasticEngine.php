@@ -68,7 +68,7 @@ class ElasticEngine extends Engine
                 continue;
             }
 
-            if (!array_has($queryPayload, 'filter.bool.'.$clause)) {
+            if (! array_has($queryPayload, 'filter.bool.'.$clause)) {
                 array_set($queryPayload, 'filter.bool.'.$clause, []);
             }
 
@@ -90,10 +90,14 @@ class ElasticEngine extends Engine
 
         if (($size = isset($options['limit']) ? $options['limit'] : $builder->limit) || $builder->aggregates || $builder->suggesters) {
             $payload->set('body.size', $size);
+        }
 
-            if (isset($options['page'])) {
-                $payload->set('body.from', ($options['page'] - 1) * $size);
-            }
+        if (isset($builder->offset)) {
+            $payload->set('body.from', $builder->offset);
+        }
+
+        if (isset($builder->limit)) {
+            $payload->set('body.size', $builder->limit);
         }
 
         return $payload->get();
@@ -173,10 +177,11 @@ class ElasticEngine extends Engine
 
     public function paginate(Builder $builder, $perPage, $page)
     {
-        return $this->performSearch($builder, [
-            'limit' => $perPage,
-            'page' => $page
-        ]);
+        $builder
+            ->from(($page - 1) * $perPage)
+            ->take($perPage);
+
+        return $this->performSearch($builder);
     }
 
     public function explain(Builder $builder)
@@ -243,19 +248,5 @@ class ElasticEngine extends Engine
     public function getTotalCount($results)
     {
         return $results['hits']['total'];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function get(Builder $builder)
-    {
-        $collection = parent::get($builder);
-
-        if (isset($builder->with) && $collection->count() > 0) {
-            $collection->load($builder->with);
-        }
-
-        return $collection;
     }
 }
