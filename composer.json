@@ -21,8 +21,12 @@
         }
     ],
     "require": {
-        "elasticsearch/elasticsearch": "^6.0",
-        "laravel/scout": "^3.0"
+        "elasticsearch/elasticsearch": "6.*",
+        "laravel/scout": "3.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "6.*",
+        "mockery/mockery": "0.9.*"
     },
     "autoload": {
         "psr-4": {
