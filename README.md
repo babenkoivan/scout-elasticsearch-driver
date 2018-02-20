@@ -16,7 +16,6 @@ Check out its [features](#features)!
 
 ## Contents
 
-* [Tutorial](#tutorial)
 * [Features](#features)
 * [Requirements](#requirements)
 * [Installation](#installation)
@@ -29,11 +28,6 @@ Check out its [features](#features)!
 * [Available filters](#available-filters)
 * [Zero downtime migration](#zero-downtime-migration)
 * [Debug](#debug)
-
-## Tutorial
-
-For your convenience I wrote step-by-step tutorial - [How to make Laravel and Elasticsearch become friends](https://medium.com/@babenko.i.a/how-to-make-laravel-and-elasticsearch-become-friends-55ed7690331c). 
-There are information about Elasticsearch installation and the package usage examples, don't miss it!    
 
 ## Features
 
@@ -49,8 +43,8 @@ There are information about Elasticsearch installation and the package usage exa
 
 The package has been tested in the following configuration: 
 
-* PHP version &gt;= 7.0
-* Laravel Framework version &gt;= 5.5
+* PHP version &gt;= 7.1.3
+* Laravel Framework version &gt;= 5.6
 * Elasticsearch version &gt;= 6
 
 ## Installation
@@ -373,8 +367,8 @@ The default search rule returns the following payload:
 ```php
 return [
    'must' => [
-       'match' => [
-           '_all' => $this->builder->query
+       'query_string' => [
+           'query' => $this->builder->query
        ]
    ]
 ];

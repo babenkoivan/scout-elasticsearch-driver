@@ -2,10 +2,10 @@
 
 namespace ScoutElastic;
 
-use Config;
 use InvalidArgumentException;
 use Elasticsearch\ClientBuilder;
 use Laravel\Scout\EngineManager;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 
 use ScoutElastic\Console\ElasticIndexCreateCommand;
