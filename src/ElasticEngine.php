@@ -218,7 +218,7 @@ class ElasticEngine extends Engine
             if (isset($models[$id])) {
                 return $models[$id];
             }
-        })->filter();
+        })->filter()->values();
     }
 
     public function getTotalCount($results)

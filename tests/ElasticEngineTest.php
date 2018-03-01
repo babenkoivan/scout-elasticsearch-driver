@@ -249,6 +249,7 @@ class ElasticEngineTest extends TestCase
         ];
 
         $model = $this->mockModel([
+            'key' => 2,
             'methods' => [
                 'whereIn',
                 'get',
@@ -267,7 +268,7 @@ class ElasticEngineTest extends TestCase
         $model
             ->method('keyBy')
             ->willReturn([
-                1 => $model
+                2 => $model
             ]);
 
         $this->assertEquals(
