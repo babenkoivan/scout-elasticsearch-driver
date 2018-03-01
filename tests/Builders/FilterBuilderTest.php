@@ -2,6 +2,7 @@
 
 namespace ScoutElastic\Tests\Builders;
 
+use ScoutElastic\AggregateRule;
 use ScoutElastic\Builders\FilterBuilder;
 
 class FilterBuilderTest extends AbstractBuilderTest
@@ -371,6 +372,45 @@ class FilterBuilderTest extends AbstractBuilderTest
         $this->assertEquals(
             100,
             $this->builder->offset
+        );
+    }
+
+    public function testAggregateRule()
+    {
+        $ruleFunc = function () {
+            return [
+                'icon_count' => [
+                    'terms' => [
+                        'field' => 'icon_id',
+                        'size' => 15,
+                    ],
+                ],
+                'style_count' => [
+                    'terms' => [
+                        'field' => 'style_id',
+                        'size' => 7,
+                    ],
+                ],
+                'category_count' => [
+                    'terms' => [
+                        'field' => 'category_id',
+                        'size' => 39,
+                    ],
+                ],
+            ];
+        };
+
+        $this
+            ->builder
+            ->aggregateRule(AggregateRule::class)
+            ->aggregateRule($ruleFunc);
+
+        $this->assertEquals(
+            [
+                AggregateRule::class,
+                $ruleFunc,
+            ],
+            $this->builder->aggregateRules
         );
     }
 }

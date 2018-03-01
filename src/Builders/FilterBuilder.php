@@ -15,6 +15,8 @@ class FilterBuilder extends Builder
 
     public $aggregates;
 
+    public $aggregateRules = [];
+
     public $suggesters;
 
     public $highlighter;
@@ -237,14 +239,17 @@ class FilterBuilder extends Builder
         $this->take($size);
         $payloadCollection = [];
 
-        $aggregateRules = $this->model->getAggregateRules();
+        $aggregateRules = $this->aggregateRules ?: $this->model->getAggregateRules();
 
         foreach ($aggregateRules as $rule) {
+            if (is_callable($rule)) {
+                $payloadCollection[] = call_user_func($rule);
+            } else {
+                $ruleEntity = new $rule;
 
-            $ruleEntity = new $rule;
-
-            if ($aggregatePayload = $ruleEntity->buildAggregatePayload()) {
-                $payloadCollection[] = $aggregatePayload;
+                if ($aggregatePayload = $ruleEntity->buildAggregatePayload()) {
+                    $payloadCollection[] = $aggregatePayload;
+                }
             }
         }
 
@@ -307,6 +312,19 @@ class FilterBuilder extends Builder
             
             return $this->engine()->search($this);
         }
+    }
+
+    /**
+     * Adds rule to the aggregate rules of the builder.
+     *
+     * @param $rule
+     * @return $this
+     */
+    public function aggregateRule($rule)
+    {
+        $this->aggregateRules[] = $rule;
+
+        return $this;
     }
 
     public function from($offset)
