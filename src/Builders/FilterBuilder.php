@@ -15,6 +15,8 @@ class FilterBuilder extends Builder
 
     public $offset;
 
+    public $collapse;
+
     public function __construct($model, $callback = null)
     {
         $this->model = $model;
@@ -202,6 +204,13 @@ class FilterBuilder extends Builder
     public function from($offset)
     {
         $this->offset = $offset;
+
+        return $this;
+    }
+
+    public function collapse($collapse)
+    {
+        $this->collapse = $collapse;
 
         return $this;
     }
