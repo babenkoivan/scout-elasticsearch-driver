@@ -2,7 +2,9 @@
 
 namespace ScoutElastic;
 
-use Config;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\ServiceProvider;
+use Elasticsearch\ClientBuilder;
 use InvalidArgumentException;
 use Elasticsearch\ClientBuilder;
 use Laravel\Scout\EngineManager;
