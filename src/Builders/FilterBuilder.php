@@ -124,6 +124,13 @@ class FilterBuilder extends Builder
         return $this;
     }
 
+    public function whereCustom(array $filter)
+    {
+        $this->wheres['must'][] = $filter;
+
+        return $this;
+    }
+
     public function when($value, callable $callback, callable $default = null)
     {
         if ($value) {

@@ -241,6 +241,41 @@ class FilterBuilderTest extends AbstractBuilderTest
         );
     }
 
+    public function testWhereCustom()
+    {
+        $this
+            ->builder
+            ->whereCustom([
+                'bool' => [
+                    'should' => [
+                        ['term' => ['foo' => 'bar']],
+                        ['term' => ['baz' => 'qux']]
+                    ],
+                    'minimum_should_match' => 1,
+                    'boost' => 2.0
+                ]
+            ]);
+
+        $this->assertEquals(
+            [
+                'must' => [
+                    [
+                        'bool' => [
+                            'should' => [
+                                ['term' => ['foo' => 'bar']],
+                                ['term' => ['baz' => 'qux']]
+                            ],
+                            'minimum_should_match' => 1,
+                            'boost' => 2.0
+                        ]
+                    ]
+                ],
+                'must_not' => []
+            ],
+            $this->builder->wheres
+        );
+    }
+
     public function testWhen()
     {
         $this
