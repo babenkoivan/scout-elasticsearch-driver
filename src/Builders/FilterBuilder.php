@@ -21,6 +21,8 @@ class FilterBuilder extends Builder
 
     public $offset;
 
+    public $collapse;
+
     public function __construct($model, $callback = null)
     {
         $this->model = $model;
@@ -206,6 +208,19 @@ class FilterBuilder extends Builder
     public function profile()
     {
         return $this->engine()->profile($this);
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-collapse.html
+     *
+     * @param array $collapse
+     * @return $this
+     */
+    public function collapse($collapse)
+    {
+        $this->collapse = $collapse;
+
+        return $this;
     }
 
     public function buildPayload()
