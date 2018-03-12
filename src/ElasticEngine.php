@@ -180,6 +180,29 @@ class ElasticEngine extends Engine
         ]);
     }
 
+    /**
+     * @param Builder $builder
+     * @return int
+     */
+    public function count(Builder $builder)
+    {
+        $count = 0;
+
+        $this
+            ->buildSearchQueryPayloadCollection($builder)
+            ->each(function($payload) use (&$count) {
+                $result = ElasticClient::count($payload);
+
+                $count = $result['count'];
+
+                if ($count > 0) {
+                    return false;
+                }
+        });
+
+        return $count;
+    }
+
     public function searchRaw(Model $model, $query)
     {
         $payload = (new TypePayload($model))

@@ -270,4 +270,14 @@ class FilterBuilder extends Builder
 
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return $this
+            ->engine()
+            ->count($this);
+    }
 }

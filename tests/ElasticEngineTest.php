@@ -201,6 +201,48 @@ class ElasticEngineTest extends TestCase
         );
     }
 
+    public function testCount()
+    {
+        ElasticClient
+            ::shouldReceive('count')
+            ->once()
+            ->with([
+                'index' => 'test',
+                'type' => 'test',
+                'body' => [
+                    'query' => [
+                        'bool' => [
+                            'must' => [
+                                'match_all' => new stdClass()
+                            ],
+                            'filter' => [
+                                'bool' => [
+                                    'must' => [
+                                        [
+                                            'term' => [
+                                                'foo' => 'bar'
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+        $model = $this->mockModel();
+
+        $filterBuilder = (new FilterBuilder($model))
+            ->where('foo', 'bar');
+
+        $this
+            ->engine
+            ->count($filterBuilder);
+
+        $this->addToAssertionCount(1);
+    }
+
     public function testSearchRaw()
     {
         ElasticClient

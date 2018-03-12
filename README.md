@@ -207,7 +207,14 @@ App\MyModel::search('phone')
     ->get();
 ```
 
-If you need to load relations you can use the `with` method:
+If you only need the number of matches for a query, use the `count` method:
+
+```php
+App\MyModel::search('phone') 
+    ->count();
+```
+
+If you need to load relations, use the `with` method:
 
 ```php
 App\MyModel::search('phone') 
