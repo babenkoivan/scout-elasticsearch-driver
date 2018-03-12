@@ -316,12 +316,12 @@ class FilterBuilderTest extends AbstractBuilderTest
     {
         $this
             ->builder
-            ->whereGeoPolygon('foo', [[-70, 40],[-80, 30],[-90, 20]]);
+            ->whereGeoPolygon('foo', [[-70, 40], [-80, 30], [-90, 20]]);
 
         $this->assertEquals(
             [
                 'must' => [
-                    ['geo_polygon' => ['foo' => ['points' => [[-70, 40],[-80, 30],[-90, 20]]]]]
+                    ['geo_polygon' => ['foo' => ['points' => [[-70, 40], [-80, 30], [-90, 20]]]]]
                 ],
                 'must_not' => []
             ],
@@ -371,6 +371,18 @@ class FilterBuilderTest extends AbstractBuilderTest
         $this->assertEquals(
             100,
             $this->builder->offset
+        );
+    }
+
+    public function testCollapse()
+    {
+        $this
+            ->builder
+            ->collapse('foo');
+
+        $this->assertEquals(
+            'foo',
+            $this->builder->collapse
         );
     }
 }

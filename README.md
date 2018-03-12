@@ -195,6 +195,8 @@ App\MyModel::search('phone')
     ->where('color', 'red')
     // sort
     ->orderBy('price', 'asc')
+    // collapse by field
+    ->collapse('brand')
     // set offset
     ->from(0)
     // set limit

@@ -34,6 +34,28 @@ class RawPayloadTest extends TestCase
         );
     }
 
+    public function testSetIfNotNull()
+    {
+        $payload = (new RawPayload())
+            ->setIfNotNull('null', null)
+            ->setIfNotNull('false', false)
+            ->setIfNotNull('zero', 0)
+            ->setIfNotNull('empty_array', [])
+            ->setIfNotNull('empty_string', '')
+            ->setIfNotNull('foo', 'bar');
+
+        $this->assertEquals(
+            [
+                'false' => false,
+                'zero' => 0,
+                'empty_array' => [],
+                'empty_string' => '',
+                'foo' => 'bar'
+            ],
+            $payload->get()
+        );
+    }
+
     public function testHas()
     {
         $payload = (new RawPayload())

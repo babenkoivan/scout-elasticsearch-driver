@@ -24,6 +24,20 @@ class RawPayload
         return $this->set($key, $value);
     }
 
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @return $this
+     */
+    public function setIfNotNull(string $key, $value)
+    {
+        if (is_null($value)) {
+            return $this;
+        }
+
+        return $this->set($key, $value);
+    }
+
     public function has($key)
     {
         return array_has($this->payload, $key);

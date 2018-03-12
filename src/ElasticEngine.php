@@ -76,17 +76,12 @@ class ElasticEngine extends Engine
 
         $payload = (new TypePayload($builder->model))
             ->setIfNotEmpty('body.query.bool', $queryPayload)
+            ->setIfNotEmpty('body.collapse.field', $builder->collapse)
             ->setIfNotEmpty('body.sort', $builder->orders)
             ->setIfNotEmpty('body.explain', $options['explain'] ?? null)
-            ->setIfNotEmpty('body.profile', $options['profile'] ?? null);
-
-        if (isset($builder->offset)) {
-            $payload->set('body.from', $builder->offset);
-        }
-
-        if (isset($builder->limit)) {
-            $payload->set('body.size', $builder->limit);
-        }
+            ->setIfNotEmpty('body.profile', $options['profile'] ?? null)
+            ->setIfNotNull('body.from', $builder->offset)
+            ->setIfNotNull('body.size', $builder->limit);
 
         return $payload->get();
     }

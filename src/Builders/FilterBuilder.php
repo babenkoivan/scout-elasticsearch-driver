@@ -15,6 +15,11 @@ class FilterBuilder extends Builder
 
     public $offset;
 
+    /**
+     * @var string
+     */
+    public $collapse;
+
     public function __construct($model, $callback = null)
     {
         $this->model = $model;
@@ -234,5 +239,16 @@ class FilterBuilder extends Builder
         }
 
         return $paginator;
+    }
+
+    /**
+     * @param string $field
+     * @return $this
+     */
+    public function collapse(string $field)
+    {
+        $this->collapse = $field;
+
+        return $this;
     }
 }

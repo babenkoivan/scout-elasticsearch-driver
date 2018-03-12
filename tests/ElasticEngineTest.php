@@ -35,7 +35,7 @@ class ElasticEngineTest extends TestCase
 
         $searchBuilder = (new SearchBuilder($model, 'foo'))
             ->rule(SearchRule::class)
-            ->rule(function(SearchBuilder $searchBuilder) {
+            ->rule(function (SearchBuilder $searchBuilder) {
                 return [
                     'must' => [
                         'match' => [
@@ -46,6 +46,7 @@ class ElasticEngineTest extends TestCase
             })
             ->where('id', '>', 20)
             ->orderBy('id', 'asc')
+            ->collapse('brand')
             ->take(10)
             ->from(100);
 
@@ -81,6 +82,9 @@ class ElasticEngineTest extends TestCase
                                 ]
                             ]
                         ],
+                        'collapse' => [
+                            'field' => 'brand'
+                        ],
                         'sort' => [
                             [
                                 'id' => 'asc'
@@ -115,6 +119,9 @@ class ElasticEngineTest extends TestCase
                                     ]
                                 ]
                             ]
+                        ],
+                        'collapse' => [
+                            'field' => 'brand'
                         ],
                         'sort' => [
                             [
