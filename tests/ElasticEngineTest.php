@@ -44,6 +44,8 @@ class ElasticEngineTest extends TestCase
                     ]
                 ];
             })
+            ->select('title')
+            ->select(['price', 'color'])
             ->where('id', '>', 20)
             ->orderBy('id', 'asc')
             ->collapse('brand')
@@ -60,6 +62,11 @@ class ElasticEngineTest extends TestCase
                     'index' => 'test',
                     'type' => 'test',
                     'body' => [
+                        '_source' => [
+                            'title',
+                            'price',
+                            'color'
+                        ],
                         'query' => [
                             'bool' => [
                                 'must' => [
@@ -98,6 +105,11 @@ class ElasticEngineTest extends TestCase
                     'index' => 'test',
                     'type' => 'test',
                     'body' => [
+                        '_source' => [
+                            'title',
+                            'price',
+                            'color'
+                        ],
                         'query' => [
                             'bool' => [
                                 'must' => [
@@ -249,8 +261,18 @@ class ElasticEngineTest extends TestCase
             'hits' => [
                 'total' => 2,
                 'hits' => [
-                    ['_id' => 1],
-                    ['_id' => 2]
+                    [
+                        '_id' => 1,
+                        '_source' => [
+                            'title' => 'foo'
+                        ]
+                    ],
+                    [
+                        '_id' => 2,
+                        '_source' => [
+                            'title' => 'bar'
+                        ]
+                    ]
                 ]
             ]
         ];

@@ -75,6 +75,7 @@ class ElasticEngine extends Engine
         }
 
         $payload = (new TypePayload($builder->model))
+            ->setIfNotEmpty('body._source', $builder->select)
             ->setIfNotEmpty('body.query.bool', $queryPayload)
             ->setIfNotEmpty('body.collapse.field', $builder->collapse)
             ->setIfNotEmpty('body.sort', $builder->orders)
@@ -193,21 +194,33 @@ class ElasticEngine extends Engine
         return array_pluck($results['hits']['hits'], '_id');
     }
 
+    /**
+     * @inheritdoc
+     */
     public function map($results, $model)
     {
         if ($this->getTotalCount($results) == 0) {
             return Collection::make();
         }
 
+        $hits = $results['hits']['hits'];
+        $firstHit = reset($hits);
+
+        $primaryKey = $model->getKeyName();
+
+        $columns = array_merge(
+            array_keys($firstHit['_source']),
+            [$primaryKey]
+        );
+
         $ids = $this->mapIds($results);
 
-        $modelKey = $model->getKeyName();
+        $models = $model
+            ->whereIn($primaryKey, $ids)
+            ->get($columns)
+            ->keyBy($primaryKey);
 
-        $models = $model->whereIn($modelKey, $ids)
-                        ->get()
-                        ->keyBy($modelKey);
-
-        return Collection::make($results['hits']['hits'])->map(function($hit) use ($models) {
+        return Collection::make($hits)->map(function($hit) use ($models) {
             $id = $hit['_id'];
 
             if (isset($models[$id])) {

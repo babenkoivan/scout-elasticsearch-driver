@@ -385,4 +385,16 @@ class FilterBuilderTest extends AbstractBuilderTest
             $this->builder->collapse
         );
     }
+
+    public function testSelect()
+    {
+        $this
+            ->builder
+            ->select(['foo', 'bar']);
+
+        $this->assertEquals(
+            ['foo', 'bar'],
+            $this->builder->select
+        );
+    }
 }

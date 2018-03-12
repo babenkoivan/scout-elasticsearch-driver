@@ -20,6 +20,11 @@ class FilterBuilder extends Builder
      */
     public $collapse;
 
+    /**
+     * @var array
+     */
+    public $select = [];
+
     public function __construct($model, $callback = null)
     {
         $this->model = $model;
@@ -175,9 +180,9 @@ class FilterBuilder extends Builder
         return $this;
     }
 
-    public function orderBy($column, $direction = 'asc')
+    public function orderBy($field, $direction = 'asc')
     {
-        $this->orders[] = [$column => strtolower($direction) == 'asc' ? 'asc' : 'desc'];
+        $this->orders[] = [$field => strtolower($direction) == 'asc' ? 'asc' : 'desc'];
 
         return $this;
     }
@@ -248,6 +253,20 @@ class FilterBuilder extends Builder
     public function collapse(string $field)
     {
         $this->collapse = $field;
+
+        return $this;
+    }
+
+    /**
+     * @param mixed $fields
+     * @return $this
+     */
+    public function select($fields)
+    {
+        $this->select = array_merge(
+            $this->select,
+            array_wrap($fields)
+        );
 
         return $this;
     }

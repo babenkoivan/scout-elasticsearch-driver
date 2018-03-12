@@ -191,6 +191,8 @@ Basic search usage example:
 ```php
 // set query string
 App\MyModel::search('phone')
+    // specify columns to select
+    ->select(['title', 'price'])
     // filter 
     ->where('color', 'red')
     // sort
