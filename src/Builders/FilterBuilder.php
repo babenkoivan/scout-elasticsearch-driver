@@ -8,7 +8,8 @@ class FilterBuilder extends Builder
 {
     public $wheres = [
         'must' => [],
-        'must_not' => []
+        'should' => [],
+        'must_not' => [],
     ];
 
     public $with;
@@ -176,6 +177,118 @@ class FilterBuilder extends Builder
     public function whereGeoPolygon($field, array $points)
     {
         $this->wheres['must'][] = ['geo_polygon' => [$field => ['points' => $points]]];
+
+        return $this;
+    }
+    
+   /**
+     * Supported operators are =, &gt;, &lt;, &gt;=, &lt;=;
+     * @param string $field Field name
+     * @param mixed $value Scalar value or an array
+     * @return $this
+     */
+    public function should($field, $value)
+    {
+        $args = func_get_args();
+
+        if (count($args) == 3) {
+            list($field, $operator, $value) = $args;
+        } else {
+            $operator = '=';
+        }
+
+        switch ($operator) {
+            case '=':
+                $this->wheres['should'][] = ['term' => [$field => $value]];
+                break;
+
+            case '>':
+                $this->wheres['should'][] = ['range' => [$field => ['gt' => $value]]];
+                break;
+
+            case '<':
+                $this->wheres['should'][] = ['range' => [$field => ['lt' => $value]]];
+                break;
+
+            case '>=':
+                $this->wheres['should'][] = ['range' => [$field => ['gte' => $value]]];
+                break;
+
+            case '<=':
+                $this->wheres['should'][] = ['range' => [$field => ['lte' => $value]]];
+                break;
+        }
+
+        return $this;
+    }
+
+    public function shouldIn($field, array $value)
+    {
+        $this->wheres['should'][] = ['terms' => [$field => $value]];
+
+        return $this;
+    }
+
+    public function shouldBetween($field, array $value)
+    {
+        $this->wheres['should'][] = ['range' => [$field => ['gte' => $value[0], 'lte' => $value[1]]]];
+
+        return $this;
+    }
+
+    public function shouldExists($field)
+    {
+        $this->wheres['should'][] = ['exists' => ['field' => $field]];
+
+        return $this;
+    }
+
+    public function shouldRegexp($field, $value, $flags = 'ALL')
+    {
+        $this->wheres['should'][] = ['regexp' => [$field => ['value' => $value, 'flags' => $flags]]];
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html
+     *
+     * @param string $field
+     * @param string|array $value
+     * @param int|string $distance
+     * @return $this
+     */
+    public function shouldGeoDistance($field, $value, $distance)
+    {
+        $this->wheres['should'][] = ['geo_distance' => ['distance' => $distance, $field => $value]];
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html
+     *
+     * @param string $field
+     * @param array $value
+     * @return $this
+     */
+    public function shouldGeoBoundingBox($field, array $value)
+    {
+        $this->wheres['should'][] = ['geo_bounding_box' => [$field => $value]];
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-query.html
+     *
+     * @param string $field
+     * @param array $points
+     * @return $this
+     */
+    public function shouldGeoPolygon($field, array $points)
+    {
+        $this->wheres['should'][] = ['geo_polygon' => [$field => ['points' => $points]]];
 
         return $this;
     }
