@@ -139,17 +139,21 @@ class ElasticEngine extends Engine
             );
         }
 
-        $result = null;
+        $results = null;
 
-        $this->buildSearchQueryPayloadCollection($builder, $options)->each(function($payload) use (&$result) {
-            $result = ElasticClient::search($payload);
+        $this
+            ->buildSearchQueryPayloadCollection($builder, $options)
+            ->each(function($payload) use (&$results) {
+                $results = ElasticClient::search($payload);
 
-            if ($this->getTotalCount($result) > 0) {
-                return false;
-            }
-        });
+                $results['_payload'] = $payload;
 
-        return $result;
+                if ($this->getTotalCount($results) > 0) {
+                    return false;
+                }
+            });
+
+        return $results;
     }
 
     public function search(Builder $builder)
@@ -226,15 +230,15 @@ class ElasticEngine extends Engine
             return Collection::make();
         }
 
-        $hits = $results['hits']['hits'];
-        $firstHit = reset($hits);
-
         $primaryKey = $model->getKeyName();
 
-        $columns = array_merge(
-            array_keys($firstHit['_source']),
-            [$primaryKey]
-        );
+        $columns = array_get($results, '_payload.body._source');
+
+        if (is_null($columns)) {
+            $columns = ['*'];
+        } else {
+            $columns[] = $primaryKey;
+        }
 
         $ids = $this->mapIds($results);
 
@@ -243,13 +247,16 @@ class ElasticEngine extends Engine
             ->get($columns)
             ->keyBy($primaryKey);
 
-        return Collection::make($hits)->map(function($hit) use ($models) {
-            $id = $hit['_id'];
+        return Collection::make($results['hits']['hits'])
+            ->map(function($hit) use ($models) {
+                $id = $hit['_id'];
 
-            if (isset($models[$id])) {
-                return $models[$id];
-            }
-        })->filter()->values();
+                if (isset($models[$id])) {
+                    return $models[$id];
+                }
+            })
+            ->filter()
+            ->values();
     }
 
     public function getTotalCount($results)
