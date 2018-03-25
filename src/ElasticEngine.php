@@ -242,7 +242,9 @@ class ElasticEngine extends Engine
 
         $ids = $this->mapIds($results);
 
-        $models = $model
+        $builder = $model->usesSoftDelete() ? $model->withTrashed() : $model->newQuery();
+
+        $models = $builder
             ->whereIn($primaryKey, $ids)
             ->get($columns)
             ->keyBy($primaryKey);

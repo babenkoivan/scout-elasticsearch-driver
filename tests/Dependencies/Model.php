@@ -13,11 +13,13 @@ trait Model
      * @param array $params Available parameters: key, searchable_as, searchable_array, index_configurator, methods.
      * @return Searchable
      */
-    public function mockModel(array $params = []) {
+    public function mockModel(array $params = [])
+    {
         $methods = array_merge(
             $params['methods'] ?? [],
             [
                 'getKey',
+                'trashed',
                 'searchableAs',
                 'toSearchableArray',
                 'getIndexConfigurator'
@@ -32,6 +34,10 @@ trait Model
         $mock
             ->method('getKey')
             ->willReturn($params['key'] ?? 1);
+
+        $mock
+            ->method('trashed')
+            ->willReturn($params['trashed'] ?? false);
 
         $mock
             ->method('searchableAs')

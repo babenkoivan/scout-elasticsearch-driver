@@ -12,7 +12,14 @@ class SingleIndexer implements IndexerInterface
     public function update(Collection $models)
     {
         $models->each(function ($model) {
-            $modelData = $model->toSearchableArray();
+            if ($model->usesSoftDelete() && config('scout.soft_delete', false)) {
+                $model->pushSoftDeleteMetadata();
+            }
+
+            $modelData = array_merge(
+                $model->toSearchableArray(),
+                $model->scoutMetadata()
+            );
 
             if (empty($modelData)) {
                 return true;

@@ -2,6 +2,7 @@
 
 namespace ScoutElastic\Builders;
 
+use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Builder;
 
 class FilterBuilder extends Builder
@@ -25,10 +26,19 @@ class FilterBuilder extends Builder
      */
     public $select = [];
 
-    public function __construct($model, $callback = null)
+    /**
+     * @param Model $model
+     * @param callable|null $callback
+     * @param bool $softDelete
+     */
+    public function __construct($model, $callback = null, $softDelete = false)
     {
         $this->model = $model;
         $this->callback = $callback;
+
+        if ($softDelete) {
+            $this->wheres['must'][] = ['term' => ['__soft_deleted' => 0]];
+        }
     }
 
     /**
@@ -279,5 +289,30 @@ class FilterBuilder extends Builder
         return $this
             ->engine()
             ->count($this);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function withTrashed()
+    {
+        $this->wheres['must'] = collect($this->wheres['must'])
+            ->filter(function ($item) {
+                return array_get($item, 'term.__soft_deleted') !== 0;
+            })
+            ->values()
+            ->all();
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function onlyTrashed()
+    {
+        return tap($this->withTrashed(), function () {
+            $this->wheres['must'][] = ['term' => ['__soft_deleted' => 1]];
+        });
     }
 }

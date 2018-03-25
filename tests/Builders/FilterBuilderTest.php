@@ -3,22 +3,48 @@
 namespace ScoutElastic\Tests\Builders;
 
 use ScoutElastic\Builders\FilterBuilder;
+use ScoutElastic\Tests\AbstractTestCase;
+use ScoutElastic\Tests\Dependencies\Model;
 
-class FilterBuilderTest extends AbstractBuilderTest
+class FilterBuilderTest extends AbstractTestCase
 {
-    protected function initBuilder()
+    use Model;
+
+    public function testCreationWithSoftDelete()
     {
-        $this->builder = $this
-            ->getMockBuilder(FilterBuilder::class)
-            ->disableOriginalConstructor()
-            ->setMethods(null)
-            ->getMock();
+        $builder = new FilterBuilder($this->mockModel(), null, true);
+
+        $this->assertEquals(
+            [
+                'must' => [
+                    [
+                        'term' => [
+                            '__soft_deleted' => 0
+                        ]
+                    ]
+                ],
+                'must_not' => []
+            ],
+            $builder->wheres
+        );
+    }
+
+    public function testCreationWithoutSoftDelete()
+    {
+        $builder = new FilterBuilder($this->mockModel(), null, false);
+
+        $this->assertEquals(
+            [
+                'must' => [],
+                'must_not' => []
+            ],
+            $builder->wheres
+        );
     }
 
     public function testWhereEq()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->where('foo', 0)
             ->where('bar', '=', 1);
 
@@ -30,14 +56,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                 ],
                 'must_not' => []
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereNotEq()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->where('foo', '!=', 'bar');
 
         $this->assertEquals(
@@ -47,14 +72,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                     ['term' => ['foo' => 'bar']]
                 ]
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereGt()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->where('foo', '>', 0);
 
         $this->assertEquals(
@@ -64,14 +88,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                 ],
                 'must_not' => []
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereGte()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->where('foo', '>=', 0);
 
         $this->assertEquals(
@@ -81,14 +104,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                 ],
                 'must_not' => []
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereLt()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->where('foo', '<', 0);
 
         $this->assertEquals(
@@ -98,14 +120,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                 ],
                 'must_not' => []
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereLte()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->where('foo', '>=', 0);
 
         $this->assertEquals(
@@ -115,14 +136,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                 ],
                 'must_not' => []
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereIn()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->whereIn('foo', [0, 1]);
 
         $this->assertEquals(
@@ -132,14 +152,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                 ],
                 'must_not' => []
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereNotIn()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->whereNotIn('foo', [0, 1]);
 
         $this->assertEquals(
@@ -149,14 +168,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                     ['terms' => ['foo' => [0, 1]]]
                 ]
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereBetween()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->whereBetween('foo', [0, 10]);
 
         $this->assertEquals(
@@ -166,14 +184,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                 ],
                 'must_not' => []
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereNotBetween()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->whereNotBetween('foo', [0, 10]);
 
         $this->assertEquals(
@@ -183,14 +200,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                     ['range' => ['foo' => ['gte' => 0, 'lte' => 10]]]
                 ]
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereExists()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->whereExists('foo');
 
         $this->assertEquals(
@@ -200,14 +216,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                 ],
                 'must_not' => []
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereNotExists()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->whereNotExists('foo');
 
         $this->assertEquals(
@@ -217,14 +232,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                     ['exists' => ['field' => 'foo']]
                 ]
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereRegexp()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->whereRegexp('foo', '.*')
             ->whereRegexp('bar', '^test.*', 'EMPTY|NONE');
 
@@ -236,14 +250,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                 ],
                 'must_not' => []
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhen()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->when(
                 false,
                 function (FilterBuilder $builder) {
@@ -274,14 +287,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                 ],
                 'must_not' => []
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereGeoDistance()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->whereGeoDistance('foo', [-20, 30], '10m');
 
         $this->assertEquals(
@@ -291,14 +303,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                 ],
                 'must_not' => []
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereGeoBoundingBox()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->whereGeoBoundingBox('foo', ['top_left' => [-5, 10], 'bottom_right' => [-20, 30]]);
 
         $this->assertEquals(
@@ -308,14 +319,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                 ],
                 'must_not' => []
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testWhereGeoPolygon()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->whereGeoPolygon('foo', [[-70, 40], [-80, 30], [-90, 20]]);
 
         $this->assertEquals(
@@ -325,14 +335,13 @@ class FilterBuilderTest extends AbstractBuilderTest
                 ],
                 'must_not' => []
             ],
-            $this->builder->wheres
+            $builder->wheres
         );
     }
 
     public function testOrderBy()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->orderBy('foo')
             ->orderBy('bar', 'DESC');
 
@@ -341,60 +350,104 @@ class FilterBuilderTest extends AbstractBuilderTest
                 ['foo' => 'asc'],
                 ['bar' => 'desc'],
             ],
-            $this->builder->orders
+            $builder->orders
         );
     }
 
     public function testWith()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->with('RelatedModel');
 
         $this->assertEquals(
             'RelatedModel',
-            $this->builder->with
+            $builder->with
         );
     }
 
     public function testFrom()
     {
+        $builder = new FilterBuilder($this->mockModel());
+
         $this->assertEquals(
             0,
-            $this->builder->offset
+            $builder->offset
         );
 
-        $this
-            ->builder
-            ->from(100);
+        $builder->from(100);
 
         $this->assertEquals(
             100,
-            $this->builder->offset
+            $builder->offset
         );
     }
 
     public function testCollapse()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->collapse('foo');
 
         $this->assertEquals(
             'foo',
-            $this->builder->collapse
+            $builder->collapse
         );
     }
 
     public function testSelect()
     {
-        $this
-            ->builder
+        $builder = (new FilterBuilder($this->mockModel()))
             ->select(['foo', 'bar']);
 
         $this->assertEquals(
             ['foo', 'bar'],
-            $this->builder->select
+            $builder->select
+        );
+    }
+
+    public function testWithTrashed()
+    {
+        $builder = (new FilterBuilder($this->mockModel(), null, true))
+            ->withTrashed()
+            ->where('foo', 'bar');
+
+        $this->assertEquals(
+            [
+                'must' => [
+                    [
+                        'term' => [
+                            'foo' => 'bar'
+                        ]
+                    ]
+                ],
+                'must_not' => []
+            ],
+            $builder->wheres
+        );
+    }
+
+    public function testOnlyTrashed()
+    {
+        $builder = (new FilterBuilder($this->mockModel(), null, true))
+            ->onlyTrashed()
+            ->where('foo', 'bar');
+
+        $this->assertEquals(
+            [
+                'must' => [
+                    [
+                        'term' => [
+                            '__soft_deleted' => 1
+                        ]
+                    ],
+                    [
+                        'term' => [
+                            'foo' => 'bar'
+                        ]
+                    ]
+                ],
+                'must_not' => []
+            ],
+            $builder->wheres
         );
     }
 }

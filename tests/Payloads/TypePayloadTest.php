@@ -2,11 +2,11 @@
 
 namespace ScoutElastic\Tests\Payloads;
 
-use PHPUnit\Framework\TestCase;
 use ScoutElastic\Payloads\TypePayload;
+use ScoutElastic\Tests\AbstractTestCase;
 use ScoutElastic\Tests\Dependencies\Model;
 
-class TypePayloadTest extends TestCase
+class TypePayloadTest extends AbstractTestCase
 {
     use Model;
 

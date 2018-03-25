@@ -22,7 +22,14 @@ class BulkIndexer implements IndexerInterface
         }
 
         $models->each(function ($model) use ($bulkPayload) {
-            $modelData = $model->toSearchableArray();
+            if ($model->usesSoftDelete() && config('scout.soft_delete', false)) {
+                $model->pushSoftDeleteMetadata();
+            }
+
+            $modelData = array_merge(
+                $model->toSearchableArray(),
+                $model->scoutMetadata()
+            );
 
             if (empty($modelData)) {
                 return true;
