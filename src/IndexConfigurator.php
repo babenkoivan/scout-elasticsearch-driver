@@ -12,13 +12,13 @@ abstract class IndexConfigurator
 
     protected $defaultMapping = [];
 
+    /**
+     * @return string
+     */
     public function getName()
     {
-        if (isset($this->name)) {
-            return $this->name;
-        }
-
-        return Str::snake(str_replace('IndexConfigurator', '', class_basename($this)));
+        $name = $this->name ?? Str::snake(str_replace('IndexConfigurator', '', class_basename($this)));
+        return config('scout.prefix') . $name;
     }
 
     public function getSettings()
