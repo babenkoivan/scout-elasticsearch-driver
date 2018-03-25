@@ -21,6 +21,10 @@ class BulkIndexer implements IndexerInterface
             $bulkPayload->useAlias('write');
         }
 
+        if ($documentRefresh = config('scout_elastic.document_refresh')) {
+            $bulkPayload->set('refresh', $documentRefresh);
+        }
+
         $models->each(function ($model) use ($bulkPayload) {
             if ($model->usesSoftDelete() && config('scout.soft_delete', false)) {
                 $model->pushSoftDeleteMetadata();

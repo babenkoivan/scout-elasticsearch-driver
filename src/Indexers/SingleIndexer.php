@@ -34,6 +34,10 @@ class SingleIndexer implements IndexerInterface
                 $payload->useAlias('write');
             }
 
+            if ($documentRefresh = config('scout_elastic.document_refresh')) {
+                $payload->set('refresh', $documentRefresh);
+            }
+
             ElasticClient::index($payload->get());
         });
     }

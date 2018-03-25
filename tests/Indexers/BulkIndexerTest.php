@@ -58,6 +58,31 @@ class BulkIndexerTest extends AbstractIndexerTest
         $this->addToAssertionCount(1);
     }
 
+    public function testUpdateWithSpecifiedDocumentRefreshOption()
+    {
+        Config::set('scout_elastic.document_refresh', 'true');
+
+        ElasticClient
+            ::shouldReceive('bulk')
+            ->once()
+            ->with([
+                'index' => 'test',
+                'type' => 'test',
+                'refresh' => 'true',
+                'body' => [
+                    ['index' => ['_id' => 1]],
+                    ['name' => 'foo'],
+                    ['index' => ['_id' => 2]],
+                    ['name' => 'bar']
+                ]
+            ]);
+
+        (new BulkIndexer())
+            ->update($this->models);
+
+        $this->addToAssertionCount(1);
+    }
+
     public function testDelete()
     {
         ElasticClient

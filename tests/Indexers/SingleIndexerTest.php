@@ -84,6 +84,40 @@ class SingleIndexerTest extends AbstractIndexerTest
         $this->addToAssertionCount(1);
     }
 
+    public function testUpdateWithSpecifiedDocumentRefreshOption()
+    {
+        Config::set('scout_elastic.document_refresh', 'true');
+
+        ElasticClient
+            ::shouldReceive('index')
+            ->once()
+            ->with([
+                'index' => 'test',
+                'type' => 'test',
+                'refresh' => 'true',
+                'id' => 1,
+                'body' => [
+                    'name' => 'foo'
+                ]
+            ])
+            ->shouldReceive('index')
+            ->once()
+            ->with([
+                'index' => 'test',
+                'type' => 'test',
+                'refresh' => 'true',
+                'id' => 2,
+                'body' => [
+                    'name' => 'bar'
+                ]
+            ]);
+
+        (new SingleIndexer())
+            ->update($this->models);
+
+        $this->addToAssertionCount(1);
+    }
+
     public function testDelete()
     {
         ElasticClient
