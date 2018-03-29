@@ -80,6 +80,7 @@ class ElasticEngine extends Engine
 
         $payload = (new TypePayload($builder->model))
             ->setIfNotEmpty('body.query.bool', $queryPayload)
+            ->setIfNotEmpty('body.collapse', $builder->collapse)
             ->setIfNotEmpty('body.sort', $builder->orders)
             ->setIfNotEmpty('body.aggs', $builder->aggregates)
             ->setIfNotEmpty('body.suggest', $builder->suggesters)
@@ -234,7 +235,7 @@ class ElasticEngine extends Engine
                 $model->_score = $hit['_score'];
                 return $model;
             }
-        })->filter();
+        })->filter()->values();
 
         $builder = $results['builder'];
 
