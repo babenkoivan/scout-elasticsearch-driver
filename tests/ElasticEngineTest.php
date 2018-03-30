@@ -242,10 +242,11 @@ class ElasticEngineTest extends TestCase
             'hits' => [
                 'total' => 2,
                 'hits' => [
-                    ['_id' => 1],
-                    ['_id' => 2]
+                    ['_id' => 1, '_score' => 1.0],
+                    ['_id' => 2, '_score' => 1.0]
                 ]
-            ]
+            ],
+            'builder' => $this->getMockBuilder(FilterBuilder::class)
         ];
 
         $model = $this->mockModel([
