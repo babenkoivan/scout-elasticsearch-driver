@@ -69,8 +69,13 @@ class RawPayload
         return $this->add($key, $value);
     }
 
-    public function get($key = null)
+    /**
+     * @param string|null $key
+     * @param mixed|null $default
+     * @return mixed
+     */
+    public function get($key = null, $default = null)
     {
-        return array_get($this->payload, $key);
+        return array_get($this->payload, $key, $default);
     }
 }

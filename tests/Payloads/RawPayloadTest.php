@@ -104,5 +104,10 @@ class RawPayloadTest extends AbstractTestCase
             ['foo' => ['bar' => 0]],
             $payload->get()
         );
+
+        $this->assertEquals(
+            ['value' => 1],
+            $payload->get('default', ['value' => 1])
+        );
     }
 }

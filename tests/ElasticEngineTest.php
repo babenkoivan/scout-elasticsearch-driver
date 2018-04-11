@@ -6,8 +6,8 @@ use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
 use ScoutElastic\ElasticEngine;
 use ScoutElastic\Facades\ElasticClient;
-use ScoutElastic\SearchRule;
 use ScoutElastic\Tests\Dependencies\Model;
+use ScoutElastic\Tests\Stubs\SearchRule;
 use stdClass;
 
 class ElasticEngineTest extends AbstractTestCase
@@ -88,14 +88,27 @@ class ElasticEngineTest extends AbstractTestCase
                                 ]
                             ]
                         ],
-                        'collapse' => [
-                            'field' => 'brand'
-                        ],
-                        'sort' => [
-                            [
-                                'id' => 'asc'
+                        'highlight' => [
+                            'fields' => [
+                                'title' => [
+                                    'type' => 'plain'
+                                ],
+                                'price' => [
+                                    'type' => 'plain'
+                                ],
+                                'color' => [
+                                    'type' => 'plain'
+                                ]
                             ]
                         ],
+                        'collapse' => [
+        'field' => 'brand'
+    ],
+                        'sort' => [
+        [
+            'id' => 'asc'
+        ]
+    ],
                         'from' => 100,
                         'size' => 10
                     ],

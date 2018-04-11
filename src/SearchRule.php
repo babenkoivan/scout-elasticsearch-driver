@@ -18,6 +18,17 @@ class SearchRule
         return true;
     }
 
+    /**
+     * @return array|null
+     */
+    public function buildHighlightPayload()
+    {
+        return null;
+    }
+
+    /**
+     * @return array
+     */
     public function buildQueryPayload()
     {
         return [

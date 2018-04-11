@@ -8,10 +8,16 @@ use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
 use \Exception;
 
-trait Searchable {
+trait Searchable
+{
     use ScoutSearchable {
         ScoutSearchable::bootSearchable as bootScoutSearchable;
     }
+
+    /**
+     * @var Highlight|null
+     */
+    private $highlight = null;
 
     private static $isSearchableTraitBooted = false;
 
@@ -87,5 +93,21 @@ trait Searchable {
     public function usesSoftDelete()
     {
         return in_array(SoftDeletes::class, class_uses_recursive($this));
+    }
+
+    /**
+     * @param Highlight $value
+     */
+    public function setHighlightAttribute(Highlight $value)
+    {
+        $this->highlight = $value;
+    }
+
+    /**
+     * @return Highlight|null
+     */
+    public function getHighlightAttribute()
+    {
+        return $this->highlight;
     }
 }
