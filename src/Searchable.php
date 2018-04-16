@@ -19,6 +19,9 @@ trait Searchable
      */
     private $highlight = null;
 
+    /**
+     * @var bool
+     */
     private static $isSearchableTraitBooted = false;
 
     public static function bootSearchable()
@@ -34,7 +37,7 @@ trait Searchable
 
     /**
      * @return IndexConfigurator
-     * @throws Exception If an index configurator is not specified
+     * @throws Exception
      */
     public function getIndexConfigurator()
     {
@@ -42,7 +45,10 @@ trait Searchable
 
         if (!$indexConfigurator) {
             if (!isset($this->indexConfigurator) || empty($this->indexConfigurator)) {
-                throw new Exception(sprintf('An index configurator for the %s model is not specified.', __CLASS__));
+                throw new Exception(sprintf(
+                    'An index configurator for the %s model is not specified.',
+                    __CLASS__
+                ));
             }
 
             $indexConfiguratorClass = $this->indexConfigurator;
@@ -52,6 +58,9 @@ trait Searchable
         return $indexConfigurator;
     }
 
+    /**
+     * @return array
+     */
     public function getMapping()
     {
         $mapping = $this->mapping ?? [];
@@ -63,11 +72,20 @@ trait Searchable
         return $mapping;
     }
 
+    /**
+     * @return array
+     */
     public function getSearchRules()
     {
-        return isset($this->searchRules) && count($this->searchRules) > 0 ? $this->searchRules : [SearchRule::class];
+        return isset($this->searchRules) && count($this->searchRules) > 0 ?
+            $this->searchRules : [SearchRule::class];
     }
 
+    /**
+     * @param $query
+     * @param null $callback
+     * @return FilterBuilder|SearchBuilder
+     */
     public static function search($query, $callback = null)
     {
         $softDelete = config('scout.soft_delete', false);
@@ -79,7 +97,11 @@ trait Searchable
         }
     }
 
-    public static function searchRaw($query)
+    /**
+     * @param array $query
+     * @return array
+     */
+    public static function searchRaw(array $query)
     {
         $model = new static();
 

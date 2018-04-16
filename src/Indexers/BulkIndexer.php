@@ -10,6 +10,9 @@ use ScoutElastic\Payloads\TypePayload;
 
 class BulkIndexer implements IndexerInterface
 {
+    /**
+     * @inheritdoc
+     */
     public function update(Collection $models)
     {
         $model = $models->first();
@@ -50,6 +53,9 @@ class BulkIndexer implements IndexerInterface
         ElasticClient::bulk($bulkPayload->get());
     }
 
+    /**
+     * @inheritdoc
+     */
     public function delete(Collection $models)
     {
         $model = $models->first();

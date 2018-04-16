@@ -7,13 +7,22 @@ use Laravel\Scout\Builder;
 
 class FilterBuilder extends Builder
 {
+    /**
+     * @var array
+     */
     public $wheres = [
         'must' => [],
         'must_not' => []
     ];
 
+    /**
+     * @var array|string
+     */
     public $with;
 
+    /**
+     * @var int
+     */
     public $offset;
 
     /**
@@ -31,17 +40,24 @@ class FilterBuilder extends Builder
      * @param callable|null $callback
      * @param bool $softDelete
      */
-    public function __construct($model, $callback = null, $softDelete = false)
+    public function __construct(Model $model, $callback = null, $softDelete = false)
     {
         $this->model = $model;
         $this->callback = $callback;
 
         if ($softDelete) {
-            $this->wheres['must'][] = ['term' => ['__soft_deleted' => 0]];
+            $this->wheres['must'][] = [
+                'term' => [
+                    '__soft_deleted' => 0
+                ]
+            ];
         }
     }
 
     /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html Term query
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-range-query.html Range query
+     *
      * Supported operators are =, &gt;, &lt;, &gt;=, &lt;=, &lt;&gt;
      * @param string $field Field name
      * @param mixed $value Scalar value or an array
@@ -59,83 +75,206 @@ class FilterBuilder extends Builder
 
         switch ($operator) {
             case '=':
-                $this->wheres['must'][] = ['term' => [$field => $value]];
+                $this->wheres['must'][] = [
+                    'term' => [
+                        $field => $value
+                    ]
+                ];
                 break;
 
             case '>':
-                $this->wheres['must'][] = ['range' => [$field => ['gt' => $value]]];
+                $this->wheres['must'][] = [
+                    'range' => [
+                        $field => [
+                            'gt' => $value
+                        ]
+                    ]
+                ];
                 break;
 
             case '<':
-                $this->wheres['must'][] = ['range' => [$field => ['lt' => $value]]];
+                $this->wheres['must'][] = [
+                    'range' => [
+                        $field => [
+                            'lt' => $value
+                        ]
+                    ]
+                ];
                 break;
 
             case '>=':
-                $this->wheres['must'][] = ['range' => [$field => ['gte' => $value]]];
+                $this->wheres['must'][] = [
+                    'range' => [
+                        $field => [
+                            'gte' => $value
+                        ]
+                    ]
+                ];
                 break;
 
             case '<=':
-                $this->wheres['must'][] = ['range' => [$field => ['lte' => $value]]];
+                $this->wheres['must'][] = [
+                    'range' => [
+                        $field => [
+                            'lte' => $value
+                        ]
+                    ]
+                ];
                 break;
 
             case '!=':
             case '<>':
-                $this->wheres['must_not'][] = ['term' => [$field => $value]];
+                $this->wheres['must_not'][] = [
+                    'term' => [
+                        $field => $value
+                    ]
+                ];
                 break;
         }
 
         return $this;
     }
 
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html Terms query
+     *
+     * @param string $field
+     * @param array $value
+     * @return $this
+     */
     public function whereIn($field, array $value)
     {
-        $this->wheres['must'][] = ['terms' => [$field => $value]];
+        $this->wheres['must'][] = [
+            'terms' => [
+                $field => $value
+            ]
+        ];
 
         return $this;
     }
 
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html Terms query
+     *
+     * @param string $field
+     * @param array $value
+     * @return $this
+     */
     public function whereNotIn($field, array $value)
     {
-        $this->wheres['must_not'][] = ['terms' => [$field => $value]];
+        $this->wheres['must_not'][] = [
+            'terms' => [
+                $field => $value
+            ]
+        ];
 
         return $this;
     }
 
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-range-query.html Range query
+     *
+     * @param string $field
+     * @param array $value
+     * @return $this
+     */
     public function whereBetween($field, array $value)
     {
-        $this->wheres['must'][] = ['range' => [$field => ['gte' => $value[0], 'lte' => $value[1]]]];
+        $this->wheres['must'][] = [
+            'range' => [
+                $field => [
+                    'gte' => $value[0],
+                    'lte' => $value[1]
+                ]
+            ]
+        ];
 
         return $this;
     }
 
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-range-query.html Range query
+     *
+     * @param string $field
+     * @param array $value
+     * @return $this
+     */
     public function whereNotBetween($field, array $value)
     {
-        $this->wheres['must_not'][] = ['range' => [$field => ['gte' => $value[0], 'lte' => $value[1]]]];
+        $this->wheres['must_not'][] = [
+            'range' => [
+                $field => [
+                    'gte' => $value[0],
+                    'lte' => $value[1]
+                ]
+            ]
+        ];
 
         return $this;
     }
 
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-exists-query.html Exists query
+     *
+     * @param string $field
+     * @return $this
+     */
     public function whereExists($field)
     {
-        $this->wheres['must'][] = ['exists' => ['field' => $field]];
+        $this->wheres['must'][] = [
+            'exists' => [
+                'field' => $field
+            ]
+        ];
 
         return $this;
     }
 
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-exists-query.html Exists query
+     *
+     * @param string $field
+     * @return $this
+     */
     public function whereNotExists($field)
     {
-        $this->wheres['must_not'][] = ['exists' => ['field' => $field]];
+        $this->wheres['must_not'][] = [
+            'exists' => [
+                'field' => $field
+            ]
+        ];
 
         return $this;
     }
 
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html Regexp query
+     *
+     * @param string $field
+     * @param string $value
+     * @param string $flags
+     * @return $this
+     */
     public function whereRegexp($field, $value, $flags = 'ALL')
     {
-        $this->wheres['must'][] = ['regexp' => [$field => ['value' => $value, 'flags' => $flags]]];
+        $this->wheres['must'][] = [
+            'regexp' => [
+                $field => [
+                    'value' => $value,
+                    'flags' => $flags
+                ]
+            ]
+        ];
 
         return $this;
     }
 
+    /**
+     * @param mixed $value
+     * @param callable $callback
+     * @param callable|null $default
+     * @return $this
+     */
     public function when($value, callable $callback, callable $default = null)
     {
         if ($value) {
@@ -148,7 +287,7 @@ class FilterBuilder extends Builder
     }
 
     /**
-     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html Geo distance query
      *
      * @param string $field
      * @param string|array $value
@@ -157,13 +296,18 @@ class FilterBuilder extends Builder
      */
     public function whereGeoDistance($field, $value, $distance)
     {
-        $this->wheres['must'][] = ['geo_distance' => ['distance' => $distance, $field => $value]];
+        $this->wheres['must'][] = [
+            'geo_distance' => [
+                'distance' => $distance,
+                $field => $value
+            ]
+        ];
 
         return $this;
     }
 
     /**
-     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html Geo bounding box query
      *
      * @param string $field
      * @param array $value
@@ -171,13 +315,17 @@ class FilterBuilder extends Builder
      */
     public function whereGeoBoundingBox($field, array $value)
     {
-        $this->wheres['must'][] = ['geo_bounding_box' => [$field => $value]];
+        $this->wheres['must'][] = [
+            'geo_bounding_box' => [
+                $field => $value
+            ]
+        ];
 
         return $this;
     }
 
     /**
-     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-query.html
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-query.html Geo polygon query
      *
      * @param string $field
      * @param array $points
@@ -185,33 +333,65 @@ class FilterBuilder extends Builder
      */
     public function whereGeoPolygon($field, array $points)
     {
-        $this->wheres['must'][] = ['geo_polygon' => [$field => ['points' => $points]]];
+        $this->wheres['must'][] = [
+            'geo_polygon' => [
+                $field => [
+                    'points' => $points
+                ]
+            ]
+        ];
 
         return $this;
     }
 
+    /**
+     * @param string $field
+     * @param string $direction
+     * @return $this
+     */
     public function orderBy($field, $direction = 'asc')
     {
-        $this->orders[] = [$field => strtolower($direction) == 'asc' ? 'asc' : 'desc'];
+        $this->orders[] = [
+            $field => strtolower($direction) == 'asc' ? 'asc' : 'desc'
+        ];
 
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function explain()
     {
-        return $this->engine()->explain($this);
+        return $this
+            ->engine()
+            ->explain($this);
     }
 
+    /**
+     * @return array
+     */
     public function profile()
     {
-        return $this->engine()->profile($this);
+        return $this
+            ->engine()
+            ->profile($this);
     }
 
+    /**
+     * @return array
+     */
     public function buildPayload()
     {
-        return $this->engine()->buildSearchQueryPayloadCollection($this);
+        return $this
+            ->engine()
+            ->buildSearchQueryPayloadCollection($this);
     }
 
+    /**
+     * @param array|string $relations
+     * @return $this
+     */
     public function with($relations)
     {
         $this->with = $relations;
@@ -219,6 +399,10 @@ class FilterBuilder extends Builder
         return $this;
     }
 
+    /**
+     * @param int $offset
+     * @return $this
+     */
     public function from($offset)
     {
         $this->offset = $offset;

@@ -38,7 +38,9 @@ class ScoutElasticServiceProvider extends ServiceProvider
             ElasticMigrateCommand::class
         ]);
 
-        $this->app->make(EngineManager::class)
+        $this
+            ->app
+            ->make(EngineManager::class)
             ->extend('elastic', function () {
                 $indexerType = config('scout_elastic.indexer', 'single');
                 $updateMapping = config('scout_elastic.update_mapping', true);
@@ -58,9 +60,11 @@ class ScoutElasticServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->singleton('scout_elastic.client', function() {
-            $config = Config::get('scout_elastic.client');
-            return ClientBuilder::fromConfig($config);
-        });
+        $this
+            ->app
+            ->singleton('scout_elastic.client', function() {
+                $config = Config::get('scout_elastic.client');
+                return ClientBuilder::fromConfig($config);
+            });
     }
 }

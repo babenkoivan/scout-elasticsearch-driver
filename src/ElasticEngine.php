@@ -15,12 +15,25 @@ use stdClass;
 
 class ElasticEngine extends Engine
 {
+    /**
+     * @var IndexerInterface
+     */
     protected $indexer;
 
+    /**
+     * @var bool
+     */
     protected $updateMapping;
 
+    /**
+     * @var array
+     */
     static protected $updatedMappings = [];
 
+    /**
+     * @param IndexerInterface $indexer
+     * @param $updateMapping
+     */
     public function __construct(IndexerInterface $indexer, $updateMapping)
     {
         $this->indexer = $indexer;
@@ -28,6 +41,9 @@ class ElasticEngine extends Engine
         $this->updateMapping = $updateMapping;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function update($models)
     {
         if ($this->updateMapping) {
@@ -49,9 +65,14 @@ class ElasticEngine extends Engine
             });
         }
 
-        $this->indexer->update($models);
+        $this
+            ->indexer
+            ->update($models);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function delete($models)
     {
         $this->indexer->delete($models);
@@ -95,7 +116,7 @@ class ElasticEngine extends Engine
             $payloadCollection->push($payload);
         }
 
-        return $payloadCollection->map(function(TypePayload $payload) use ($builder, $options) {
+        return $payloadCollection->map(function (TypePayload $payload) use ($builder, $options) {
             $payload
                 ->setIfNotEmpty('body._source', $builder->select)
                 ->setIfNotEmpty('body.collapse.field', $builder->collapse)
@@ -121,6 +142,11 @@ class ElasticEngine extends Engine
         });
     }
 
+    /**
+     * @param Builder $builder
+     * @param array $options
+     * @return array
+     */
     protected function performSearch(Builder $builder, array $options = [])
     {
         if ($builder->callback) {
@@ -132,11 +158,11 @@ class ElasticEngine extends Engine
             );
         }
 
-        $results = null;
+        $results = [];
 
         $this
             ->buildSearchQueryPayloadCollection($builder, $options)
-            ->each(function($payload) use (&$results) {
+            ->each(function ($payload) use (&$results) {
                 $results = ElasticClient::search($payload);
 
                 $results['_payload'] = $payload;
@@ -149,11 +175,17 @@ class ElasticEngine extends Engine
         return $results;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function search(Builder $builder)
     {
         return $this->performSearch($builder);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function paginate(Builder $builder, $perPage, $page)
     {
         $builder
@@ -163,6 +195,10 @@ class ElasticEngine extends Engine
         return $this->performSearch($builder);
     }
 
+    /**
+     * @param Builder $builder
+     * @return array
+     */
     public function explain(Builder $builder)
     {
         return $this->performSearch($builder, [
@@ -170,6 +206,10 @@ class ElasticEngine extends Engine
         ]);
     }
 
+    /**
+     * @param Builder $builder
+     * @return array
+     */
     public function profile(Builder $builder)
     {
         return $this->performSearch($builder, [
@@ -200,6 +240,11 @@ class ElasticEngine extends Engine
         return $count;
     }
 
+    /**
+     * @param Model $model
+     * @param array $query
+     * @return array
+     */
     public function searchRaw(Model $model, $query)
     {
         $payload = (new TypePayload($model))
@@ -209,6 +254,9 @@ class ElasticEngine extends Engine
         return ElasticClient::search($payload);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function mapIds($results)
     {
         return array_pluck($results['hits']['hits'], '_id');
@@ -260,6 +308,9 @@ class ElasticEngine extends Engine
             ->values();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getTotalCount($results)
     {
         return $results['hits']['total'];

@@ -6,10 +6,19 @@ use Illuminate\Support\Str;
 
 abstract class IndexConfigurator
 {
+    /**
+     * @var string
+     */
     protected $name;
 
+    /**
+     * @var array
+     */
     protected $settings = [];
 
+    /**
+     * @var array
+     */
     protected $defaultMapping = [];
 
     /**
@@ -21,6 +30,9 @@ abstract class IndexConfigurator
         return config('scout.prefix') . $name;
     }
 
+    /**
+     * @return array
+     */
     public function getSettings()
     {
         return $this->settings;

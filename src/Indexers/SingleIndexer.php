@@ -9,6 +9,9 @@ use ScoutElastic\Payloads\DocumentPayload;
 
 class SingleIndexer implements IndexerInterface
 {
+    /**
+     * @inheritdoc
+     */
     public function update(Collection $models)
     {
         $models->each(function ($model) {
@@ -42,6 +45,9 @@ class SingleIndexer implements IndexerInterface
         });
     }
 
+    /**
+     * @inheritdoc
+     */
     public function delete(Collection $models)
     {
         $models->each(function ($model) {
