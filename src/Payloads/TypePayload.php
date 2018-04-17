@@ -8,13 +8,15 @@ use ScoutElastic\Searchable;
 
 class TypePayload extends IndexPayload
 {
-    protected $protectedKeys = [
-        'index',
-        'type'
-    ];
-
+    /**
+     * @var Model
+     */
     protected $model;
 
+    /**
+     * @param Model $model
+     * @throws Exception
+     */
     public function __construct(Model $model)
     {
         if (!in_array(Searchable::class, class_uses_recursive($model))) {
@@ -30,5 +32,6 @@ class TypePayload extends IndexPayload
         parent::__construct($model->getIndexConfigurator());
 
         $this->payload['type'] = $model->searchableAs();
+        $this->protectedKeys[] = 'type';
     }
 }

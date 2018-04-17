@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use ScoutElastic\Searchable;
 use Symfony\Component\Console\Input\InputArgument;
 
-trait requiresModelArgument
+trait RequiresModelArgument
 {
     /**
-     * @return Model|null
+     * @return Model
      */
     protected function getModel()
     {
@@ -18,7 +18,10 @@ trait requiresModelArgument
 
         $modelInstance = new $modelClass;
 
-        if (!($modelInstance instanceof Model) || !in_array(Searchable::class, class_uses_recursive($modelClass))) {
+        if (
+            !($modelInstance instanceof Model) ||
+            !in_array(Searchable::class, class_uses_recursive($modelClass))
+        ) {
             throw new InvalidArgumentException(sprintf(
                 'The %s class must extend %s and use the %s trait.',
                 $modelClass,
@@ -30,10 +33,17 @@ trait requiresModelArgument
         return $modelInstance;
     }
 
+    /**
+     * @return array
+     */
     protected function getArguments()
     {
         return [
-            ['model', InputArgument::REQUIRED, 'The model class'],
+            [
+                'model',
+                InputArgument::REQUIRED,
+                'The model class'
+            ]
         ];
     }
 }

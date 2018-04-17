@@ -2,16 +2,15 @@
 
 namespace ScoutElastic\Tests;
 
-use PHPUnit\Framework\TestCase;
 use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
 use ScoutElastic\ElasticEngine;
 use ScoutElastic\Facades\ElasticClient;
-use ScoutElastic\SearchRule;
 use ScoutElastic\Tests\Dependencies\Model;
+use ScoutElastic\Tests\Stubs\SearchRule;
 use stdClass;
 
-class ElasticEngineTest extends TestCase
+class ElasticEngineTest extends AbstractTestCase
 {
     use Model;
 
@@ -89,14 +88,27 @@ class ElasticEngineTest extends TestCase
                                 ]
                             ]
                         ],
-                        'collapse' => [
-                            'field' => 'brand'
-                        ],
-                        'sort' => [
-                            [
-                                'id' => 'asc'
+                        'highlight' => [
+                            'fields' => [
+                                'title' => [
+                                    'type' => 'plain'
+                                ],
+                                'price' => [
+                                    'type' => 'plain'
+                                ],
+                                'color' => [
+                                    'type' => 'plain'
+                                ]
                             ]
                         ],
+                        'collapse' => [
+        'field' => 'brand'
+    ],
+                        'sort' => [
+        [
+            'id' => 'asc'
+        ]
+    ],
                         'from' => 100,
                         'size' => 10
                     ],
@@ -297,7 +309,7 @@ class ElasticEngineTest extends TestCase
         );
     }
 
-    public function testMap()
+    public function testMapWithoutTrashed()
     {
         $results = [
             'hits' => [
@@ -322,11 +334,82 @@ class ElasticEngineTest extends TestCase
         $model = $this->mockModel([
             'key' => 2,
             'methods' => [
+                'usesSoftDelete',
+                'newQuery',
                 'whereIn',
                 'get',
                 'keyBy'
             ]
         ]);
+
+        $model
+            ->method('usesSoftDelete')
+            ->willReturn(false);
+
+        $model
+            ->method('newQuery')
+            ->willReturn($model);
+
+        $model
+            ->method('whereIn')
+            ->willReturn($model);
+
+        $model
+            ->method('get')
+            ->willReturn($model);
+
+        $model
+            ->method('keyBy')
+            ->willReturn([
+                2 => $model
+            ]);
+
+        $this->assertEquals(
+            [$model],
+            $this->engine->map($results, $model)->all()
+        );
+    }
+
+    public function testMapWithTrashed()
+    {
+        $results = [
+            'hits' => [
+                'total' => 2,
+                'hits' => [
+                    [
+                        '_id' => 1,
+                        '_source' => [
+                            'title' => 'foo'
+                        ]
+                    ],
+                    [
+                        '_id' => 2,
+                        '_source' => [
+                            'title' => 'bar'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $model = $this->mockModel([
+            'key' => 2,
+            'methods' => [
+                'usesSoftDelete',
+                'withTrashed',
+                'whereIn',
+                'get',
+                'keyBy'
+            ]
+        ]);
+
+        $model
+            ->method('usesSoftDelete')
+            ->willReturn(true);
+
+        $model
+            ->method('withTrashed')
+            ->willReturn($model);
 
         $model
             ->method('whereIn')

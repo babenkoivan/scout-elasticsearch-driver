@@ -5,7 +5,7 @@ namespace ScoutElastic\Console;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use ScoutElastic\Console\Features\requiresModelArgument;
+use ScoutElastic\Console\Features\RequiresModelArgument;
 use ScoutElastic\Facades\ElasticClient;
 use ScoutElastic\Migratable;
 use ScoutElastic\Payloads\IndexPayload;
@@ -14,14 +14,23 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class ElasticMigrateCommand extends Command
 {
-    use requiresModelArgument {
-        requiresModelArgument::getArguments as private modelArgument;
+    use RequiresModelArgument {
+        RequiresModelArgument::getArguments as private modelArgument;
     }
 
+    /**
+     * @var string
+     */
     protected $name = 'elastic:migrate';
 
+    /**
+     * @var string
+     */
     protected $description = 'Migrate model to another index';
 
+    /**
+     * @return array
+     */
     protected function getArguments()
     {
         $arguments = $this->modelArgument();
@@ -31,13 +40,16 @@ class ElasticMigrateCommand extends Command
         return $arguments;
     }
 
+    /**
+     * @return bool
+     */
     protected function isTargetIndexExists()
     {
         $targetIndex = $this->argument('target-index');
 
         $payload = (new RawPayload())
-           ->set('index', $targetIndex)
-           ->get();
+            ->set('index', $targetIndex)
+            ->get();
 
         return ElasticClient::indices()
             ->exists($payload);
@@ -138,7 +150,7 @@ class ElasticMigrateCommand extends Command
         $payload = (new RawPayload())
             ->set('index', $targetIndex)
             ->set('type', $targetType)
-            ->set('body.'.$targetType, $mapping)
+            ->set('body.' . $targetType, $mapping)
             ->get();
 
         ElasticClient::indices()
@@ -150,6 +162,10 @@ class ElasticMigrateCommand extends Command
         ));
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     protected function isAliasExists($name)
     {
         $payload = (new RawPayload())
@@ -160,6 +176,9 @@ class ElasticMigrateCommand extends Command
             ->existsAlias($payload);
     }
 
+    /**
+     * @param string $name
+     */
     protected function deleteAlias($name)
     {
         $indices = ElasticClient::indices();
@@ -190,6 +209,9 @@ class ElasticMigrateCommand extends Command
         }
     }
 
+    /**
+     * @param string $name
+     */
     protected function createAliasForTargetIndex($name)
     {
         $targetIndex = $this->argument('target-index');

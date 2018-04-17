@@ -6,21 +6,33 @@ use Illuminate\Support\Str;
 
 abstract class IndexConfigurator
 {
+    /**
+     * @var string
+     */
     protected $name;
 
+    /**
+     * @var array
+     */
     protected $settings = [];
 
+    /**
+     * @var array
+     */
     protected $defaultMapping = [];
 
+    /**
+     * @return string
+     */
     public function getName()
     {
-        if (isset($this->name)) {
-            return $this->name;
-        }
-
-        return Str::snake(str_replace('IndexConfigurator', '', class_basename($this)));
+        $name = $this->name ?? Str::snake(str_replace('IndexConfigurator', '', class_basename($this)));
+        return config('scout.prefix') . $name;
     }
 
+    /**
+     * @return array
+     */
     public function getSettings()
     {
         return $this->settings;

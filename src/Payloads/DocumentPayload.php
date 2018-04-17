@@ -7,12 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class DocumentPayload extends TypePayload
 {
-    protected $protectedKeys = [
-        'index',
-        'type',
-        'id'
-    ];
-
+    /**
+     * @param Model $model
+     * @throws Exception
+     */
     public function __construct(Model $model)
     {
         if (!$model->getKey()) {
@@ -25,5 +23,6 @@ class DocumentPayload extends TypePayload
         parent::__construct($model);
 
         $this->payload['id'] = $model->getKey();
+        $this->protectedKeys[] = 'id';
     }
 }

@@ -3,10 +3,10 @@
 namespace ScoutElastic\Tests\Indexers;
 
 use Illuminate\Database\Eloquent\Collection;
-use PHPUnit\Framework\TestCase;
+use ScoutElastic\Tests\AbstractTestCase;
 use ScoutElastic\Tests\Dependencies\Model;
 
-abstract class AbstractIndexerTest extends TestCase
+abstract class AbstractIndexerTest extends AbstractTestCase
 {
     use Model;
 
@@ -20,18 +20,21 @@ abstract class AbstractIndexerTest extends TestCase
         $this->models = new Collection([
             $this->mockModel([
                 'key' => 1,
+                'trashed' => true,
                 'searchable_array' => [
                     'name' => 'foo'
                 ]
             ]),
             $this->mockModel([
                 'key' => 2,
+                'trashed' => false,
                 'searchable_array' => [
                     'name' => 'bar'
                 ]
             ]),
             $this->mockModel([
                 'key' => 3,
+                'trashed' => false,
                 'searchable_array' => []
             ])
         ]);

@@ -4,20 +4,17 @@ namespace ScoutElastic\Tests\Builders;
 
 use ScoutElastic\Builders\SearchBuilder;
 use ScoutElastic\SearchRule;
+use ScoutElastic\Tests\AbstractTestCase;
+use ScoutElastic\Tests\Dependencies\Model;
 
-class SearchBuilderTest extends AbstractBuilderTest
+class SearchBuilderTest extends AbstractTestCase
 {
-    protected function initBuilder()
-    {
-        $this->builder = $this
-            ->getMockBuilder(SearchBuilder::class)
-            ->disableOriginalConstructor()
-            ->setMethods(null)
-            ->getMock();
-    }
+    use Model;
 
     public function testRule()
     {
+        $builder = new SearchBuilder($this->mockModel(), 'qwerty');
+
         $ruleFunc = function(SearchBuilder $builder) {
             return [
                 'must' => [
@@ -28,8 +25,7 @@ class SearchBuilderTest extends AbstractBuilderTest
             ];
         };
 
-        $this
-            ->builder
+        $builder
             ->rule(SearchRule::class)
             ->rule($ruleFunc);
 
@@ -38,7 +34,7 @@ class SearchBuilderTest extends AbstractBuilderTest
                 SearchRule::class,
                 $ruleFunc
             ],
-            $this->builder->rules
+            $builder->rules
         );
     }
 }

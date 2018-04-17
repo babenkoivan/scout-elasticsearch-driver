@@ -6,10 +6,10 @@ use InvalidArgumentException;
 use ScoutElastic\IndexConfigurator;
 use Symfony\Component\Console\Input\InputArgument;
 
-trait requiresIndexConfiguratorArgument
+trait RequiresIndexConfiguratorArgument
 {
     /**
-     * @return IndexConfigurator|null
+     * @return IndexConfigurator
      */
     protected function getIndexConfigurator()
     {
@@ -28,10 +28,17 @@ trait requiresIndexConfiguratorArgument
         return (new $configuratorClass);
     }
 
+    /**
+     * @return array
+     */
     protected function getArguments()
     {
         return [
-            ['index-configurator', InputArgument::REQUIRED, 'The index configurator class'],
+            [
+                'index-configurator',
+                InputArgument::REQUIRED,
+                'The index configurator class'
+            ]
         ];
     }
 }

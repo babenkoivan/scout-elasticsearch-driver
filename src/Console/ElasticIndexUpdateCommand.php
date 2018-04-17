@@ -5,7 +5,7 @@ namespace ScoutElastic\Console;
 use Exception;
 use LogicException;
 use Illuminate\Console\Command;
-use ScoutElastic\Console\Features\requiresIndexConfiguratorArgument;
+use ScoutElastic\Console\Features\RequiresIndexConfiguratorArgument;
 use ScoutElastic\Facades\ElasticClient;
 use ScoutElastic\Migratable;
 use ScoutElastic\Payloads\IndexPayload;
@@ -13,10 +13,16 @@ use ScoutElastic\Payloads\RawPayload;
 
 class ElasticIndexUpdateCommand extends Command
 {
-    use requiresIndexConfiguratorArgument;
+    use RequiresIndexConfiguratorArgument;
 
+    /**
+     * @var string
+     */
     protected $name = 'elastic:update-index';
 
+    /**
+     * @var string
+     */
     protected $description = 'Update settings and mappings of an Elasticsearch index';
 
     protected function updateIndex()

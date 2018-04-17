@@ -3,16 +3,22 @@
 namespace ScoutElastic\Console;
 
 use Illuminate\Console\Command;
-use ScoutElastic\Console\Features\requiresIndexConfiguratorArgument;
+use ScoutElastic\Console\Features\RequiresIndexConfiguratorArgument;
 use ScoutElastic\Facades\ElasticClient;
 use ScoutElastic\Payloads\IndexPayload;
 
 class ElasticIndexDropCommand extends Command
 {
-    use requiresIndexConfiguratorArgument;
+    use RequiresIndexConfiguratorArgument;
 
+    /**
+     * @var string
+     */
     protected $name = 'elastic:drop-index';
 
+    /**
+     * @var string
+     */
     protected $description = 'Drop an Elasticsearch index';
 
     public function handle()
