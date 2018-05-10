@@ -189,6 +189,20 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/guide/current/querying-geo-shapes.html Querying Geo Shapes
+     *
+     * @param string $field
+     * @param array $shape
+     * @return $this
+     */
+    public function whereGeoShape($field, array $shape)
+    {
+        $this->wheres['must'][] = ['geo_shape' => [$field => ['shape' => $shape]]];
+
+        return $this;
+    }
+
+    /**
      * Supported operators are =, &gt;, &lt;, &gt;=, &lt;=;
      * @param string $field Field name
      * @param mixed $value Scalar value or an array
@@ -286,6 +300,20 @@ class FilterBuilder extends Builder
     {
         $this->wheres['should'][] = ['geo_polygon' => [$field => ['points' => $points]]];
         
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/guide/current/querying-geo-shapes.html Querying Geo Shapes
+     *
+     * @param string $field
+     * @param array $shape
+     * @return $this
+     */
+    public function shouldGeoShape($field, array $shape)
+    {
+        $this->wheres['should'][] = ['geo_shape' => [$field => ['shape' => $shape]]];
+
         return $this;
     }
 
