@@ -60,6 +60,7 @@ composer require babenkoivan/scout-elasticsearch-driver
 To configure the package you need to publish settings first:
 
 ```
+php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 php artisan vendor:publish --provider="ScoutElastic\ScoutElasticServiceProvider"
 ```
 Then, set the driver setting to `elastic` in the `config/scout.php` file and configure the driver itself in the `config/scout_elastic.php` file.
