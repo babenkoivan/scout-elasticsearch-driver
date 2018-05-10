@@ -339,6 +339,37 @@ class FilterBuilderTest extends AbstractTestCase
         );
     }
 
+    public function testWhereGeoShape()
+    {
+        $shape = [
+            'type' => 'circle',
+            'radius' => '1km',
+            'coordinates' => [
+                4.89994,
+                52.37815
+            ]
+        ];
+
+        $builder = (new FilterBuilder($this->mockModel()))
+            ->whereGeoShape('foo', $shape);
+
+        $this->assertEquals(
+            [
+                'must' => [
+                    [
+                        'geo_shape' => [
+                            'foo' => [
+                                'shape' => $shape
+                            ]
+                        ]
+                    ]
+                ],
+                'must_not' => []
+            ],
+            $builder->wheres
+        );
+    }
+
     public function testOrderBy()
     {
         $builder = (new FilterBuilder($this->mockModel()))
