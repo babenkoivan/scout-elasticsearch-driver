@@ -124,7 +124,7 @@ class ElasticEngine extends Engine
                 ->setIfNotEmpty('body.suggest', $builder->suggesters)
                 ->setIfNotEmpty('body.explain', $options['explain'] ?? null)
                 ->setIfNotEmpty('body.profile', $options['profile'] ?? null)
-                ->setIfNotEmpty('body.track_scores', $this->trackScores);
+                ->setIfNotEmpty('body.track_scores', $this->trackScores)
                 ->setIfNotNull('body.from', $builder->offset)
                 ->setIfNotNull('body.size', $builder->limit);
 

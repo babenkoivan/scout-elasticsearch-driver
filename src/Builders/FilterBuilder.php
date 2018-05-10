@@ -21,17 +21,25 @@ class FilterBuilder extends Builder
      */
     public $with;
 
+    /**
+     * @var array
+     */
     public $aggregates;
 
+    /**
+     * @var array
+     */
     public $aggregateRules = [];
 
+    /**
+     * @var array
+     */
     public $suggesters;
 
+    /**
+     * @var array
+     */
     public $highlighter;
-
-    public $offset;
-
-    public $collapse;
 
     /**
      * @var int
@@ -383,26 +391,6 @@ class FilterBuilder extends Builder
 
         return $this;
     }
-    
-    /**
-     * @see https://www.elastic.co/guide/en/elasticsearch/guide/current/querying-geo-shapes.html Querying Geo Shapes
-     *
-     * @param string $field
-     * @param array $shape
-     * @return $this
-     */
-    public function whereGeoShape($field, array $shape)
-    {
-        $this->wheres['must'][] = [
-            'geo_shape' => [
-                $field => [
-                    'shape' => $shape
-                ]
-            ]
-        ];
-
-        return $this;
-    }
 
     /**
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html Term query
@@ -685,19 +673,6 @@ class FilterBuilder extends Builder
     }
 
     /**
-     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-collapse.html
-     *
-     * @param array $collapse
-     * @return $this
-     */
-    public function collapse($collapse)
-    {
-        $this->collapse = $collapse;
-
-        return $this;
-    }
-
-    /**
      * @return array
      */
     public function buildPayload()
@@ -862,6 +837,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-collapse.html
+     * 
      * @param string $field
      * @return $this
      */
