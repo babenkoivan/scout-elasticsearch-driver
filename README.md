@@ -5,7 +5,7 @@
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/scout-elasticsearch-driver/Lobby)
 [![Donate](https://img.shields.io/badge/donate-PayPal-blue.svg)](https://www.paypal.me/ivanbabenko)
 
-:coffee: If you like my package, it'd be nice of you [to buy me a cup of coffee](https://www.paypal.me/ivanbabenko).
+:beer: If you like my package, it'd be nice of you [to buy me a beer](https://www.paypal.me/ivanbabenko).
  
 :octocat: The project has a [chat room on Gitter](https://gitter.im/scout-elasticsearch-driver/Lobby)!
 
@@ -70,7 +70,10 @@ Option | Description
 --- | ---
 client | A setting hash to build Elasticsearch client. More information you can find [here](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/_configuration.html#_building_the_client_from_a_configuration_hash). By default the host is set to `localhost:9200`.
 update_mapping | The option that specifies whether to update a mapping automatically or not. By default it is set to `true`.
-indexer | Set to `single` for the single document indexing and to `bulk` for the bulk document indexing. By default is set to `single`. By default the track_scores is set to `true`.
+indexer | Set to `single` for the single document indexing and to `bulk` for the bulk document indexing. By default is set to `single`.
+document_refresh | This option controls when updated documents appear in the search results. Can be set to `'true'`, `'false'`, `'wait_for'` or `null`. More details about this option you can find [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-refresh.html). By default set to `null`.
+track_scores | By default the track_scores is set to `true`.
+
 
 Note, that if you use the bulk document indexing you'll probably want to change the chunk size, you can do that in the `config/scout.php` file.
 
@@ -190,10 +193,14 @@ Basic search usage example:
 ```php
 // set query string
 App\MyModel::search('phone')
+    // specify columns to select
+    ->select(['title', 'price'])
     // filter 
     ->where('color', 'red')
     // sort
     ->orderBy('price', 'asc')
+    // collapse by field
+    ->collapse('brand')
     // set offset
     ->from(0)
     // set limit
@@ -202,7 +209,14 @@ App\MyModel::search('phone')
     ->get();
 ```
 
-If you need to load relations you can use the `with` method:
+If you only need the number of matches for a query, use the `count` method:
+
+```php
+App\MyModel::search('phone') 
+    ->count();
+```
+
+If you need to load relations, use the `with` method:
 
 ```php
 App\MyModel::search('phone') 
@@ -346,7 +360,20 @@ use ScoutElastic\SearchRule;
 
 class MySearchRule extends SearchRule
 {
-    // This method returns an array that represents a content of bool query.
+    // This method returns an array, describes how to highlight the results.
+    // If null is returned, no highlighting will be used. 
+    public function buildHighlightPayload()
+    {
+        return [
+            'fields' => [
+                'name' => [
+                    'type' => 'plain'
+                ]
+            ]
+        ];
+    }
+    
+    // This method returns an array, that represents bool query.
     public function buildQueryPayload()
     {
         return [
@@ -360,7 +387,8 @@ class MySearchRule extends SearchRule
 }
 ```
 
-You can read more about bool queries [here](https://www.elastic.co/guide/en/elasticsearch/reference/5.2/query-dsl-bool-query.html).
+You can read more about bool queries [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html) 
+and about highlighting [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-highlighting.html#search-request-highlighting).
 
 The default search rule returns the following payload:
 
@@ -632,6 +660,21 @@ class MyModel extends Model
         MyHightlightRule::class
     ];
 }
+
+To retrieve highlight, use model `highlight` attribute:
+
+```php
+// Let's say we highlight field `name` of `MyModel`.
+$model = App\MyModel::search('Brazil')
+    ->rule(App\MySearchRule::class)
+    ->first();
+
+// Now you can get raw highlighted value:
+$model->highlight->name;
+
+// or string value:
+ $model->highlight->nameAsString;
+
 ```
 
 ## Available filters
@@ -648,7 +691,7 @@ whereBetween($field, $value) | whereBetween('price', [100, 200]) | Checks if a v
 whereNotBetween($field, $value) | whereNotBetween('price', [100, 200]) | Checks if a value isn't in a range.
 whereExists($field) | whereExists('unemployed') | Checks if a value is defined.
 whereNotExists($field) | whereNotExists('unemployed') | Checks if a value isn't defined.  
-whereRegexp($field, $value, $flags = 'ALL') | whereRegexp('name.raw', 'A.+') | Filters records according to a given regular expression. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/5.2/query-dsl-regexp-query.html#regexp-syntax) you can find more about syntax.
+whereRegexp($field, $value, $flags = 'ALL') | whereRegexp('name.raw', 'A.+') | Filters records according to a given regular expression. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html#regexp-syntax) you can find more about syntax.
 whereGeoDistance($field, $value, $distance) | whereGeoDistance('location', [-70, 40], '1000m') | Filters records according to given point and distance from it. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html) you can find more about syntax.
 whereGeoBoundingBox($field, array $value) | whereGeoBoundingBox('location', ['top_left' =>  [-74.1, 40.73], 'bottom_right' => [-71.12, 40.01]]) | Filters records within given boundings. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html) you can find more about syntax.
 whereGeoPolygon($field, array $points) | whereGeoPolygon('location', [[-70, 40],[-80, 30],[-90, 20]]) | Filters records within given polygon. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-query.html) you can find more about syntax.

@@ -9,10 +9,20 @@ use ScoutElastic\Payloads\DocumentPayload;
 
 class SingleIndexer implements IndexerInterface
 {
+    /**
+     * @inheritdoc
+     */
     public function update(Collection $models)
     {
         $models->each(function ($model) {
-            $modelData = $model->toSearchableArray();
+            if ($model->usesSoftDelete() && config('scout.soft_delete', false)) {
+                $model->pushSoftDeleteMetadata();
+            }
+
+            $modelData = array_merge(
+                $model->toSearchableArray(),
+                $model->scoutMetadata()
+            );
 
             if (empty($modelData)) {
                 return true;
@@ -27,10 +37,17 @@ class SingleIndexer implements IndexerInterface
                 $payload->useAlias('write');
             }
 
+            if ($documentRefresh = config('scout_elastic.document_refresh')) {
+                $payload->set('refresh', $documentRefresh);
+            }
+
             ElasticClient::index($payload->get());
         });
     }
 
+    /**
+     * @inheritdoc
+     */
     public function delete(Collection $models)
     {
         $models->each(function ($model) {

@@ -4,15 +4,27 @@ namespace ScoutElastic\Payloads;
 
 use Exception;
 use ScoutElastic\IndexConfigurator;
+use ScoutElastic\Payloads\Features\HasProtectedKeys;
 
 class IndexPayload extends RawPayload
 {
+    use HasProtectedKeys;
+
+    /**
+     * @var array
+     */
     protected $protectedKeys = [
         'index'
     ];
 
+    /**
+     * @var IndexConfigurator
+     */
     protected $indexConfigurator;
 
+    /**
+     * @param IndexConfigurator $indexConfigurator
+     */
     public function __construct(IndexConfigurator $indexConfigurator)
     {
         $this->indexConfigurator = $indexConfigurator;
@@ -20,6 +32,11 @@ class IndexPayload extends RawPayload
         $this->payload['index'] = $indexConfigurator->getName();
     }
 
+    /**
+     * @param string $alias
+     * @return $this
+     * @throws Exception
+     */
     public function useAlias($alias)
     {
         $aliasGetter = 'get'.ucfirst($alias).'Alias';
@@ -35,14 +52,5 @@ class IndexPayload extends RawPayload
         $this->payload['index'] = call_user_func([$this->indexConfigurator, $aliasGetter]);
 
         return $this;
-    }
-
-    public function set($key, $value)
-    {
-        if (in_array($key, $this->protectedKeys)) {
-            return $this;
-        }
-
-        return parent::set($key, $value);
     }
 }

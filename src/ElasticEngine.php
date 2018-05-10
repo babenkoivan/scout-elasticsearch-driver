@@ -15,14 +15,27 @@ use stdClass;
 
 class ElasticEngine extends Engine
 {
+    /**
+     * @var IndexerInterface
+     */
     protected $indexer;
 
+    /**
+     * @var bool
+     */
     protected $updateMapping;
 
     protected $trackScores;
 
+    /**
+     * @var array
+     */
     static protected $updatedMappings = [];
 
+    /**
+     * @param IndexerInterface $indexer
+     * @param $updateMapping
+     */
     public function __construct(IndexerInterface $indexer, $updateMapping, $trackScores)
     {
         $this->indexer = $indexer;
@@ -32,6 +45,9 @@ class ElasticEngine extends Engine
         $this->trackScores = $trackScores;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function update($models)
     {
         if ($this->updateMapping) {
@@ -53,55 +69,17 @@ class ElasticEngine extends Engine
             });
         }
 
-        $this->indexer->update($models);
+        $this
+            ->indexer
+            ->update($models);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function delete($models)
     {
         $this->indexer->delete($models);
-    }
-
-    protected function buildSearchQueryPayload(Builder $builder, $queryPayload, array $options = [])
-    {
-        foreach ($builder->wheres as $clause => $filters) {
-            if (count($filters) == 0) {
-                continue;
-            }
-
-            if (! array_has($queryPayload, 'filter.bool.'.$clause)) {
-                array_set($queryPayload, 'filter.bool.'.$clause, []);
-            }
-
-            $queryPayload['filter']['bool'][$clause] = array_merge(
-                $queryPayload['filter']['bool'][$clause],
-                $filters
-            );
-        }
-
-        $payload = (new TypePayload($builder->model))
-            ->setIfNotEmpty('body.query.bool', $queryPayload)
-            ->setIfNotEmpty('body.collapse', $builder->collapse)
-            ->setIfNotEmpty('body.sort', $builder->orders)
-            ->setIfNotEmpty('body.aggs', $builder->aggregates)
-            ->setIfNotEmpty('body.suggest', $builder->suggesters)
-            ->setIfNotEmpty('body.highlight', $builder->highlighter)
-            ->setIfNotEmpty('body.explain', $options['explain'] ?? null)
-            ->setIfNotEmpty('body.profile', $options['profile'] ?? null)
-            ->setIfNotEmpty('body.track_scores', $this->trackScores);
-
-        if (($size = isset($options['limit']) ? $options['limit'] : $builder->limit) || $builder->aggregates || $builder->suggesters) {
-            $payload->set('body.size', $size);
-        }
-
-        if (isset($builder->offset)) {
-            $payload->set('body.from', $builder->offset);
-        }
-
-        if (isset($builder->limit)) {
-            $payload->set('body.size', $builder->limit);
-        }
-
-        return $payload->get();
     }
 
     public function buildSearchQueryPayloadCollection(Builder $builder, array $options = [])
@@ -112,41 +90,67 @@ class ElasticEngine extends Engine
             $searchRules = $builder->rules ?: $builder->model->getSearchRules();
 
             foreach ($searchRules as $rule) {
+                $payload = new TypePayload($builder->model);
+
                 if (is_callable($rule)) {
-                    $queryPayload = call_user_func($rule, $builder);
+                    $payload->setIfNotEmpty('body.query.bool', call_user_func($rule, $builder));
                 } else {
                     /** @var SearchRule $ruleEntity */
                     $ruleEntity = new $rule($builder);
 
                     if ($ruleEntity->isApplicable()) {
-                        $queryPayload = $ruleEntity->buildQueryPayload();
+                        $payload->setIfNotEmpty('body.query.bool', $ruleEntity->buildQueryPayload());
+                        $payload->setIfNotEmpty('body.highlight', $ruleEntity->buildHighlightPayload());
                     } else {
                         continue;
                     }
                 }
 
-                $payload = $this->buildSearchQueryPayload(
-                    $builder,
-                    $queryPayload,
-                    $options
-                );
-
                 $payloadCollection->push($payload);
             }
         } else {
-            $payload = $this->buildSearchQueryPayload(
-                $builder,
-                ['must' => ['match_all' => new stdClass()]],
-                $options
-            );
+            $payload = (new TypePayload($builder->model))
+                ->setIfNotEmpty('body.query.bool.must.match_all', new stdClass());
 
             $payloadCollection->push($payload);
         }
 
-        return $payloadCollection;
+        return $payloadCollection->map(function (TypePayload $payload) use ($builder, $options) {
+            $payload
+                ->setIfNotEmpty('body._source', $builder->select)
+                ->setIfNotEmpty('body.collapse.field', $builder->collapse)
+                ->setIfNotEmpty('body.sort', $builder->orders)
+                ->setIfNotEmpty('body.aggs', $builder->aggregates)
+                ->setIfNotEmpty('body.suggest', $builder->suggesters)
+                ->setIfNotEmpty('body.explain', $options['explain'] ?? null)
+                ->setIfNotEmpty('body.profile', $options['profile'] ?? null)
+                ->setIfNotEmpty('body.track_scores', $this->trackScores);
+                ->setIfNotNull('body.from', $builder->offset)
+                ->setIfNotNull('body.size', $builder->limit);
+
+
+            foreach ($builder->wheres as $clause => $filters) {
+                $clauseKey = 'body.query.bool.filter.bool.' . $clause;
+
+                $clauseValue = array_merge(
+                    $payload->get($clauseKey, []),
+                    $filters
+                );
+
+                $payload->setIfNotEmpty($clauseKey, $clauseValue);
+            }
+
+            return $payload->get();
+        });
     }
 
-    protected function performSearch(Builder $builder, array $options = []) {
+    /**
+     * @param Builder $builder
+     * @param array $options
+     * @return array
+     */
+    protected function performSearch(Builder $builder, array $options = [])
+    {
         if ($builder->callback) {
             return call_user_func(
                 $builder->callback,
@@ -156,26 +160,34 @@ class ElasticEngine extends Engine
             );
         }
 
-        $result = null;
+        $results = [];
 
-        $this->buildSearchQueryPayloadCollection($builder, $options)->each(function($payload) use (&$result) {
-            $result = ElasticClient::search($payload);
+        $this
+            ->buildSearchQueryPayloadCollection($builder, $options)
+            ->each(function ($payload) use (&$results) {
+                $results = ElasticClient::search($payload);
 
-            if ($this->getTotalCount($result) > 0) {
-                return false;
-            }
-        });
+                $results['_payload'] = $payload;
 
-        $result['builder'] = $builder;
+                if ($this->getTotalCount($results) > 0) {
+                    return false;
+                }
+            });
 
-        return $result;
+        return $results;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function search(Builder $builder)
     {
         return $this->performSearch($builder);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function paginate(Builder $builder, $perPage, $page)
     {
         $builder
@@ -185,6 +197,10 @@ class ElasticEngine extends Engine
         return $this->performSearch($builder);
     }
 
+    /**
+     * @param Builder $builder
+     * @return array
+     */
     public function explain(Builder $builder)
     {
         return $this->performSearch($builder, [
@@ -192,6 +208,10 @@ class ElasticEngine extends Engine
         ]);
     }
 
+    /**
+     * @param Builder $builder
+     * @return array
+     */
     public function profile(Builder $builder)
     {
         return $this->performSearch($builder, [
@@ -199,6 +219,34 @@ class ElasticEngine extends Engine
         ]);
     }
 
+    /**
+     * @param Builder $builder
+     * @return int
+     */
+    public function count(Builder $builder)
+    {
+        $count = 0;
+
+        $this
+            ->buildSearchQueryPayloadCollection($builder)
+            ->each(function ($payload) use (&$count) {
+                $result = ElasticClient::count($payload);
+
+                $count = $result['count'];
+
+                if ($count > 0) {
+                    return false;
+                }
+            });
+
+        return $count;
+    }
+
+    /**
+     * @param Model $model
+     * @param array $query
+     * @return array
+     */
     public function searchRaw(Model $model, $query)
     {
         $payload = (new TypePayload($model))
@@ -208,44 +256,67 @@ class ElasticEngine extends Engine
         return ElasticClient::search($payload);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function mapIds($results)
     {
         return array_pluck($results['hits']['hits'], '_id');
     }
 
+    /**
+     * @inheritdoc
+     */
     public function map($results, $model)
     {
         if ($this->getTotalCount($results) == 0) {
             return Collection::make();
         }
 
-        $ids = $this->mapIds($results);
+        $primaryKey = $model->getKeyName();
 
-        $modelKey = $model->getKeyName();
+        $columns = array_get($results, '_payload.body._source');
 
-        $models = $model->whereIn($modelKey, $ids)
-                        ->get()
-                        ->keyBy($modelKey);
-
-        $collection = Collection::make($results['hits']['hits'])->map(function($hit) use ($models) {
-            $id = $hit['_id'];
-
-            if (isset($models[$id])) {
-                $model = $models[$id];
-                $model->_score = $hit['_score'];
-                return $model;
-            }
-        })->filter()->values();
-
-        $builder = $results['builder'];
-
-        if (isset($builder->with) && $collection->count() > 0) {
-            $collection->load($builder->with);
+        if (is_null($columns)) {
+            $columns = ['*'];
+        } else {
+            $columns[] = $primaryKey;
         }
 
-        return $collection;
+        $ids = $this->mapIds($results);
+
+        $builder = $model->usesSoftDelete() ? $model->withTrashed() : $model->newQuery();
+
+        $models = $builder
+            ->whereIn($primaryKey, $ids)
+            ->get($columns)
+            ->keyBy($primaryKey);
+
+        return Collection::make($results['hits']['hits'])
+            ->map(function ($hit) use ($models) {
+                $id = $hit['_id'];
+
+                if (isset($models[$id])) {
+                    $model = $models[$id];
+
+                    if (isset($hit['_score'])) {
+                        $model->_score = $hit['_score'];
+                    }
+
+                    if (isset($hit['highlight'])) {
+                        $model->highlight = new Highlight($hit['highlight']);
+                    }
+
+                    return $model;
+                }
+            })
+            ->filter()
+            ->values();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getTotalCount($results)
     {
         return $results['hits']['total'];

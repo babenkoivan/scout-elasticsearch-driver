@@ -9,12 +9,21 @@ class DummyClass extends Model
 {
     use Searchable;
 
+    /**
+     * @var string
+     */
     protected $indexConfigurator = DummyIndexConfigurator;
 
+    /**
+     * @var array
+     */
     protected $searchRules = [
         DummySearchRule
     ];
 
+    /**
+     * @var array
+     */
     protected $mapping = [
         //
     ];

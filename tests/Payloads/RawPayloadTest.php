@@ -2,10 +2,10 @@
 
 namespace ScoutElastic\Tests\Payloads;
 
-use PHPUnit\Framework\TestCase;
 use ScoutElastic\Payloads\RawPayload;
+use ScoutElastic\Tests\AbstractTestCase;
 
-class RawPayloadTest extends TestCase
+class RawPayloadTest extends AbstractTestCase
 {
     public function testSet()
     {
@@ -30,6 +30,28 @@ class RawPayloadTest extends TestCase
 
         $this->assertEquals(
             ['foo' => 'bar'],
+            $payload->get()
+        );
+    }
+
+    public function testSetIfNotNull()
+    {
+        $payload = (new RawPayload())
+            ->setIfNotNull('null', null)
+            ->setIfNotNull('false', false)
+            ->setIfNotNull('zero', 0)
+            ->setIfNotNull('empty_array', [])
+            ->setIfNotNull('empty_string', '')
+            ->setIfNotNull('foo', 'bar');
+
+        $this->assertEquals(
+            [
+                'false' => false,
+                'zero' => 0,
+                'empty_array' => [],
+                'empty_string' => '',
+                'foo' => 'bar'
+            ],
             $payload->get()
         );
     }
@@ -81,6 +103,11 @@ class RawPayloadTest extends TestCase
         $this->assertEquals(
             ['foo' => ['bar' => 0]],
             $payload->get()
+        );
+
+        $this->assertEquals(
+            ['value' => 1],
+            $payload->get('default', ['value' => 1])
         );
     }
 }

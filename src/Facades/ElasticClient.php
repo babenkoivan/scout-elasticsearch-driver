@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Facade;
 
 class ElasticClient extends Facade
 {
+    /**
+     * @return string
+     */
     protected static function getFacadeAccessor()
     {
-        return 'scout.es.client';
+        return 'scout_elastic.client';
     }
 }

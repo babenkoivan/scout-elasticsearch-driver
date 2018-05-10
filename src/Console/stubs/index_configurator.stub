@@ -9,6 +9,9 @@ class DummyClass extends IndexConfigurator
 {
     use Migratable;
 
+    /**
+     * @var array
+     */
     protected $settings = [
         //
     ];

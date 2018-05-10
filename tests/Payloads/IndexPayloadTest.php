@@ -2,11 +2,11 @@
 
 namespace ScoutElastic\Tests\Payloads;
 
-use PHPUnit\Framework\TestCase;
 use ScoutElastic\Payloads\IndexPayload;
+use ScoutElastic\Tests\AbstractTestCase;
 use ScoutElastic\Tests\Dependencies\IndexConfigurator;
 
-class IndexPayloadTest extends TestCase
+class IndexPayloadTest extends AbstractTestCase
 {
     use IndexConfigurator;
 
