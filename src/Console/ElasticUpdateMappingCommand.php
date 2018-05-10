@@ -6,6 +6,7 @@ use LogicException;
 use Illuminate\Console\Command;
 use ScoutElastic\Console\Features\RequiresModelArgument;
 use ScoutElastic\Facades\ElasticClient;
+use ScoutElastic\Migratable;
 use ScoutElastic\Payloads\TypePayload;
 
 class ElasticUpdateMappingCommand extends Command
@@ -39,12 +40,16 @@ class ElasticUpdateMappingCommand extends Command
             throw new LogicException('Nothing to update: the mapping is not specified.');
         }
 
-        $payload = (new TypePayload($model))
-            ->set('body.' . $model->searchableAs(), $mapping)
-            ->get();
+        $payload = new TypePayload($model);
+
+        if (in_array(Migratable::class, class_uses_recursive($configurator))) {
+            $payload->useAlias('write');
+        }
+
+        $payload->set('body.' . $model->searchableAs(), $mapping);
 
         ElasticClient::indices()
-            ->putMapping($payload);
+            ->putMapping($payload->get());
 
         $this->info(sprintf(
             'The %s mapping was updated!',
