@@ -177,17 +177,25 @@ class ElasticMigrateCommand extends Command
     }
 
     /**
-     * @param string $name
+     * @param $name
+     * @return array
      */
-    protected function deleteAlias($name)
+    protected function getAlias($name)
     {
-        $indices = ElasticClient::indices();
-
         $getPayload = (new RawPayload())
             ->set('name', $name)
             ->get();
 
-        $aliases = $indices->getAlias($getPayload);
+        return ElasticClient::indices()
+            ->getAlias($getPayload);
+    }
+
+    /**
+     * @param string $name
+     */
+    protected function deleteAlias($name)
+    {
+        $aliases = $this->getAlias($name);
 
         if (empty($aliases)) {
             return;
@@ -199,7 +207,8 @@ class ElasticMigrateCommand extends Command
                 ->set('name', $name)
                 ->get();
 
-            $indices->deleteAlias($deletePayload);
+            ElasticClient::indices()
+                ->deleteAlias($deletePayload);
 
             $this->info(sprintf(
                 'The %s alias for the %s index was deleted.',
@@ -247,19 +256,38 @@ class ElasticMigrateCommand extends Command
 
     protected function deleteSourceIndex()
     {
-        $sourceIndexConfigurator = $this->getModel()
+        $sourceIndexConfigurator = $this
+            ->getModel()
             ->getIndexConfigurator();
 
-        $payload = (new IndexPayload($sourceIndexConfigurator))
-            ->get();
+        if ($this->isAliasExists($sourceIndexConfigurator->getName())) {
+            $aliases = $this->getAlias($sourceIndexConfigurator->getName());
 
-        ElasticClient::indices()
-            ->delete($payload);
+            foreach ($aliases as $index => $alias) {
+                $payload = (new RawPayload())
+                    ->set('index', $index)
+                    ->get();
 
-        $this->info(sprintf(
-            'The %s index was removed.',
-            $sourceIndexConfigurator->getName()
-        ));
+                ElasticClient::indices()
+                    ->delete($payload);
+
+                $this->info(sprintf(
+                    'The %s index was removed.',
+                    $index
+                ));
+            }
+        } else {
+            $payload = (new IndexPayload($sourceIndexConfigurator))
+                ->get();
+
+            ElasticClient::indices()
+                ->delete($payload);
+
+            $this->info(sprintf(
+                'The %s index was removed.',
+                $sourceIndexConfigurator->getName()
+            ));
+        }
     }
 
     public function handle()
