@@ -62,8 +62,7 @@ To configure the package you need to publish settings first:
 ```
 php artisan vendor:publish --provider="ScoutElastic\ScoutElasticServiceProvider"
 ```
-
-Then, set the driver setting to `es` in the `config/scout.php` file and configure the driver itself in the `config/scout.php` file.
+Then, set the driver setting to `elastic` in the `config/scout.php` file and configure the driver itself in the `config/scout_elastic.php` file.
 The available options are:
 
 Option | Description
@@ -465,7 +464,7 @@ namespace App;
 
 use ScoutElastic\AggregateRule;
 
-class MyAggregate extends AggregateRule
+class MyAggregateRule extends AggregateRule
 {
     // This method returns an array that represents a content of bool query.
     public function buildAggregatePayload()
@@ -623,7 +622,7 @@ namespace App;
 
 use ScoutElastic\HightlightRule;
 
-class MyHightlight extends HightlightRule
+class MyHightlightRule extends HightlightRule
 {
     // This method returns an array that represents a content of bool query.
     public function buildHightlightPayload()
