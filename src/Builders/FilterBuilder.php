@@ -12,6 +12,7 @@ class FilterBuilder extends Builder
      */
     public $wheres = [
         'must' => [],
+        'should' => [],
         'must_not' => []
     ];
 
@@ -19,6 +20,26 @@ class FilterBuilder extends Builder
      * @var array|string
      */
     public $with;
+
+    /**
+     * @var array
+     */
+    public $aggregates;
+
+    /**
+     * @var array
+     */
+    public $aggregateRules = [];
+
+    /**
+     * @var array
+     */
+    public $suggesters;
+
+    /**
+     * @var array
+     */
+    public $highlighter;
 
     /**
      * @var int
@@ -269,6 +290,13 @@ class FilterBuilder extends Builder
         return $this;
     }
 
+    public function whereCustom(array $filter)
+    {
+        $this->wheres['must'][] = $filter;
+
+        return $this;
+    }
+
     /**
      * @param mixed $value
      * @param callable $callback
@@ -363,7 +391,238 @@ class FilterBuilder extends Builder
 
         return $this;
     }
-    
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html Term query
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-range-query.html Range query
+     * 
+     * Supported operators are =, &gt;, &lt;, &gt;=, &lt;=;
+     * @param string $field Field name
+     * @param mixed $value Scalar value or an array
+     * @return $this
+     */
+    public function should($field, $value)
+    {
+        $args = func_get_args();
+
+        if (count($args) == 3) {
+            list($field, $operator, $value) = $args;
+        } else {
+            $operator = '=';
+        }
+
+        switch ($operator) {
+            case '=':
+                $this->wheres['should'][] = [
+                    'term' => [
+                        $field => $value
+                    ]
+                ];
+                break;
+            case '>':
+                $this->wheres['should'][] = [
+                    'range' => [
+                        $field => [
+                            'gt' => $value
+                        ]
+                    ]
+                ];
+                break;
+            case '<':
+                $this->wheres['should'][] = [
+                    'range' => [
+                        $field => [
+                            'lt' => $value
+                        ]
+                    ]
+                ];
+                break;
+            case '>=':
+                $this->wheres['should'][] = [
+                    'range' => [
+                        $field => [
+                            'gte' => $value
+                        ]
+                    ]
+                ];
+                break;
+            case '<=':
+                $this->wheres['should'][] = [
+                    'range' => [
+                        $field => [
+                            'lte' => $value
+                        ]
+                    ]
+                ];
+                break;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html Terms query
+     *
+     * @param string $field
+     * @param array $value
+     * @return $this
+     */
+    public function shouldIn($field, array $value)
+    {
+        $this->wheres['should'][] = [
+            'terms' => [
+                $field => $value
+            ]
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-range-query.html Range query
+     *
+     * @param string $field
+     * @param array $value
+     * @return $this
+     */
+    public function shouldBetween($field, array $value)
+    {
+        $this->wheres['should'][] = [
+            'range' => [
+                $field => [
+                    'gte' => $value[0],
+                    'lte' => $value[1]
+                ]
+            ]
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-exists-query.html Exists query
+     *
+     * @param string $field
+     * @return $this
+     */
+    public function shouldExists($field)
+    {
+        $this->wheres['should'][] = [
+            'exists' => [
+                'field' => $field
+            ]
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html Regexp query
+     *
+     * @param string $field
+     * @param string $value
+     * @param string $flags
+     * @return $this
+     */
+    public function shouldRegexp($field, $value, $flags = 'ALL')
+    {
+        $this->wheres['should'][] = [
+            'regexp' => [
+                $field => [
+                    'value' => $value,
+                    'flags' => $flags
+                ]
+            ]
+        ];
+
+        return $this;
+    }
+
+    public function shouldCustom(array $filter)
+    {
+        $this->wheres['should'][] = $filter;
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html Geo distance query
+     *
+     * @param string $field
+     * @param string|array $value
+     * @param int|string $distance
+     * @return $this
+     */
+    public function shouldGeoDistance($field, $value, $distance)
+    {
+        $this->wheres['should'][] = [
+            'geo_distance' => [
+                'distance' => $distance,
+                $field => $value
+            ]
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html Geo bounding box query
+     *
+     * @param string $field
+     * @param array $value
+     * @return $this
+     */
+    public function shouldGeoBoundingBox($field, array $value)
+    {
+        $this->wheres['should'][] = [
+            'geo_bounding_box' => [
+                $field => $value
+            ]
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-query.html Geo polygon query
+     *
+     * @param string $field
+     * @param array $points
+     * @return $this
+     */
+    public function shouldGeoPolygon($field, array $points)
+    {
+        $this->wheres['should'][] = [
+            'geo_polygon' => [
+                $field => [
+                    'points' => $points
+                ]
+            ]
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/guide/current/querying-geo-shapes.html Querying Geo Shapes
+     *
+     * @param string $field
+     * @param array $shape
+     * @return $this
+     */
+    public function shouldGeoShape($field, array $shape)
+    {
+        $this->wheres['should'][] = [
+            'geo_shape' => [
+                $field => [
+                    'shape' => $shape
+                ]
+            ]
+        ];
+
+        return $this;
+    }
+
     /**
      * @param string $field
      * @param string $direction
@@ -373,6 +632,21 @@ class FilterBuilder extends Builder
     {
         $this->orders[] = [
             $field => strtolower($direction) == 'asc' ? 'asc' : 'desc'
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting-security.html
+     *
+     * @param array $script
+     * @return $this
+     */
+    public function orderByScript($script)
+    {
+        $this->orders[] = [
+            '_script' => $script
         ];
 
         return $this;
@@ -409,12 +683,114 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * @see https://laravel.com/docs/master/eloquent-relationships#eager-loading
+     *
+     * @param array $relations
      * @param array|string $relations
      * @return $this
      */
     public function with($relations)
     {
         $this->with = $relations;
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/returning-only-agg-results.html
+     *
+     * @param int $size
+     * @return $this
+     */
+    public function aggregate($size = 0)
+    {
+        $this->take($size);
+        $payloadCollection = [];
+
+        $aggregateRules = $this->aggregateRules ?: $this->model->getAggregateRules();
+
+        foreach ($aggregateRules as $rule) {
+            if (is_callable($rule)) {
+                $payloadCollection[] = call_user_func($rule);
+            } else {
+                $ruleEntity = new $rule;
+
+                if ($aggregatePayload = $ruleEntity->buildAggregatePayload()) {
+                    $payloadCollection[] = $aggregatePayload;
+                }
+            }
+        }
+
+        $this->aggregates = array_reduce($payloadCollection, 'array_merge', []);
+
+        return $this->engine()->search($this);
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-phrase.html
+     *
+     * @param int $size
+     * @return $this
+     */
+    public function suggest($size = 0)
+    {
+        if ($this instanceof SearchBuilder) {
+            $this->take($size);
+            $payloadCollection = [];
+            
+            $suggestRules = $this->model->getSuggestRules();
+
+            foreach ($suggestRules as $rule) {
+
+                $ruleEntity = new $rule($this);
+
+                if ($suggestPayload = $ruleEntity->buildSuggestPayload()) {
+                    $payloadCollection[] = $suggestPayload;
+                }
+            }
+
+            $this->suggesters = array_reduce($payloadCollection, 'array_merge', []);
+            
+            return $this->engine()->search($this);
+        }
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-highlighting.html
+     *
+     * @return $this
+     */
+    public function highlight()
+    {
+        if ($this instanceof SearchBuilder) {
+            $payloadCollection = [];
+            
+            $highlightRules = $this->model->getHighlightRules();
+
+            foreach ($highlightRules as $rule) {
+
+                $ruleEntity = new $rule($this);
+
+                if ($highlightPayload = $ruleEntity->buildHighlightPayload()) {
+                    $payloadCollection[] = $highlightPayload;
+                }
+            }
+
+            $this->highlighters = array_reduce($payloadCollection, 'array_merge', []);
+            
+            return $this->engine()->search($this);
+        }
+    }
+
+    /**
+     * Adds rule to the aggregate rules of the builder.
+     *
+     * @param $rule
+     * @return $this
+     */
+    public function aggregateRule($rule)
+    {
+        $this->aggregateRules[] = $rule;
 
         return $this;
     }
@@ -461,6 +837,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-collapse.html
+     * 
      * @param string $field
      * @return $this
      */

@@ -63,7 +63,6 @@ To configure the package you need to publish settings first:
 php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 php artisan vendor:publish --provider="ScoutElastic\ScoutElasticServiceProvider"
 ```
-
 Then, set the driver setting to `elastic` in the `config/scout.php` file and configure the driver itself in the `config/scout_elastic.php` file.
 The available options are:
 
@@ -73,6 +72,8 @@ client | A setting hash to build Elasticsearch client. More information you can 
 update_mapping | The option that specifies whether to update a mapping automatically or not. By default it is set to `true`.
 indexer | Set to `single` for the single document indexing and to `bulk` for the bulk document indexing. By default is set to `single`.
 document_refresh | This option controls when updated documents appear in the search results. Can be set to `'true'`, `'false'`, `'wait_for'` or `null`. More details about this option you can find [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-refresh.html). By default set to `null`.
+track_scores | By default the track_scores is set to `true`.
+
 
 Note, that if you use the bulk document indexing you'll probably want to change the chunk size, you can do that in the `config/scout.php` file.
 
@@ -223,6 +224,14 @@ App\MyModel::search('phone')
     ->get();
 ```
 
+If you need to load multiple relations you can use the `with` method:
+
+```php
+App\MyModel::search('phone') 
+    ->with(['makers', 'company'])
+    ->paginate();
+```
+
 In addition to standard functionality the package offers you the possibility to filter data in Elasticsearch without specifying a query string:
   
 ```php
@@ -249,6 +258,28 @@ App\MyModel::search('*')
     ->get();
 ```
 
+
+If you want to send a custom sort, you can use the `orderByScript` method:
+
+```php
+App\MyModel::search('*')->orderByScript([
+    'script' => [
+        'lang' => 'groovy',
+        'inline' => "
+            def rank = 1;
+            if (doc['price'].value) {
+                rank += doc['total_view'].value*1+doc['total_like'].value*4+doc['total_download'].value*64;
+            } else {
+                rank += doc['total_view'].value*1+doc['total_like'].value*8+doc['total_download'].value*16;
+            }
+            return rank;
+        "
+    ],
+    'type' => 'number',
+    'order' => 'desc'
+])->paginate();
+```
+
 At last, if you want to send a custom request, you can use the `searchRaw` method:
 
 ```php
@@ -265,6 +296,28 @@ App\MyModel::searchRaw([
 ]);
 ```
 
+In addition to standard functionality the package offers you the possibility to aggregate data in Elasticsearch without specifying a query string:
+  
+```php
+App\MyModel::search('*')
+    ->aggregate();
+```
+
+In addition to standard functionality the package offers you the possibility to suggest data in Elasticsearch with specifying a query string:
+  
+```php
+App\MyModel::search('phone')
+    ->suggest();
+```
+
+In addition to standard functionality the package offers you the possibility to highlight data in Elasticsearch with specifying a query string:
+  
+```php
+App\MyModel::search('phone')
+    ->highlight();
+```
+
+
 This query will return raw response.
 
 ## Console commands
@@ -276,6 +329,9 @@ Command | Arguments | Description
 make:index-configurator | `name` - The name of the class | Creates a new Elasticsearch index configurator.
 make:searchable-model | `name` - The name of the class | Creates a new searchable model.
 make:search-rule | `name` - The name of the class | Creates a new search rule.
+make:aggregate-rule | `name` - The name of the class | Creates a new aggregate rule.
+make:suggest-rule | `name` - The name of the class | Creates a new suggest rule.
+make:highlight-rule | `name` - The name of the class | Creates a new highlight rule.
 elastic:create-index | `index-configurator` - The index configurator class | Creates an Elasticsearch index.
 elastic:update-index | `index-configurator` - The index configurator class | Updates settings and mappings of an Elasticsearch index.
 elastic:drop-index | `index-configurator` - The index configurator class | Drops an Elasticsearch index.
@@ -302,7 +358,7 @@ namespace App;
 
 use ScoutElastic\SearchRule;
 
-class MySearch extends SearchRule
+class MySearchRule extends SearchRule
 {
     // This method returns an array, describes how to highlight the results.
     // If null is returned, no highlighting will be used. 
@@ -391,6 +447,220 @@ App\MyModel::search('Brazil')
     ->get();
 ```
 
+## Aggregate rules
+
+A aggregate rule is a class that describes how a aggregate query will be executed. 
+To create a aggregate rule use the command:
+
+```
+php artisan make:aggregate-rule MyAggregateRule
+```
+
+In the file `app/MyAggregateRule.php` you will find a class definition:
+
+```php
+<?php
+
+namespace App;
+
+use ScoutElastic\AggregateRule;
+
+class MyAggregateRule extends AggregateRule
+{
+    // This method returns an array that represents a content of bool query.
+    public function buildAggregatePayload()
+    {
+        return [
+            'icon_count' => [
+                'terms' => [
+                    'field' => 'icon_id',
+                    'size' => 15
+                ]
+            ],
+            'style_count' => [
+                'terms' => [
+                    'field' => 'style_id',
+                    'size' => 7
+                ]
+            ],
+            'category_count' => [
+                'terms' => [
+                    'field' => 'category_id',
+                    'size' => 39
+                ]
+            ]
+        ];
+    }
+}
+```
+
+You can read more about aggregation queries [here](https://www.elastic.co/guide/en/elasticsearch/reference/5.2/returning-only-agg-results.html).
+
+To determine default aggregate rules for a model just add a property:
+
+```php
+<?php
+
+namespace App;
+
+use ScoutElastic\Searchable;
+use Illuminate\Database\Eloquent\Model;
+
+class MyModel extends Model
+{
+    use Searchable;
+    
+    // You can set several rules for one model. In this case, the first not empty result will be returned.
+    protected $aggregateRules = [
+        MyAggregateRule::class
+    ];
+}
+```
+
+## Suggest rules
+
+A suggest rule is a class that describes how a suggest query will be executed. 
+To create a suggest rule use the command:
+
+```
+php artisan make:suggest-rule MySuggestRule
+```
+
+In the file `app/MySuggestRule.php` you will find a class definition:
+
+```php
+<?php
+
+namespace App;
+
+use ScoutElastic\SuggestRule;
+
+class MySuggestRule extends SuggestRule
+{
+    // This method returns an array that represents a content of bool query.
+    public function buildSuggestPayload()
+    {
+        $query = $this->builder->query;
+
+        if (empty($query)) {
+            return null;
+        }
+
+        return [
+            'text' => $query,
+            'autocomplete' => [
+                'prefix' => $query,
+                'completion' => [
+                    'field' => 'name.suggest_autocomplete',
+                    'size' => 7
+                ],
+            ],
+            'phrase-suggest' => [
+                'phrase' => [
+                    'field' => 'name.suggest_phrase.trigram',
+                    'gram_size' => 3,
+                    'direct_generator' => [
+                        [
+                            'field' => 'name.suggest_phrase.trigram',
+                            'suggest_mode' => 'always'
+                        ],
+                        [
+                            'field' => 'name.suggest_phrase.reverse',
+                            'suggest_mode' => 'always',
+                            'pre_filter' => 'reverse',
+                            'post_filter' => 'reverse'
+                        ],
+                    ],
+                    'highlight' => [
+                        'pre_tag' => '<em>',
+                        'post_tag' => '</em>'
+                    ]
+                ]
+            ]
+        ];
+    }
+}
+```
+
+You can read more about suggestion queries [here](https://www.elastic.co/guide/en/elasticsearch/reference/5.2/search-suggesters-phrase.html).
+
+To determine default suggest rules for a model just add a property:
+
+```php
+<?php
+
+namespace App;
+
+use ScoutElastic\Searchable;
+use Illuminate\Database\Eloquent\Model;
+
+class MyModel extends Model
+{
+    use Searchable;
+    
+    // You can set several rules for one model. In this case, the first not empty result will be returned.
+    protected $suggestRules = [
+        MySuggestRule::class
+    ];
+}
+```
+
+## Hightlight rules
+
+A hightlight rule is a class that describes how a hightlight query will be executed. 
+To create a hightlight rule use the command:
+
+```
+php artisan make:hightlight-rule MyHightlightRule
+```
+
+In the file `app/MyHightlightRule.php` you will find a class definition:
+
+```php
+<?php
+
+namespace App;
+
+use ScoutElastic\HightlightRule;
+
+class MyHightlightRule extends HightlightRule
+{
+    // This method returns an array that represents a content of bool query.
+    public function buildHightlightPayload()
+    {
+        return [
+            'fields' => [
+                'name' => [
+                    'force_source' => true
+                ]
+            ]
+        ];
+    }
+}
+```
+
+You can read more about hightlighter queries [here](https://www.elastic.co/guide/en/elasticsearch/reference/5.2/search-request-highlighting.html).
+
+To determine default hightlight rules for a model just add a property:
+
+```php
+<?php
+
+namespace App;
+
+use ScoutElastic\Searchable;
+use Illuminate\Database\Eloquent\Model;
+
+class MyModel extends Model
+{
+    use Searchable;
+    
+    // You can set several rules for one model. In this case, the first not empty result will be returned.
+    protected $hightlightRules = [
+        MyHightlightRule::class
+    ];
+}
+
 To retrieve highlight, use model `highlight` attribute:
 
 ```php
@@ -404,6 +674,7 @@ $model->highlight->name;
 
 // or string value:
  $model->highlight->nameAsString;
+
 ```
 
 ## Available filters

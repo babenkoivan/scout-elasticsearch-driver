@@ -25,6 +25,8 @@ class ElasticEngine extends Engine
      */
     protected $updateMapping;
 
+    protected $trackScores;
+
     /**
      * @var array
      */
@@ -34,11 +36,13 @@ class ElasticEngine extends Engine
      * @param IndexerInterface $indexer
      * @param $updateMapping
      */
-    public function __construct(IndexerInterface $indexer, $updateMapping)
+    public function __construct(IndexerInterface $indexer, $updateMapping, $trackScores)
     {
         $this->indexer = $indexer;
 
         $this->updateMapping = $updateMapping;
+
+        $this->trackScores = $trackScores;
     }
 
     /**
@@ -78,11 +82,6 @@ class ElasticEngine extends Engine
         $this->indexer->delete($models);
     }
 
-    /**
-     * @param Builder $builder
-     * @param array $options
-     * @return array
-     */
     public function buildSearchQueryPayloadCollection(Builder $builder, array $options = [])
     {
         $payloadCollection = collect();
@@ -121,8 +120,11 @@ class ElasticEngine extends Engine
                 ->setIfNotEmpty('body._source', $builder->select)
                 ->setIfNotEmpty('body.collapse.field', $builder->collapse)
                 ->setIfNotEmpty('body.sort', $builder->orders)
+                ->setIfNotEmpty('body.aggs', $builder->aggregates)
+                ->setIfNotEmpty('body.suggest', $builder->suggesters)
                 ->setIfNotEmpty('body.explain', $options['explain'] ?? null)
                 ->setIfNotEmpty('body.profile', $options['profile'] ?? null)
+                ->setIfNotEmpty('body.track_scores', $this->trackScores)
                 ->setIfNotNull('body.from', $builder->offset)
                 ->setIfNotNull('body.size', $builder->limit);
 
@@ -296,6 +298,10 @@ class ElasticEngine extends Engine
 
                 if (isset($models[$id])) {
                     $model = $models[$id];
+
+                    if (isset($hit['_score'])) {
+                        $model->_score = $hit['_score'];
+                    }
 
                     if (isset($hit['highlight'])) {
                         $model->highlight = new Highlight($hit['highlight']);

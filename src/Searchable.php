@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable as ScoutSearchable;
 use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
-use \Exception;
+use Exception;
 
 trait Searchable
 {
@@ -79,6 +79,22 @@ trait Searchable
     {
         return isset($this->searchRules) && count($this->searchRules) > 0 ?
             $this->searchRules : [SearchRule::class];
+    }
+
+    /**
+     * @return array
+     */
+    public function getAggregateRules()
+    {
+        return isset($this->aggregateRules) && count($this->aggregateRules) > 0 ? $this->aggregateRules : [AggregateRule::class];
+    }
+
+    /**
+     * @return array
+     */
+    public function getSuggestRules()
+    {
+        return isset($this->suggestRules) && count($this->suggestRules) > 0 ? $this->suggestRules : [SuggestRule::class];
     }
 
     /**

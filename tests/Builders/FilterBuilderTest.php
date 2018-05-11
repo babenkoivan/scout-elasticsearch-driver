@@ -2,6 +2,7 @@
 
 namespace ScoutElastic\Tests\Builders;
 
+use ScoutElastic\AggregateRule;
 use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Tests\AbstractTestCase;
 use ScoutElastic\Tests\Dependencies\Model;
@@ -254,6 +255,41 @@ class FilterBuilderTest extends AbstractTestCase
         );
     }
 
+    public function testWhereCustom()
+    {
+        $this
+            ->builder
+            ->whereCustom([
+                'bool' => [
+                    'should' => [
+                        ['term' => ['foo' => 'bar']],
+                        ['term' => ['baz' => 'qux']]
+                    ],
+                    'minimum_should_match' => 1,
+                    'boost' => 2.0
+                ]
+            ]);
+
+        $this->assertEquals(
+            [
+                'must' => [
+                    [
+                        'bool' => [
+                            'should' => [
+                                ['term' => ['foo' => 'bar']],
+                                ['term' => ['baz' => 'qux']]
+                            ],
+                            'minimum_should_match' => 1,
+                            'boost' => 2.0
+                        ]
+                    ]
+                ],
+                'must_not' => []
+            ],
+            $this->builder->wheres
+        );
+    }
+
     public function testWhen()
     {
         $builder = (new FilterBuilder($this->mockModel()))
@@ -479,6 +515,45 @@ class FilterBuilderTest extends AbstractTestCase
                 'must_not' => []
             ],
             $builder->wheres
+        );
+    }
+
+    public function testAggregateRule()
+    {
+        $ruleFunc = function () {
+            return [
+                'icon_count' => [
+                    'terms' => [
+                        'field' => 'icon_id',
+                        'size' => 15,
+                    ],
+                ],
+                'style_count' => [
+                    'terms' => [
+                        'field' => 'style_id',
+                        'size' => 7,
+                    ],
+                ],
+                'category_count' => [
+                    'terms' => [
+                        'field' => 'category_id',
+                        'size' => 39,
+                    ],
+                ],
+            ];
+        };
+
+        $this
+            ->builder
+            ->aggregateRule(AggregateRule::class)
+            ->aggregateRule($ruleFunc);
+
+        $this->assertEquals(
+            [
+                AggregateRule::class,
+                $ruleFunc,
+            ],
+            $this->builder->aggregateRules
         );
     }
 }

@@ -1,0 +1,13 @@
+<?php
+
+namespace DummyNamespace;
+
+use ScoutElastic\SearchRule;
+
+class DummyClass extends HightlightRule
+{
+    public function buildHightlightPayload()
+    {
+        //
+    }
+}

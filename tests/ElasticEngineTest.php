@@ -389,7 +389,8 @@ class ElasticEngineTest extends AbstractTestCase
                         ]
                     ]
                 ]
-            ]
+            ],
+            'builder' => $this->getMockBuilder(FilterBuilder::class)
         ];
 
         $model = $this->mockModel([
