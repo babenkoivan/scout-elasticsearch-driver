@@ -1,0 +1,69 @@
+version: '3'
+
+volumes:
+  laravel:
+
+networks:
+  default-net:
+
+services:
+  laravel:
+    build:
+      context: ./..
+      args:
+        version: v5.6.*
+      dockerfile: ./docker/laravel/Dockerfile
+    volumes:
+      - ./..:/app/scout-elasticsearch-driver
+      - laravel:/app/laravel
+    networks:
+      - default-net
+  php:
+    build:
+      context: php
+      args:
+        version: 7.2
+      dockerfile: ./Dockerfile
+    volumes:
+      - laravel:/app/laravel
+    networks:
+      - default-net
+  mysql:
+    build:
+      context: ./mysql
+      args:
+        version: 5.7
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 2}3Av>3pWLPuP2
+      MYSQL_DATABASE: laravel
+    networks:
+      - default-net
+    ports:
+      - 13306:3306
+  elastic:
+    build:
+      context: ./elastic
+      args:
+        version: 6.2.4
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./elastic/data:/usr/share/elasticsearch/data
+    networks:
+      - default-net
+    ports:
+      - 19200:9200
+  kibana:
+    build:
+      context: ./kibana
+      args:
+        version: 6.2.4
+      dockerfile: ./Dockerfile
+    environment:
+      ELASTICSEARCH_URL: http://elastic:9200
+    networks:
+      - default-net
+    ports:
+      - 15601:5601
