@@ -7,16 +7,21 @@ WORKDIR /app/laravel
 # Install Laravel
 RUN composer create-project --no-interaction --prefer-dist laravel/laravel . $version
 
-# Todo copy default models, migrations, seeders
+# Setup environment
+COPY ./docker/laravel/.env .env
 
-# Copy driver package files
-COPY . ../scout-elasticsearch-driver
+# Copy migrations
+RUN rm database/migrations/*
+COPY ./docker/laravel/database/migrations/* database/migrations/
 
-# Add driver repository
-RUN composer config --no-interaction repositories.scout-elasticsearch-driver \
-    '{"type": "package", "package": {"name": "babenkoivan/scout-elasticsearch-driver-local", \
-    "version": "dev", "dist": {"type": "path", "url": "../scout-elasticsearch-driver", \
-    "options": {"symlink": true}}}}'
+# Copy seeders
+RUN rm database/seeds/*
+COPY ./docker/laravel/database/seeds/* database/seeds/
 
-# Require driver package
-RUN composer require --no-interaction babenkoivan/scout-elasticsearch-driver-local:@dev
+# Regenerate autoloader
+RUN composer dump-autoload
+
+# Bootstrap
+COPY ./docker/laravel/bootstrap.sh /usr/local/bin/bootstrap
+RUN chmod 544 /usr/local/bin/bootstrap
+CMD ["bootstrap"]

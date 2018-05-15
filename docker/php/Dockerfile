@@ -2,12 +2,13 @@ ARG version
 
 FROM php:${version}-cli
 
-WORKDIR /app/laravel
-
 # Install necessary php extensions
 RUN docker-php-ext-install \
     pdo_mysql
 
-# Todo run migrations
+WORKDIR /app/laravel
 
-ENTRYPOINT ["php", "artisan"]
+# Bootstrap
+COPY ./bootstrap.sh /usr/local/bin/bootstrap
+RUN chmod 544 /usr/local/bin/bootstrap
+CMD ["bootstrap"]

@@ -20,10 +20,14 @@ services:
       - default-net
   php:
     build:
-      context: php
+      context: ./php
       args:
         version: 7.2
       dockerfile: ./Dockerfile
+    depends_on:
+      - laravel
+      - mysql
+      - elastic
     volumes:
       - laravel:/app/laravel
     networks:
@@ -61,6 +65,8 @@ services:
       args:
         version: 6.2.4
       dockerfile: ./Dockerfile
+    depends_on:
+      - elastic
     environment:
       ELASTICSEARCH_URL: http://elastic:9200
     networks:
