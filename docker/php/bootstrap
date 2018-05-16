@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/sh
 
 # Clear application cache
 php artisan cache:clear --no-interaction

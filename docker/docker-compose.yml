@@ -7,37 +7,46 @@ networks:
   default-net:
 
 services:
+  driver:
+    build:
+      context: ..
+      dockerfile: docker/driver/Dockerfile
+    volumes:
+      - ./..:/app/driver
+    networks:
+      - default-net
   laravel:
     build:
-      context: ./..
+      context: laravel
       args:
         version: v5.6.*
-      dockerfile: ./docker/laravel/Dockerfile
+      dockerfile: Dockerfile
     volumes:
-      - ./..:/app/scout-elasticsearch-driver
+      - ./..:/app/driver
       - laravel:/app/laravel
     networks:
       - default-net
   php:
     build:
-      context: ./php
+      context: php
       args:
         version: 7.2
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
     depends_on:
       - laravel
       - mysql
-      - elastic
+#      - elastic
     volumes:
+      - ./..:/app/driver
       - laravel:/app/laravel
     networks:
       - default-net
   mysql:
     build:
-      context: ./mysql
+      context: mysql
       args:
         version: 5.7
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
     volumes:
       - ./mysql/data:/var/lib/mysql
     environment:
@@ -47,29 +56,29 @@ services:
       - default-net
     ports:
       - 13306:3306
-  elastic:
-    build:
-      context: ./elastic
-      args:
-        version: 6.2.4
-      dockerfile: ./Dockerfile
-    volumes:
-      - ./elastic/data:/usr/share/elasticsearch/data
-    networks:
-      - default-net
-    ports:
-      - 19200:9200
-  kibana:
-    build:
-      context: ./kibana
-      args:
-        version: 6.2.4
-      dockerfile: ./Dockerfile
-    depends_on:
-      - elastic
-    environment:
-      ELASTICSEARCH_URL: http://elastic:9200
-    networks:
-      - default-net
-    ports:
-      - 15601:5601
+#  elastic:
+#    build:
+#      context: elastic
+#      args:
+#        version: 6.2.4
+#      dockerfile: Dockerfile
+#    volumes:
+#      - ./elastic/data:/usr/share/elasticsearch/data
+#    networks:
+#      - default-net
+#    ports:
+#      - 19200:9200
+#  kibana:
+#    build:
+#      context: kibana
+#      args:
+#        version: 6.2.4
+#      dockerfile: Dockerfile
+#    depends_on:
+#      - elastic
+#    environment:
+#      ELASTICSEARCH_URL: http://elastic:9200
+#    networks:
+#      - default-net
+#    ports:
+#      - 15601:5601

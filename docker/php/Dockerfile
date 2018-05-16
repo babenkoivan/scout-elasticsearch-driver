@@ -9,6 +9,6 @@ RUN docker-php-ext-install \
 WORKDIR /app/laravel
 
 # Bootstrap
-COPY ./bootstrap.sh /usr/local/bin/bootstrap
+COPY bootstrap /usr/local/bin/bootstrap
 RUN chmod 544 /usr/local/bin/bootstrap
 CMD ["bootstrap"]

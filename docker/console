@@ -1,0 +1,131 @@
+#!/bin/sh
+
+bg_red="\033[41m"
+bg_green="\033[42m"
+bg_black="\033[40m"
+
+txt_white="\033[0;37m"
+txt_yellow="\033[0;33m"
+txt_green="\033[0;32m"
+
+color_reset="\033[0m"
+
+error()
+{
+    echo "${txt_white}${bg_red}$@"
+}
+
+success()
+{
+    echo "${txt_white}${bg_green}$@"
+}
+
+dk_help()
+{
+    echo \
+        "${txt_yellow}Available commands:${color_reset} \n" \
+        "${txt_green}link${color_reset}     Create executable /usr/local/bin/dk\n" \
+        "${txt_green}unlink${color_reset}   Remove executable /usr/local/bin/dk\n" \
+        "${txt_green}up${color_reset}       Create and start containers\n" \
+        "${txt_green}down${color_reset}     Stop and remove containers, networks, images, and volumes\n" \
+        "${txt_green}rebuild${color_reset}  Rebuild and restart containers\n" \
+        "${txt_green}run${color_reset}      Run a command in a new container, then remove container when it exits\n" \
+        "${txt_green}exec${color_reset}     Run a command in a running container\n" \
+        "${txt_green}artisan${color_reset}  Run an artisan command\n" \
+        "${txt_green}tinker${color_reset}   Launch tinker\n" \
+        "${txt_green}tests${color_reset}    Run tests\n"
+}
+
+dk_link()
+{
+    source="`pwd`/$0"
+    target="/usr/local/bin/${1:-dk}"
+
+    if [ -f $target ]
+    then
+        error "$target already exists"
+        return
+    fi
+
+    echo \
+        "#!/bin/sh\n" \
+        "export dk_bin=$target\n" \
+        "cd `dirname $source`\n" \
+        "./`basename $source` \$@\n" \
+        > $target
+
+    chmod +x $source
+    chmod +x $target
+
+    success "$target was created"
+}
+
+dk_unlink()
+{
+    if [ -z $dk_bin ]
+    then
+        error "link not found"
+        return
+    fi
+
+    rm $dk_bin
+
+    success "$dk_bin was removed"
+}
+
+dk_up()
+{
+    docker-compose up $@
+}
+
+dk_down()
+{
+    docker-compose down $@
+}
+
+dk_rebuild()
+{
+    dk_down --volumes --rmi all
+    dk_up --build -d
+}
+
+dk_run()
+{
+    service=$1
+    shift
+
+    docker-compose run --rm $service $@
+}
+
+dk_exec()
+{
+    service=$1
+    shift
+
+    docker-compose exec $service $@
+}
+
+dk_artisan()
+{
+    dk_run php ./artisan $@
+}
+
+dk_tinker()
+{
+    dk_artisan tinker
+}
+
+dk_tests()
+{
+    dk_run php /app/driver/vendor/bin/phpunit -c /app/driver/phpunit.xml
+}
+
+command=dk_${1:-help}
+shift
+
+if [ "`type -t $command`" = "function" ]
+then
+    $command $@
+else
+    error "Command not found"
+fi

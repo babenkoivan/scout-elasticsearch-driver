@@ -13,4 +13,4 @@ if (!function_exists('config')) {
     }
 }
 
-include '../vendor/autoload.php';
+include __DIR__ . '/../vendor/autoload.php';
