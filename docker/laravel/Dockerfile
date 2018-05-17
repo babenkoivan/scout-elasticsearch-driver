@@ -20,8 +20,3 @@ COPY database/seeds/* database/seeds/
 
 # Regenerate autoloader
 RUN composer dump-autoload --no-interaction
-
-# Bootstrap
-COPY bootstrap /usr/local/bin/bootstrap
-RUN chmod 544 /usr/local/bin/bootstrap
-CMD ["bootstrap"]
