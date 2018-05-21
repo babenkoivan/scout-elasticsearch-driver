@@ -23,6 +23,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - laravel:/app/laravel
+      - ./laravel/app/Stubs:/app/laravel/app/Stubs
     networks:
       - default-net
   php:
@@ -38,6 +39,7 @@ services:
     volumes:
       - ./..:/app/driver
       - laravel:/app/laravel
+      - ./laravel/app/Stubs:/app/laravel/app/Stubs
     networks:
       - default-net
   mysql:

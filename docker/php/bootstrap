@@ -7,6 +7,10 @@ composer config --no-interaction repositories.scout-elasticsearch-driver \
 # Require driver package
 composer require --no-interaction --prefer-dist babenkoivan/scout-elasticsearch-driver:@dev
 
+# Publish configs
+php artisan vendor:publish --provider=Laravel\\Scout\\ScoutServiceProvider
+php artisan vendor:publish --provider=ScoutElastic\\ScoutElasticServiceProvider
+
 # Clear application cache
 php artisan cache:clear --no-interaction
 

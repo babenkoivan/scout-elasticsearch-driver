@@ -4,17 +4,17 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCarModelsTable extends Migration
+class CreateMakersTable extends Migration
 {
     /**
      * @inheritdoc
      */
     public function up()
     {
-        Schema::create('car_models', function (Blueprint $table) {
+        Schema::create('makers', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('maker_id');
             $table->string('title');
+            $table->timestamps();
         });
     }
 
@@ -23,6 +23,6 @@ class CreateCarModelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('car_models');
+        Schema::dropIfExists('makers');
     }
 }

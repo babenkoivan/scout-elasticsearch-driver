@@ -10,8 +10,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            CarMakersTableSeeder::class,
-            CarModelsTableSeeder::class
+            MakersTableSeeder::class,
+            CarsTableSeeder::class
         ]);
     }
 }
