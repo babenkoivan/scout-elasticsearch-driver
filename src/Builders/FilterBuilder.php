@@ -371,6 +371,12 @@ class FilterBuilder extends Builder
      */
     public function orderBy($field, $direction = 'asc')
     {
+        //if we're passing an array, just add it to the builder
+        if (is_array($field)) {
+            $this->orders[] = $field;
+            return $this;
+        }
+
         $this->orders[] = [
             $field => strtolower($direction) == 'asc' ? 'asc' : 'desc'
         ];

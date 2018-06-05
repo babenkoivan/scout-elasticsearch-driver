@@ -297,6 +297,11 @@ class ElasticEngine extends Engine
                 if (isset($models[$id])) {
                     $model = $models[$id];
 
+                    //add sort information to results for use
+                    if (isset($hit['sort'])) {
+                        $model->sortPayload = $hit['sort'];
+                    }
+
                     if (isset($hit['highlight'])) {
                         $model->highlight = new Highlight($hit['highlight']);
                     }
