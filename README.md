@@ -52,11 +52,24 @@ The package has been tested in the following configuration:
 Use composer to install the package:
 
 ```
+composer require laravel/scout
 composer require babenkoivan/scout-elasticsearch-driver
 ```
 
 ## Configuration
 
+Add into providers: `config/app.php`
+
+```
+'providers' => [
+
+         ...
+         
+        //Laravel Scout & Elasticsearch
+        Laravel\Scout\ScoutServiceProvider::class,
+        ScoutElastic\ScoutElasticServiceProvider::class,
+    ],
+```    
 To configure the package you need to publish settings first:
 
 ```
@@ -121,6 +134,13 @@ To create an index just run the artisan command:
 ```
 php artisan elastic:create-index App\\MyIndexConfigurator
 ```
+
+Note that an IndexConfigurator has to be created for each Model
+
+> Indices created in Elasticsearch 6.0.0 or later may only contain a single mapping type. Indices created in 5.x with multiple mapping types will continue to function as before in Elasticsearch 6.x. Mapping types will be completely removed in Elasticsearch 7.0.0.
+
+https://www.elastic.co/guide/en/elasticsearch/reference/6.x/removal-of-types.html
+
 
 ## Searchable model
 
