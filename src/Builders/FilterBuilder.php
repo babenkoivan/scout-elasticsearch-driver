@@ -491,6 +491,7 @@ class FilterBuilder extends Builder
     public function count()
     {
         return $this
+            ->take(0)
             ->engine()
             ->count($this);
     }
