@@ -157,8 +157,7 @@ class MyModel extends Model
                 'type' => 'text',
                 'fields' => [
                     'raw' => [
-                        'type' => 'text',
-                        'index' => 'not_analyzed',
+                        'type' => 'text'
                     ]
                 ]
             ],
