@@ -13,7 +13,7 @@ class DocumentPayload extends TypePayload
      */
     public function __construct(Model $model)
     {
-        if (!$model->getKey()) {
+        if ($model->getKey() === null) {
             throw new Exception(sprintf(
                 'The key value must be set to construct a payload for the %s instance.',
                 get_class($model)
