@@ -259,7 +259,7 @@ class ElasticEngine extends Engine
      */
     public function mapIds($results)
     {
-        return array_pluck($results['hits']['hits'], '_id');
+        return collect(array_pluck($results['hits']['hits'], '_id'));
     }
 
     /**
