@@ -89,6 +89,7 @@ class ElasticEngine extends Engine
 
         if ($builder instanceof SearchBuilder) {
             $searchRules = $builder->rules ?: $builder->model->getSearchRules();
+	        $highlight = !!($options['highlight'] ?? true);
 
             foreach ($searchRules as $rule) {
                 $payload = new TypePayload($builder->model);
@@ -101,7 +102,9 @@ class ElasticEngine extends Engine
 
                     if ($ruleEntity->isApplicable()) {
                         $payload->setIfNotEmpty('body.query.bool', $ruleEntity->buildQueryPayload());
-                        $payload->setIfNotEmpty('body.highlight', $ruleEntity->buildHighlightPayload());
+	                    if ($highlight) {
+		                    $payload->setIfNotEmpty('body.highlight', $ruleEntity->buildHighlightPayload());
+	                    }
                     } else {
                         continue;
                     }
@@ -226,7 +229,7 @@ class ElasticEngine extends Engine
         $count = 0;
 
         $this
-            ->buildSearchQueryPayloadCollection($builder)
+            ->buildSearchQueryPayloadCollection($builder, ['highlight' => false])
             ->each(function ($payload) use (&$count) {
                 $result = ElasticClient::count($payload);
 
