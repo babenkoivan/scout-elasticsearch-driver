@@ -102,13 +102,13 @@ class ElasticEngineTest extends AbstractTestCase
                             ]
                         ],
                         'collapse' => [
-        'field' => 'brand'
-    ],
+                            'field' => 'brand'
+                        ],
                         'sort' => [
-        [
-            'id' => 'asc'
-        ]
-    ],
+                            [
+                                'id' => 'asc'
+                            ]
+                        ],
                         'from' => 100,
                         'size' => 10
                     ],
@@ -222,20 +222,14 @@ class ElasticEngineTest extends AbstractTestCase
                 'index' => 'test',
                 'type' => 'test',
                 'body' => [
+                    '_source' => [
+                        'title',
+                    ],
                     'query' => [
                         'bool' => [
                             'must' => [
-                                'match_all' => new stdClass()
-                            ],
-                            'filter' => [
-                                'bool' => [
-                                    'must' => [
-                                        [
-                                            'term' => [
-                                                'foo' => 'bar'
-                                            ]
-                                        ]
-                                    ]
+                                'query_string' => [
+                                    'query' => 'foo'
                                 ]
                             ]
                         ]
@@ -245,12 +239,13 @@ class ElasticEngineTest extends AbstractTestCase
 
         $model = $this->mockModel();
 
-        $filterBuilder = (new FilterBuilder($model))
-            ->where('foo', 'bar');
+        $searchBuilder = (new SearchBuilder($model, 'foo'))
+            ->rule(SearchRule::class)
+            ->select('title');
 
         $this
             ->engine
-            ->count($filterBuilder);
+            ->count($searchBuilder);
 
         $this->addToAssertionCount(1);
     }
