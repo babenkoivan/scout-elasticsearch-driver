@@ -33,6 +33,7 @@ services:
         version: 7.2
       dockerfile: Dockerfile
     depends_on:
+      - driver
       - laravel
       - mysql
       - elastic
@@ -51,7 +52,7 @@ services:
     volumes:
       - ./mysql/data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: 2}3Av>3pWLPuP2
+      MYSQL_ROOT_PASSWORD: laravel
       MYSQL_DATABASE: laravel
     networks:
       - default-net
