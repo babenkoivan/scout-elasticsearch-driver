@@ -262,7 +262,7 @@ class ElasticEngine extends Engine
      */
     public function mapIds($results)
     {
-        return array_pluck($results['hits']['hits'], '_id');
+        return collect($results['hits']['hits'])->pluck('_id');
     }
 
     /**
@@ -284,7 +284,7 @@ class ElasticEngine extends Engine
             $columns[] = $primaryKey;
         }
 
-        $ids = $this->mapIds($results);
+        $ids = $this->mapIds($results)->all();
 
         $builder = $model->usesSoftDelete() ? $model->withTrashed() : $model->newQuery();
 

@@ -300,7 +300,7 @@ class ElasticEngineTest extends AbstractTestCase
 
         $this->assertEquals(
             [1, 2],
-            $this->engine->mapIds($results)
+            $this->engine->mapIds($results)->all()
         );
     }
 
