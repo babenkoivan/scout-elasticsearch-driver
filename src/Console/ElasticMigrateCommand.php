@@ -221,6 +221,64 @@ class ElasticMigrateCommand extends Command
     /**
      * @param string $name
      */
+    protected function switchAliasForTargetIndex($name)
+    {
+        $targetIndex = $this->argument('target-index');
+
+        $sourceIndexConfigurator = $this
+            ->getModel()
+            ->getIndexConfigurator();
+        $payload = (new IndexPayload($sourceIndexConfigurator))
+                ->get();
+
+        // the model's index name is an alias, switch the alias from the current index to the target index
+        // otherwise, delete the index and create an alias to the target index
+        if ($this->isAliasExists($sourceIndexConfigurator->getName())) {
+            $aliases = $this->getAlias($sourceIndexConfigurator->getName());
+
+            foreach ($aliases as $index => $alias) {
+
+                // switch the alias to the new index in a single atomic step
+                $payload = (new RawPayload())
+                    ->set('body.actions.0.remove.alias', $name)
+                    ->set('body.actions.0.remove.index', $index)
+                    ->set('body.actions.1.add.alias', $name)
+                    ->set('body.actions.1.add.index', $targetIndex)
+                    ->get();
+
+                ElasticClient::indices()
+                    ->updateAliases($payload);
+
+                $this->info(sprintf(
+                    'The %s alias has been moved from %s to %s.',
+                    $name,
+                    $index,
+                    $targetIndex
+                ));
+
+                // delete the old index
+                $payload = (new RawPayload())
+                    ->set('index', $index)
+                    ->get();
+
+                ElasticClient::indices()
+                    ->delete($payload);
+
+                $this->info(sprintf(
+                    'The %s index was removed.',
+                    $index
+                ));
+            }
+        } else {
+            // the model's index name is an actual index
+            $this->deleteSourceIndex();
+            $this->createAliasForTargetIndex($name);
+        }
+    }
+
+    /**
+     * @param string $name
+     */
     protected function createAliasForTargetIndex($name)
     {
         $targetIndex = $this->argument('target-index');
@@ -248,6 +306,9 @@ class ElasticMigrateCommand extends Command
     {
         $sourceModel = $this->getModel();
 
+        // disable queue on migration
+        config(['scout.queue' => false]);
+
         $this->call(
             'scout:import',
             ['model' => get_class($sourceModel)]
@@ -260,23 +321,8 @@ class ElasticMigrateCommand extends Command
             ->getModel()
             ->getIndexConfigurator();
 
-        if ($this->isAliasExists($sourceIndexConfigurator->getName())) {
-            $aliases = $this->getAlias($sourceIndexConfigurator->getName());
-
-            foreach ($aliases as $index => $alias) {
-                $payload = (new RawPayload())
-                    ->set('index', $index)
-                    ->get();
-
-                ElasticClient::indices()
-                    ->delete($payload);
-
-                $this->info(sprintf(
-                    'The %s index was removed.',
-                    $index
-                ));
-            }
-        } else {
+        // Delete the index only if the model index name is an actual index
+        if (!$this->isAliasExists($sourceIndexConfigurator->getName())) {
             $payload = (new IndexPayload($sourceIndexConfigurator))
                 ->get();
 
@@ -313,9 +359,7 @@ class ElasticMigrateCommand extends Command
 
         $this->importDocumentsToTargetIndex();
 
-        $this->deleteSourceIndex();
-
-        $this->createAliasForTargetIndex($sourceIndexConfigurator->getName());
+        $this->switchAliasForTargetIndex($sourceIndexConfigurator->getName());
 
         $this->info(sprintf(
             'The %s model successfully migrated to the %s index.',
