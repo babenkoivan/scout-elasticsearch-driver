@@ -11,6 +11,7 @@ use ScoutElastic\Migratable;
 use ScoutElastic\Payloads\IndexPayload;
 use ScoutElastic\Payloads\RawPayload;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class ElasticMigrateCommand extends Command
 {
@@ -38,6 +39,16 @@ class ElasticMigrateCommand extends Command
         $arguments[] = ['target-index', InputArgument::REQUIRED, 'The index name to migrate'];
 
         return $arguments;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getOptions()
+    {
+        $options[] = ['no-queue', null, InputOption::VALUE_NONE, 'Turn off queue while importing'];
+
+        return $options;
     }
 
     /**
@@ -306,8 +317,9 @@ class ElasticMigrateCommand extends Command
     {
         $sourceModel = $this->getModel();
 
-        // disable queue on migration
-        config(['scout.queue' => false]);
+        if ($this->option('no-queue')) {
+            config(['scout.queue' => false]);
+        }
 
         $this->call(
             'scout:import',
