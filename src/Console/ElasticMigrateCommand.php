@@ -46,6 +46,8 @@ class ElasticMigrateCommand extends Command
      */
     protected function getOptions()
     {
+        $options = parent::getOptions();
+
         $options[] = ['no-queue', null, InputOption::VALUE_NONE, 'Turn off queue while importing'];
 
         return $options;
