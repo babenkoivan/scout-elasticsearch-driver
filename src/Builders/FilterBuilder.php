@@ -363,7 +363,25 @@ class FilterBuilder extends Builder
 
         return $this;
     }
-    
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html Match query
+     *
+     * @param string $field
+     * @param string $value
+     * @return $this
+     */
+    public function whereMatch($field, $value)
+    {
+        $this->wheres['must'][] = [
+            'match' => [
+                $field => $value,
+            ]
+        ];
+
+        return $this;
+    }
+
     /**
      * @param string $field
      * @param string $direction

@@ -481,4 +481,24 @@ class FilterBuilderTest extends AbstractTestCase
             $builder->wheres
         );
     }
+
+    public function testWhereMatch()
+    {
+        $builder = (new FilterBuilder($this->mockModel()))
+            ->whereMatch('tags', 'travel')
+            ->whereMatch('tags', 'spain')
+
+        ;
+
+        $this->assertEquals(
+            [
+                'must' => [
+                    ['match' => ['tags' => 'travel']],
+                    ['match' => ['tags' => 'spain']]
+                ],
+                'must_not' => []
+            ],
+            $builder->wheres
+        );
+    }
 }

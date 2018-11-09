@@ -440,6 +440,7 @@ whereGeoDistance($field, $value, $distance) | whereGeoDistance('location', [-70,
 whereGeoBoundingBox($field, array $value) | whereGeoBoundingBox('location', ['top_left' =>  [-74.1, 40.73], 'bottom_right' => [-71.12, 40.01]]) | Filters records within given boundings. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html) you can find more about syntax.
 whereGeoPolygon($field, array $points) | whereGeoPolygon('location', [[-70, 40],[-80, 30],[-90, 20]]) | Filters records within given polygon. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-query.html) you can find more about syntax.
 whereGeoShape($field, array $shape) | whereGeoShape('shape', ['type' => 'circle', 'radius' => '1km', 'coordinates' => [4, 52]]) | Filters records within given shape. [Here](https://www.elastic.co/guide/en/elasticsearch/guide/current/querying-geo-shapes.html) you can find more about syntax.
+whereMatch($field, $value) | whereMatch('tags', 'travel') | Filters records matching exact value. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html) you can find more about syntax.
 
 In most cases it's better to use raw fields to filter records, i.e. not analyzed fields.
 
