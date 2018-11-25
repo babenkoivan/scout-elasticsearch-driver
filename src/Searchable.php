@@ -88,7 +88,7 @@ trait Searchable
      */
     public static function search($query, $callback = null)
     {
-        $softDelete = config('scout.soft_delete', false);
+        $softDelete = $this->usesSoftDelete() && config('scout.soft_delete', false);
 
         if ($query == '*') {
             return new FilterBuilder(new static, $callback, $softDelete);
