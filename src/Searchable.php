@@ -2,7 +2,6 @@
 
 namespace ScoutElastic;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable as ScoutSearchable;
 use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
@@ -65,7 +64,7 @@ trait Searchable
     {
         $mapping = $this->mapping ?? [];
 
-        if ($this->usesSoftDelete() && config('scout.soft_delete', false)) {
+        if ($this::usesSoftDelete() && config('scout.soft_delete', false)) {
             array_set($mapping, 'properties.__soft_deleted', ['type' => 'integer']);
         }
 
@@ -88,7 +87,7 @@ trait Searchable
      */
     public static function search($query, $callback = null)
     {
-        $softDelete = $this->usesSoftDelete() && config('scout.soft_delete', false);
+        $softDelete = static::usesSoftDelete() && config('scout.soft_delete', false);
 
         if ($query == '*') {
             return new FilterBuilder(new static, $callback, $softDelete);
@@ -107,14 +106,6 @@ trait Searchable
 
         return $model->searchableUsing()
             ->searchRaw($model, $query);
-    }
-
-    /**
-     * @return bool
-     */
-    public function usesSoftDelete()
-    {
-        return in_array(SoftDeletes::class, class_uses_recursive($this));
     }
 
     /**

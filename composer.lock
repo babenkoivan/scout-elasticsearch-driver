@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c994c5f4a898bcb94495bbc24c1bb16",
+    "content-hash": "b4ab3f4af6942b8d07fe5a33ef5de1d7",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -727,16 +727,16 @@
         },
         {
             "name": "laravel/scout",
-            "version": "v4.0.1",
+            "version": "v6.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/scout.git",
-                "reference": "28a88fa764cd2bf0225e427b067a024f7cbb5d4f"
+                "reference": "767de369a4702cdd4fdf29d1dcb4ba7dfafdbe95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/scout/zipball/28a88fa764cd2bf0225e427b067a024f7cbb5d4f",
-                "reference": "28a88fa764cd2bf0225e427b067a024f7cbb5d4f",
+                "url": "https://api.github.com/repos/laravel/scout/zipball/767de369a4702cdd4fdf29d1dcb4ba7dfafdbe95",
+                "reference": "767de369a4702cdd4fdf29d1dcb4ba7dfafdbe95",
                 "shasum": ""
             },
             "require": {
@@ -759,7 +759,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-master": "6.0-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -788,7 +788,7 @@
                 "laravel",
                 "search"
             ],
-            "time": "2018-02-12T14:35:52+00:00"
+            "time": "2018-11-20T16:12:35+00:00"
         },
         {
             "name": "nesbot/carbon",

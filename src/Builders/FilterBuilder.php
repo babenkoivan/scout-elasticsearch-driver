@@ -270,23 +270,6 @@ class FilterBuilder extends Builder
     }
 
     /**
-     * @param mixed $value
-     * @param callable $callback
-     * @param callable|null $default
-     * @return $this
-     */
-    public function when($value, callable $callback, callable $default = null)
-    {
-        if ($value) {
-            return $callback($this);
-        } elseif ($default) {
-            return $default($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html Geo distance query
      *
      * @param string $field

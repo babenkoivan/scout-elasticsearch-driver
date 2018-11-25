@@ -15,7 +15,7 @@ class SingleIndexer implements IndexerInterface
     public function update(Collection $models)
     {
         $models->each(function ($model) {
-            if ($model->usesSoftDelete() && config('scout.soft_delete', false)) {
+            if ($model::usesSoftDelete() && config('scout.soft_delete', false)) {
                 $model->pushSoftDeleteMetadata();
             }
 

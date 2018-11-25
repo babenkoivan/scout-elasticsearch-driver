@@ -29,7 +29,7 @@ class BulkIndexer implements IndexerInterface
         }
 
         $models->each(function ($model) use ($bulkPayload) {
-            if ($model->usesSoftDelete() && config('scout.soft_delete', false)) {
+            if ($model::usesSoftDelete() && config('scout.soft_delete', false)) {
                 $model->pushSoftDeleteMetadata();
             }
 
