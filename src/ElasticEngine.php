@@ -263,6 +263,7 @@ class ElasticEngine extends Engine
     public function mapIds($results)
     {
         return collect($results['hits']['hits'])->pluck('_id');
+//	    return collect($results['hits']['hits'])->pluck('_source.id');
     }
 
     /**
@@ -284,7 +285,19 @@ class ElasticEngine extends Engine
             $columns[] = $primaryKey;
         }
 
-        $ids = $this->mapIds($results)->all();
+        //get the ids, these include the table name as a prefix to support multi table indexes
+	    //filter out the ones we need
+	    if(config("scout_elastic.uses_tablename_prefix_as_doc_id")){
+	        $raw_ids = $this->mapIds($results)->all();
+	        $regexp = "/(?<table>".$model->getTable().")_(?<id>\d+)/";
+	        $ids = [];
+	        foreach(preg_grep($regexp,$raw_ids) as $id){
+	            preg_match($regexp,$id,$m);
+	            $ids [] = $m["id"];
+	        }
+	    }else{
+		    $ids = $this->mapIds($results)->all();
+	    }
 
         $query = $model::usesSoftDelete() ? $model->withTrashed() : $model->newQuery();
 
@@ -295,7 +308,12 @@ class ElasticEngine extends Engine
 
         return Collection::make($results['hits']['hits'])
             ->map(function ($hit) use ($models) {
-                $id = $hit['_id'];
+            	//use the source id when the _source is available
+            	if(isset($hit['_source'])){
+		            $id = $hit['_source']['id'];
+	            }else{
+		            $id = $hit['_id'];
+	            }
 
                 if (isset($models[$id])) {
                     $model = $models[$id];
