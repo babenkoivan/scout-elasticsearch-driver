@@ -1,5 +1,9 @@
 # Scout Elasticsearch Driver
 
+:exclamation: **Dear fellow developers, as some of you have already noticed, I don't have enough time to maintain this project anymore. I don't want this project to be just abandoned, I would prefer to hand over it to the community. If you are interested in being a collaborator, please fill in [this form](https://goo.gl/forms/hcB8LPQCyDpNRt9u2). I will review all profiles and choose some candidates until the 1st of March.** :exclamation:    
+
+---
+
 [![Packagist](https://img.shields.io/packagist/v/babenkoivan/scout-elasticsearch-driver.svg)](https://packagist.org/packages/babenkoivan/scout-elasticsearch-driver)
 [![Packagist](https://img.shields.io/packagist/dt/babenkoivan/scout-elasticsearch-driver.svg)](https://packagist.org/packages/babenkoivan/scout-elasticsearch-driver)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/scout-elasticsearch-driver/Lobby)
