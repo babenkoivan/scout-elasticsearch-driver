@@ -1,0 +1,11 @@
+* text=auto
+
+/docker export-ignore
+/tests export-ignore
+.codecov.yml export-ignore
+.editorconfig export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+.styleci.yml export-ignore
+_config.yml export-ignore
+phpunit.xml export-ignore
