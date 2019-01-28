@@ -75,6 +75,8 @@ class FilterBuilder extends Builder
 
         switch ($operator) {
             case '=':
+            case '==':
+            case '===':
                 $this->wheres['must'][] = [
                     'term' => [
                         $field => $value
@@ -122,8 +124,9 @@ class FilterBuilder extends Builder
                 ];
                 break;
 
-            case '!=':
             case '<>':
+            case '!=':
+            case '!==':
                 $this->wheres['must_not'][] = [
                     'term' => [
                         $field => $value
@@ -326,7 +329,7 @@ class FilterBuilder extends Builder
 
         return $this;
     }
-    
+
     /**
      * @see https://www.elastic.co/guide/en/elasticsearch/guide/current/querying-geo-shapes.html Querying Geo Shapes
      *
@@ -346,7 +349,7 @@ class FilterBuilder extends Builder
 
         return $this;
     }
-    
+
     /**
      * @param string $field
      * @param string $direction

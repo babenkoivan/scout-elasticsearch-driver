@@ -42,11 +42,24 @@ class FilterBuilderTest extends AbstractTestCase
         );
     }
 
-    public function testWhereEq()
+    public function dataProviderTestWhereEq()
+    {
+        return [
+            ['='],
+            ['=='],
+            ['==='],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderTestWhereEq
+     * @param string $operator
+     */
+    public function testWhereEq($operator)
     {
         $builder = (new FilterBuilder($this->mockModel()))
             ->where('foo', 0)
-            ->where('bar', '=', 1);
+            ->where('bar', $operator, 1);
 
         $this->assertEquals(
             [
@@ -60,10 +73,23 @@ class FilterBuilderTest extends AbstractTestCase
         );
     }
 
-    public function testWhereNotEq()
+    public function dataProviderTestWhereNotEq()
+    {
+        return [
+            ['<>'],
+            ['!='],
+            ['!=='],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderTestWhereNotEq
+     * @param string $operator
+     */
+    public function testWhereNotEq($operator)
     {
         $builder = (new FilterBuilder($this->mockModel()))
-            ->where('foo', '!=', 'bar');
+            ->where('foo', $operator, 'bar');
 
         $this->assertEquals(
             [
