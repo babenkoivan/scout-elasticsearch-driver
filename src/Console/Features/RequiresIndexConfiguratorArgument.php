@@ -13,7 +13,7 @@ trait RequiresIndexConfiguratorArgument
      */
     protected function getIndexConfigurator()
     {
-        $configuratorClass = trim($this->argument('index-configurator'));
+        $configuratorClass = "\\App\\".trim($this->argument('index-configurator'));
 
         $configuratorInstance = new $configuratorClass;
 
