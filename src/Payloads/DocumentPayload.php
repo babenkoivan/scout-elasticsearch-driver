@@ -13,7 +13,7 @@ class DocumentPayload extends TypePayload
      */
     public function __construct(Model $model)
     {
-        if ($model->getKey() === null) {
+        if ($model->getScoutKey() === null) {
             throw new Exception(sprintf(
                 'The key value must be set to construct a payload for the %s instance.',
                 get_class($model)
@@ -22,7 +22,7 @@ class DocumentPayload extends TypePayload
 
         parent::__construct($model);
 
-        $this->payload['id'] = $model->getKey();
+        $this->payload['id'] = $model->getScoutKey();
         $this->protectedKeys[] = 'id';
     }
 }
