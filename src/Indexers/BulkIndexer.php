@@ -64,11 +64,12 @@ class BulkIndexer implements IndexerInterface
 
         $models->each(function ($model) use ($bulkPayload) {
             $actionPayload = (new RawPayload())
-                ->set('delete._id', $model->getKey())
-                ->set('ignore', 404);
+                ->set('delete._id', $model->getKey());
 
             $bulkPayload->add('body', $actionPayload->get());
         });
+
+        $bulkPayload->set('client.ignore', 404);
 
         ElasticClient::bulk($bulkPayload->get());
     }

@@ -126,21 +126,30 @@ class SingleIndexerTest extends AbstractIndexerTest
             ->with([
                 'index' => 'test',
                 'type' => 'test',
-                'id' => 1
+                'id' => 1,
+                'client' => [
+                    'ignore' => 404
+                ]
             ])
             ->shouldReceive('delete')
             ->once()
             ->with([
                 'index' => 'test',
                 'type' => 'test',
-                'id' => 2
+                'id' => 2,
+                'client' => [
+                    'ignore' => 404
+                ]
             ])
             ->shouldReceive('delete')
             ->once()
             ->with([
                 'index' => 'test',
                 'type' => 'test',
-                'id' => 3
+                'id' => 3,
+                'client' => [
+                    'ignore' => 404
+                ]
             ]);
 
         (new SingleIndexer())

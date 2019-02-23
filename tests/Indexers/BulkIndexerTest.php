@@ -95,6 +95,9 @@ class BulkIndexerTest extends AbstractIndexerTest
                     ['delete' => ['_id' => 1]],
                     ['delete' => ['_id' => 2]],
                     ['delete' => ['_id' => 3]]
+                ],
+                'client' => [
+                    'ignore' => 404
                 ]
             ]);
 

@@ -52,7 +52,7 @@ class SingleIndexer implements IndexerInterface
     {
         $models->each(function ($model) {
             $payload = (new DocumentPayload($model))
-                ->set('ignore', 404)
+                ->set('client.ignore', 404)
                 ->get();
 
             ElasticClient::delete($payload);

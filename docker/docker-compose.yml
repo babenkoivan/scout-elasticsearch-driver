@@ -32,6 +32,8 @@ services:
       args:
         version: 7.2
       dockerfile: Dockerfile
+    stdin_open: true
+    tty: true
     depends_on:
       - driver
       - laravel
