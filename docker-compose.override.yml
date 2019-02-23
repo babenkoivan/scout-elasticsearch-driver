@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  mysql:
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+    ports:
+      - 13306:3306
+  elastic:
+    volumes:
+      - ./docker/elastic/data:/usr/share/elasticsearch/data
+    ports:
+      - 19200:9200
+  kibana:
+    build:
+      context: docker/kibana
+      args:
+        version: 6.2.4
+    depends_on:
+      - elastic
+    environment:
+      ELASTICSEARCH_URL: http://elastic:9200
+    ports:
+      - 15601:5601

@@ -1,0 +1,49 @@
+version: '3'
+
+volumes:
+  laravel:
+
+services:
+  driver:
+    build:
+      context: .
+      dockerfile: docker/driver/Dockerfile
+    volumes:
+      - ./:/app/driver
+  laravel:
+    build:
+      context: docker/laravel
+      args:
+        version: v5.6.*
+    volumes:
+      - laravel:/app/laravel
+      - ./docker/laravel/app/Stubs:/app/laravel/app/Stubs
+  php:
+    build:
+      context: docker/php
+      args:
+        version: 7.2
+    stdin_open: true
+    tty: true
+    depends_on:
+      - driver
+      - laravel
+      - mysql
+      - elastic
+    volumes:
+      - ./:/app/driver
+      - laravel:/app/laravel
+      - ./docker/laravel/app/Stubs:/app/laravel/app/Stubs
+  mysql:
+    build:
+      context: docker/mysql
+      args:
+        version: 5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: laravel
+      MYSQL_DATABASE: laravel
+  elastic:
+    build:
+      context: docker/elastic
+      args:
+        version: 6.2.4
