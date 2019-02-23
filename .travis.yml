@@ -1,0 +1,12 @@
+sudo: required
+
+services:
+  - docker
+
+before_script:
+  - docker-compose -f docker/docker-compose.yml up --build --force-recreate -d
+  - sh ./travis/connection_check.sh elastic 9200
+  - sh ./travis/connection_check.sh mysql 3306
+
+script:
+  - docker-compose -f docker/docker-compose.yml exec php /app/driver/vendor/bin/phpunit -c /app/driver/phpunit.xml
