@@ -64,7 +64,8 @@ class BulkIndexer implements IndexerInterface
 
         $models->each(function ($model) use ($bulkPayload) {
             $actionPayload = (new RawPayload())
-                ->set('delete._id', $model->getKey());
+                ->set('delete._id', $model->getKey())
+                ->set('ignore', 404);
 
             $bulkPayload->add('body', $actionPayload->get());
         });
