@@ -69,6 +69,8 @@ class BulkIndexer implements IndexerInterface
             $bulkPayload->add('body', $actionPayload->get());
         });
 
+        $bulkPayload->set('client.ignore', 404);
+
         ElasticClient::bulk($bulkPayload->get());
     }
 }
