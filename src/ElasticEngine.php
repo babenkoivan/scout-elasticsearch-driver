@@ -289,9 +289,9 @@ class ElasticEngine extends Engine
         $query = $model::usesSoftDelete() ? $model->withTrashed() : $model->newQuery();
 
         return $model->getScoutModelsByIds($builder, $ids)
-            ->map(function ($model) use ($results) {
+            ->map(function ($model) use ($results, $primaryKey) {
                 $hit = $results[
-                    array_search($model->id, $results)
+                    array_search($model->$primaryKey, $results)
                 ];
 
                 if (isset($hit['highlight'])) {
