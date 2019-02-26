@@ -366,7 +366,7 @@ return [
 ];
 ```
 
-This means that by default when you call `search` method on a model it tries to find the query string in any field.
+This means that by default when you call `search` method on a model it must match the query string in one or more indexed fields in order to retrieve results. Here you can also set `should` match directives for ranking, etc.
 
 To determine default search rules for a model just add a property:
 
