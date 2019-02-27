@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b4ab3f4af6942b8d07fe5a33ef5de1d7",
+    "content-hash": "41de0f2d04962c603c216304c174ea47",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -727,39 +727,39 @@
         },
         {
             "name": "laravel/scout",
-            "version": "v6.1.1",
+            "version": "v7.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/scout.git",
-                "reference": "767de369a4702cdd4fdf29d1dcb4ba7dfafdbe95"
+                "reference": "59d301b79d53fb6ad47e143e06372434af0fda38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/scout/zipball/767de369a4702cdd4fdf29d1dcb4ba7dfafdbe95",
-                "reference": "767de369a4702cdd4fdf29d1dcb4ba7dfafdbe95",
+                "url": "https://api.github.com/repos/laravel/scout/zipball/59d301b79d53fb6ad47e143e06372434af0fda38",
+                "reference": "59d301b79d53fb6ad47e143e06372434af0fda38",
                 "shasum": ""
             },
             "require": {
-                "illuminate/bus": "~5.4",
-                "illuminate/contracts": "~5.4",
-                "illuminate/database": "~5.4",
-                "illuminate/pagination": "~5.4",
-                "illuminate/queue": "~5.4",
-                "illuminate/support": "~5.4",
+                "illuminate/bus": "~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0",
+                "illuminate/contracts": "~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0",
+                "illuminate/database": "~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0",
+                "illuminate/pagination": "~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0",
+                "illuminate/queue": "~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0",
+                "illuminate/support": "~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0",
                 "php": ">=7.0"
             },
             "require-dev": {
-                "algolia/algoliasearch-client-php": "^1.10",
+                "algolia/algoliasearch-client-php": "^2.2",
                 "mockery/mockery": "~1.0",
                 "phpunit/phpunit": "~6.0"
             },
             "suggest": {
-                "algolia/algoliasearch-client-php": "Required to use the Algolia engine (^1.10)."
+                "algolia/algoliasearch-client-php": "Required to use the Algolia engine (^2.2)."
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "6.0-dev"
+                    "dev-master": "7.0-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -788,7 +788,7 @@
                 "laravel",
                 "search"
             ],
-            "time": "2018-11-20T16:12:35+00:00"
+            "time": "2019-02-14T16:50:18+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -2296,6 +2296,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2018-02-15T05:27:38+00:00"
         },
         {
