@@ -22,8 +22,8 @@
     ],
     "require": {
         "php": ">=7.1.3",
-        "elasticsearch/elasticsearch": "6.*",
-        "laravel/scout": "6.*"
+        "elasticsearch/elasticsearch": "^6.*",
+        "laravel/scout": "^6.*"
     },
     "require-dev": {
         "phpunit/phpunit": "7.*",
