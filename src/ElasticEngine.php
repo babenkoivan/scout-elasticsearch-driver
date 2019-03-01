@@ -288,9 +288,10 @@ class ElasticEngine extends Engine
 
         return $model->getScoutModelsByIds($builder, $ids)
             ->map(function ($model) use ($results) {
-                $hit = $results['hits']['hits'][
-                    array_search($model->getScoutKey(), $results)
-                ];
+                $hit = $results['hits']['hits'][array_search(
+                    $model->getScoutKey(),
+                    array_column($results['hits']['hits'], '_id')
+                )];
 
                 if (isset($hit['highlight'])) {
                     $model->highlight = new Highlight($hit['highlight']);
