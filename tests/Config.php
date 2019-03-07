@@ -2,6 +2,8 @@
 
 namespace ScoutElastic\Tests;
 
+use Illuminate\Support\Arr;
+
 class Config
 {
     /**
