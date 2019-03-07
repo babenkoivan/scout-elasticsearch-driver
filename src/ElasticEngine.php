@@ -2,16 +2,16 @@
 
 namespace ScoutElastic;
 
-use Illuminate\Support\Facades\Artisan;
+use stdClass;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine;
-use ScoutElastic\Builders\SearchBuilder;
-use ScoutElastic\Facades\ElasticClient;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-use ScoutElastic\Indexers\IndexerInterface;
 use ScoutElastic\Payloads\TypePayload;
-use stdClass;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Artisan;
+use ScoutElastic\Facades\ElasticClient;
+use ScoutElastic\Builders\SearchBuilder;
+use ScoutElastic\Indexers\IndexerInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class ElasticEngine extends Engine
 {
@@ -34,7 +34,7 @@ class ElasticEngine extends Engine
      *
      * @var array
      */
-    static protected $updatedMappings = [];
+    protected static $updatedMappings = [];
 
     /**
      * ElasticEngine constructor.
@@ -51,7 +51,7 @@ class ElasticEngine extends Engine
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function update($models)
     {
@@ -80,7 +80,7 @@ class ElasticEngine extends Engine
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function delete($models)
     {
@@ -140,9 +140,8 @@ class ElasticEngine extends Engine
                 ->setIfNotNull('body.from', $builder->offset)
                 ->setIfNotNull('body.size', $builder->limit);
 
-
             foreach ($builder->wheres as $clause => $filters) {
-                $clauseKey = 'body.query.bool.filter.bool.' . $clause;
+                $clauseKey = 'body.query.bool.filter.bool.'.$clause;
 
                 $clauseValue = array_merge(
                     $payload->get($clauseKey, []),
@@ -192,7 +191,7 @@ class ElasticEngine extends Engine
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function search(Builder $builder)
     {
@@ -200,7 +199,7 @@ class ElasticEngine extends Engine
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function paginate(Builder $builder, $perPage, $page)
     {
@@ -220,12 +219,12 @@ class ElasticEngine extends Engine
     public function explain(Builder $builder)
     {
         return $this->performSearch($builder, [
-            'explain' => true
+            'explain' => true,
         ]);
     }
 
     /**
-     * Profile the search
+     * Profile the search.
      *
      * @param \Laravel\Scout\Builder $builder
      * @return array|mixed
@@ -233,7 +232,7 @@ class ElasticEngine extends Engine
     public function profile(Builder $builder)
     {
         return $this->performSearch($builder, [
-            'profile' => true
+            'profile' => true,
         ]);
     }
 
@@ -279,7 +278,7 @@ class ElasticEngine extends Engine
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function mapIds($results)
     {
@@ -287,7 +286,7 @@ class ElasticEngine extends Engine
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function map(Builder $builder, $results, $model)
     {
@@ -333,7 +332,7 @@ class ElasticEngine extends Engine
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTotalCount($results)
     {
@@ -341,7 +340,7 @@ class ElasticEngine extends Engine
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function flush($model)
     {

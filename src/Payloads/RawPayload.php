@@ -20,7 +20,7 @@ class RawPayload
      */
     public function set($key, $value)
     {
-        if (!is_null($key)) {
+        if (! is_null($key)) {
             array_set($this->payload, $key, $value);
         }
 
@@ -79,10 +79,10 @@ class RawPayload
      */
     public function add($key, $value)
     {
-        if (!is_null($key)) {
+        if (! is_null($key)) {
             $currentValue = array_get($this->payload, $key, []);
 
-            if (!is_array($currentValue)) {
+            if (! is_array($currentValue)) {
                 $currentValue = array_wrap($currentValue);
             }
 

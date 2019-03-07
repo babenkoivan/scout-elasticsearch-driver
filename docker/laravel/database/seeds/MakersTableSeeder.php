@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 class MakersTableSeeder extends Seeder
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function run()
     {

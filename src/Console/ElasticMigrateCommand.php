@@ -3,14 +3,13 @@
 namespace ScoutElastic\Console;
 
 use Exception;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
-use ScoutElastic\Console\Features\RequiresModelArgument;
-use ScoutElastic\Facades\ElasticClient;
 use ScoutElastic\Migratable;
-use ScoutElastic\Payloads\IndexPayload;
+use Illuminate\Console\Command;
 use ScoutElastic\Payloads\RawPayload;
+use ScoutElastic\Facades\ElasticClient;
+use ScoutElastic\Payloads\IndexPayload;
 use Symfony\Component\Console\Input\InputArgument;
+use ScoutElastic\Console\Features\RequiresModelArgument;
 
 class ElasticMigrateCommand extends Command
 {
@@ -60,7 +59,7 @@ class ElasticMigrateCommand extends Command
     }
 
     /**
-     * Create a target index
+     * Create a target index.
      *
      * @return void
      */
@@ -170,7 +169,7 @@ class ElasticMigrateCommand extends Command
         $payload = (new RawPayload())
             ->set('index', $targetIndex)
             ->set('type', $targetType)
-            ->set('body.' . $targetType, $mapping)
+            ->set('body.'.$targetType, $mapping)
             ->get();
 
         ElasticClient::indices()
@@ -199,7 +198,7 @@ class ElasticMigrateCommand extends Command
     }
 
     /**
-     * Get an alias
+     * Get an alias.
      *
      * @param string $name
      * @return array
@@ -246,7 +245,7 @@ class ElasticMigrateCommand extends Command
     }
 
     /**
-     * Create an alias for the target index
+     * Create an alias for the target index.
      *
      * @param string $name
      * @return void
@@ -278,7 +277,6 @@ class ElasticMigrateCommand extends Command
      * Import the documents to the target index.
      *
      * @return void
-     *
      */
     protected function importDocumentsToTargetIndex()
     {
@@ -341,7 +339,7 @@ class ElasticMigrateCommand extends Command
         $sourceModel = $this->getModel();
         $sourceIndexConfigurator = $sourceModel->getIndexConfigurator();
 
-        if (!in_array(Migratable::class, class_uses_recursive($sourceIndexConfigurator))) {
+        if (! in_array(Migratable::class, class_uses_recursive($sourceIndexConfigurator))) {
             $this->error(sprintf(
                 'The %s index configurator must use the %s trait.',
                 get_class($sourceIndexConfigurator),

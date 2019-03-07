@@ -13,7 +13,6 @@ class SearchBuilder extends FilterBuilder
      */
     public $rules = [];
 
-
     /**
      * SearchBuilder constructor.
      *

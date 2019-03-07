@@ -2,10 +2,10 @@
 
 namespace ScoutElastic;
 
-use Laravel\Scout\Searchable as ScoutSearchable;
+use Exception;
 use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
-use \Exception;
+use Laravel\Scout\Searchable as ScoutSearchable;
 
 trait Searchable
 {
@@ -48,8 +48,8 @@ trait Searchable
     {
         static $indexConfigurator;
 
-        if (!$indexConfigurator) {
-            if (!isset($this->indexConfigurator) || empty($this->indexConfigurator)) {
+        if (! $indexConfigurator) {
+            if (! isset($this->indexConfigurator) || empty($this->indexConfigurator)) {
                 throw new Exception(sprintf(
                     'An index configurator for the %s model is not specified.',
                     __CLASS__
@@ -134,7 +134,7 @@ trait Searchable
     }
 
     /**
-     * Get the highlight attribute
+     * Get the highlight attribute.
      *
      * @return \ScoutElastic\Highlight|null
      */

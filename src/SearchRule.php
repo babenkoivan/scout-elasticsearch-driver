@@ -7,7 +7,7 @@ use ScoutElastic\Builders\SearchBuilder;
 class SearchRule
 {
     /**
-     * The builder
+     * The builder.
      *
      * @var \ScoutElastic\Builders\SearchBuilder
      */
@@ -41,7 +41,6 @@ class SearchRule
      */
     public function buildHighlightPayload()
     {
-        return null;
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace App\Stubs;
 
+use ScoutElastic\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use ScoutElastic\Searchable;
 
 class Car extends Model
 {
@@ -19,7 +19,7 @@ class Car extends Model
      * @var array
      */
     protected $fillable = [
-        'title'
+        'title',
     ];
 
     /**
@@ -28,20 +28,20 @@ class Car extends Model
     protected $mapping = [
         'properties' => [
             'title' => [
-                'type' => 'text'
+                'type' => 'text',
             ],
             'maker' => [
-                'type' => 'keyword'
+                'type' => 'keyword',
             ],
             'created_at' => [
                 'type' => 'date',
-                'format' => 'yyyy-MM-dd HH:mm:ss'
+                'format' => 'yyyy-MM-dd HH:mm:ss',
             ],
             'updated_at' => [
                 'type' => 'date',
-                'format' => 'yyyy-MM-dd HH:mm:ss'
-            ]
-        ]
+                'format' => 'yyyy-MM-dd HH:mm:ss',
+            ],
+        ],
     ];
 
     /**
@@ -53,7 +53,7 @@ class Car extends Model
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function toSearchableArray()
     {

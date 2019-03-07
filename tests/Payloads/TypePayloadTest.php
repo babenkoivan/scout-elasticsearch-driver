@@ -18,7 +18,7 @@ class TypePayloadTest extends AbstractTestCase
         $this->assertEquals(
             [
                 'index' => 'test',
-                'type' => 'test'
+                'type' => 'test',
             ],
             $payload->get()
         );
@@ -27,12 +27,12 @@ class TypePayloadTest extends AbstractTestCase
     public function testSet()
     {
         $indexConfigurator = $this->mockIndexConfigurator([
-            'name' => 'foo'
+            'name' => 'foo',
         ]);
 
         $model = $this->mockModel([
             'searchable_as' => 'bar',
-            'index_configurator' => $indexConfigurator
+            'index_configurator' => $indexConfigurator,
         ]);
 
         $payload = (new TypePayload($model))
@@ -44,7 +44,7 @@ class TypePayloadTest extends AbstractTestCase
             [
                 'index' => 'foo',
                 'type' => 'bar',
-                'body' => []
+                'body' => [],
             ],
             $payload->get()
         );

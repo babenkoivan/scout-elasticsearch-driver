@@ -2,13 +2,13 @@
 
 namespace ScoutElastic\Tests;
 
-use ScoutElastic\Builders\FilterBuilder;
-use ScoutElastic\Builders\SearchBuilder;
+use stdClass;
 use ScoutElastic\ElasticEngine;
 use ScoutElastic\Facades\ElasticClient;
-use ScoutElastic\Tests\Dependencies\Model;
+use ScoutElastic\Builders\FilterBuilder;
+use ScoutElastic\Builders\SearchBuilder;
 use ScoutElastic\Tests\Stubs\SearchRule;
-use stdClass;
+use ScoutElastic\Tests\Dependencies\Model;
 
 class ElasticEngineTest extends AbstractTestCase
 {
@@ -38,9 +38,9 @@ class ElasticEngineTest extends AbstractTestCase
                 return [
                     'must' => [
                         'match' => [
-                            'bar' => $searchBuilder->query
-                        ]
-                    ]
+                            'bar' => $searchBuilder->query,
+                        ],
+                    ],
                 ];
             })
             ->select('title')
@@ -64,14 +64,14 @@ class ElasticEngineTest extends AbstractTestCase
                         '_source' => [
                             'title',
                             'price',
-                            'color'
+                            'color',
                         ],
                         'query' => [
                             'bool' => [
                                 'must' => [
                                     'query_string' => [
-                                        'query' => 'foo'
-                                    ]
+                                        'query' => 'foo',
+                                    ],
                                 ],
                                 'filter' => [
                                     'bool' => [
@@ -79,38 +79,38 @@ class ElasticEngineTest extends AbstractTestCase
                                             [
                                                 'range' => [
                                                     'id' => [
-                                                        'gt' => 20
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
+                                                        'gt' => 20,
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
                         ],
                         'highlight' => [
                             'fields' => [
                                 'title' => [
-                                    'type' => 'plain'
+                                    'type' => 'plain',
                                 ],
                                 'price' => [
-                                    'type' => 'plain'
+                                    'type' => 'plain',
                                 ],
                                 'color' => [
-                                    'type' => 'plain'
-                                ]
-                            ]
+                                    'type' => 'plain',
+                                ],
+                            ],
                         ],
                         'collapse' => [
-                            'field' => 'brand'
+                            'field' => 'brand',
                         ],
                         'sort' => [
                             [
-                                'id' => 'asc'
-                            ]
+                                'id' => 'asc',
+                            ],
                         ],
                         'from' => 100,
-                        'size' => 10
+                        'size' => 10,
                     ],
                 ],
                 [
@@ -120,14 +120,14 @@ class ElasticEngineTest extends AbstractTestCase
                         '_source' => [
                             'title',
                             'price',
-                            'color'
+                            'color',
                         ],
                         'query' => [
                             'bool' => [
                                 'must' => [
                                     'match' => [
-                                        'bar' => 'foo'
-                                    ]
+                                        'bar' => 'foo',
+                                    ],
                                 ],
                                 'filter' => [
                                     'bool' => [
@@ -135,27 +135,27 @@ class ElasticEngineTest extends AbstractTestCase
                                             [
                                                 'range' => [
                                                     'id' => [
-                                                        'gt' => 20
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
+                                                        'gt' => 20,
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
                         ],
                         'collapse' => [
-                            'field' => 'brand'
+                            'field' => 'brand',
                         ],
                         'sort' => [
                             [
-                                'id' => 'asc'
-                            ]
+                                'id' => 'asc',
+                            ],
                         ],
                         'from' => 100,
-                        'size' => 10
-                    ]
-                ]
+                        'size' => 10,
+                    ],
+                ],
             ],
             $payloadCollection->all()
         );
@@ -184,30 +184,30 @@ class ElasticEngineTest extends AbstractTestCase
                         'query' => [
                             'bool' => [
                                 'must' => [
-                                    'match_all' => new stdClass()
+                                    'match_all' => new stdClass(),
                                 ],
                                 'filter' => [
                                     'bool' => [
                                         'must' => [
                                             [
                                                 'term' => [
-                                                    'foo' => 'bar'
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
+                                                    'foo' => 'bar',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
                         ],
                         'sort' => [
                             [
-                                'foo' => 'desc'
-                            ]
+                                'foo' => 'desc',
+                            ],
                         ],
                         'from' => 30,
-                        'size' => 1
+                        'size' => 1,
                     ],
-                ]
+                ],
             ],
             $payloadCollection->all()
         );
@@ -229,12 +229,12 @@ class ElasticEngineTest extends AbstractTestCase
                         'bool' => [
                             'must' => [
                                 'query_string' => [
-                                    'query' => 'foo'
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
+                                    'query' => 'foo',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ]);
 
         $model = $this->mockModel();
@@ -261,10 +261,10 @@ class ElasticEngineTest extends AbstractTestCase
                 'body' => [
                     'query' => [
                         'match' => [
-                            'foo' => 'bar'
-                        ]
-                    ]
-                ]
+                            'foo' => 'bar',
+                        ],
+                    ],
+                ],
             ]);
 
         $model = $this->mockModel();
@@ -272,9 +272,9 @@ class ElasticEngineTest extends AbstractTestCase
         $query = [
             'query' => [
                 'match' => [
-                    'foo' => 'bar'
-                ]
-            ]
+                    'foo' => 'bar',
+                ],
+            ],
         ];
 
         $this
@@ -293,9 +293,9 @@ class ElasticEngineTest extends AbstractTestCase
             'hits' => [
                 'hits' => [
                     ['_id' => 1],
-                    ['_id' => 2]
-                ]
-            ]
+                    ['_id' => 2],
+                ],
+            ],
         ];
 
         $this->assertEquals(
@@ -315,17 +315,17 @@ class ElasticEngineTest extends AbstractTestCase
                     [
                         '_id' => 1,
                         '_source' => [
-                            'title' => 'foo'
-                        ]
+                            'title' => 'foo',
+                        ],
                     ],
                     [
                         '_id' => 2,
                         '_source' => [
-                            'title' => 'bar'
-                        ]
-                    ]
-                ]
-            ]
+                            'title' => 'bar',
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         $model = $this->mockModel([
@@ -335,8 +335,8 @@ class ElasticEngineTest extends AbstractTestCase
                 'newQuery',
                 'whereIn',
                 'get',
-                'keyBy'
-            ]
+                'keyBy',
+            ],
         ]);
 
         $model
@@ -358,7 +358,7 @@ class ElasticEngineTest extends AbstractTestCase
         $model
             ->method('keyBy')
             ->willReturn([
-                2 => $model
+                2 => $model,
             ]);
 
         $builder = $this
@@ -383,17 +383,17 @@ class ElasticEngineTest extends AbstractTestCase
                     [
                         '_id' => 1,
                         '_source' => [
-                            'title' => 'foo'
-                        ]
+                            'title' => 'foo',
+                        ],
                     ],
                     [
                         '_id' => 2,
                         '_source' => [
-                            'title' => 'bar'
-                        ]
-                    ]
-                ]
-            ]
+                            'title' => 'bar',
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         $model = $this->mockModel([
@@ -403,8 +403,8 @@ class ElasticEngineTest extends AbstractTestCase
                 'withTrashed',
                 'whereIn',
                 'get',
-                'keyBy'
-            ]
+                'keyBy',
+            ],
         ]);
 
         $model
@@ -426,7 +426,7 @@ class ElasticEngineTest extends AbstractTestCase
         $model
             ->method('keyBy')
             ->willReturn([
-                2 => $model
+                2 => $model,
             ]);
 
         $builder = $this
@@ -444,8 +444,8 @@ class ElasticEngineTest extends AbstractTestCase
     {
         $results = [
             'hits' => [
-                'total' => 100
-            ]
+                'total' => 100,
+            ],
         ];
 
         $this->assertEquals(

@@ -3,9 +3,9 @@
 namespace ScoutElastic\Console;
 
 use Illuminate\Console\Command;
-use ScoutElastic\Console\Features\RequiresIndexConfiguratorArgument;
 use ScoutElastic\Facades\ElasticClient;
 use ScoutElastic\Payloads\IndexPayload;
+use ScoutElastic\Console\Features\RequiresIndexConfiguratorArgument;
 
 class ElasticIndexDropCommand extends Command
 {
@@ -15,7 +15,6 @@ class ElasticIndexDropCommand extends Command
      * {@inheritdoc}
      */
     protected $name = 'elastic:drop-index';
-
 
     /**
      * {@inheritdoc}
