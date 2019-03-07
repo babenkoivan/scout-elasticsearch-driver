@@ -4,6 +4,7 @@ namespace ScoutElastic;
 
 use stdClass;
 use Laravel\Scout\Builder;
+use Illuminate\Support\Arr;
 use Laravel\Scout\Engines\Engine;
 use ScoutElastic\Payloads\TypePayload;
 use Illuminate\Database\Eloquent\Model;
@@ -296,7 +297,7 @@ class ElasticEngine extends Engine
 
         $primaryKey = $model->getKeyName();
 
-        $columns = array_get($results, '_payload.body._source');
+        $columns = Arr::get($results, '_payload.body._source');
 
         if (is_null($columns)) {
             $columns = ['*'];

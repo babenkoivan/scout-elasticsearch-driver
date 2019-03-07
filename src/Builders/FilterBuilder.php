@@ -3,6 +3,7 @@
 namespace ScoutElastic\Builders;
 
 use Laravel\Scout\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model;
 
 class FilterBuilder extends Builder
@@ -515,7 +516,7 @@ class FilterBuilder extends Builder
     {
         $this->select = array_merge(
             $this->select,
-            array_wrap($fields)
+            Arr::wrap($fields)
         );
 
         return $this;
@@ -540,7 +541,7 @@ class FilterBuilder extends Builder
     {
         $this->wheres['must'] = collect($this->wheres['must'])
             ->filter(function ($item) {
-                return array_get($item, 'term.__soft_deleted') !== 0;
+                return Arr::get($item, 'term.__soft_deleted') !== 0;
             })
             ->values()
             ->all();
