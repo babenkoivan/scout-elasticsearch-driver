@@ -51,6 +51,7 @@ class SearchableModelMakeCommand extends ModelMakeCommand
 
     /**
      * Get the index configurator.
+     *
      * @return string
      */
     protected function getIndexConfigurator()
@@ -60,6 +61,7 @@ class SearchableModelMakeCommand extends ModelMakeCommand
 
     /**
      * Get the search rule.
+     *
      * @return string
      */
     protected function getSearchRule()
@@ -69,6 +71,7 @@ class SearchableModelMakeCommand extends ModelMakeCommand
 
     /**
      * Build the class.
+     *
      * @param string $name
      * @return string
      */

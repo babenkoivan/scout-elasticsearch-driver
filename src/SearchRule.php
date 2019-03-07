@@ -8,6 +8,7 @@ class SearchRule
 {
     /**
      * The builder
+     *
      * @var \ScoutElastic\Builders\SearchBuilder
      */
     protected $builder;
@@ -25,6 +26,7 @@ class SearchRule
 
     /**
      * Check if this is applicable.
+     *
      * @return bool
      */
     public function isApplicable()
@@ -34,6 +36,7 @@ class SearchRule
 
     /**
      * Build the highlight payload.
+     *
      * @return array|null
      */
     public function buildHighlightPayload()
@@ -43,6 +46,7 @@ class SearchRule
 
     /**
      * Build the query payload.
+     *
      * @return array
      */
     public function buildQueryPayload()
@@ -50,9 +54,9 @@ class SearchRule
         return [
             'must' => [
                 'query_string' => [
-                    'query' => $this->builder->query
-                ]
-            ]
+                    'query' => $this->builder->query,
+                ],
+            ],
         ];
     }
 }

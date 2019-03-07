@@ -8,6 +8,7 @@ interface IndexerInterface
 {
     /**
      * Update documents.
+     *
      * @param \Illuminate\Database\Eloquent\Collection $models
      * @return array
      */
@@ -15,6 +16,7 @@ interface IndexerInterface
 
     /**
      * Delete documents.
+     *
      * @param \Illuminate\Database\Eloquent\Collection $models
      * @return array
      */

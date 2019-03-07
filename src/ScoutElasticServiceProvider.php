@@ -20,6 +20,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
 {
     /**
      * Boot the service provider
+     *
      * @return void
      */
     public function boot()
@@ -64,6 +65,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider
+     *
      * @return void
      */
     public function register()

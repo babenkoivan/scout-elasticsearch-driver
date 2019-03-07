@@ -15,25 +15,26 @@ use stdClass;
 
 class ElasticEngine extends Engine
 {
-
     /**
      * The indexer interface.
+     *
      * @var \ScoutElastic\Indexers\IndexerInterface
      */
     protected $indexer;
 
     /**
      * Should the mapping be updated.
+     *
      * @var bool
      */
     protected $updateMapping;
 
     /**
      * The updated mappings.
+     *
      * @var array
      */
     static protected $updatedMappings = [];
-
 
     /**
      * ElasticEngine constructor.
@@ -86,9 +87,9 @@ class ElasticEngine extends Engine
         $this->indexer->delete($models);
     }
 
-
     /**
      * Build the payload collection.
+     *
      * @param \Laravel\Scout\Builder $builder
      * @param array $options
      * @return \Illuminate\Support\Collection
@@ -157,6 +158,7 @@ class ElasticEngine extends Engine
 
     /**
      * Perform the search.
+     *
      * @param \Laravel\Scout\Builder $builder
      * @param array $options
      * @return array|mixed
@@ -211,6 +213,7 @@ class ElasticEngine extends Engine
 
     /**
      * Explain the search.
+     *
      * @param \Laravel\Scout\Builder $builder
      * @return array|mixed
      */
@@ -223,6 +226,7 @@ class ElasticEngine extends Engine
 
     /**
      * Profile the search
+     *
      * @param \Laravel\Scout\Builder $builder
      * @return array|mixed
      */
@@ -233,9 +237,9 @@ class ElasticEngine extends Engine
         ]);
     }
 
-
     /**
      * Return the number of documents found.
+     *
      * @param \Laravel\Scout\Builder $builder
      * @return int
      */
@@ -260,6 +264,7 @@ class ElasticEngine extends Engine
 
     /**
      * Make a raw search.
+     *
      * @param \Illuminate\Database\Eloquent\Model $model
      * @param array $query
      * @return mixed

@@ -6,6 +6,7 @@ class Highlight
 {
     /**
      * The highlight array.
+     *
      * @var array
      */
     private $highlight;
@@ -21,9 +22,9 @@ class Highlight
         $this->highlight = $highlight;
     }
 
-
     /**
      * Get a value.
+     *
      * @param string $key
      * @return mixed|string|null
      */

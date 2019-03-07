@@ -9,6 +9,7 @@ class FilterBuilder extends Builder
 {
     /**
      * The condition array.
+     *
      * @var array
      */
     public $wheres = [
@@ -39,6 +40,7 @@ class FilterBuilder extends Builder
 
     /**
      * The select array.
+     *
      * @var array
      */
     public $select = [];
@@ -424,6 +426,7 @@ class FilterBuilder extends Builder
 
     /**
      * Build the payload.
+     *
      * @return array
      */
     public function buildPayload()
@@ -448,6 +451,7 @@ class FilterBuilder extends Builder
 
     /**
      * Set the query offset.
+     *
      * @param int $offset
      * @return $this
      */

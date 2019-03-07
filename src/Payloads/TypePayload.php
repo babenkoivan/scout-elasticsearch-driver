@@ -10,10 +10,10 @@ class TypePayload extends IndexPayload
 {
     /**
      * The model.
+     *
      * @var \Illuminate\Database\Eloquent\Model
      */
     protected $model;
-
 
     /**
      * TypePayload constructor.

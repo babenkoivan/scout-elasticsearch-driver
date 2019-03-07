@@ -12,6 +12,7 @@ class IndexPayload extends RawPayload
 
     /**
      * The protected keys.
+     *
      * @var array
      */
     protected $protectedKeys = [
@@ -20,6 +21,7 @@ class IndexPayload extends RawPayload
 
     /**
      * The index configurator.
+     *
      * @var \ScoutElastic\IndexConfigurator
      */
     protected $indexConfigurator;
@@ -37,10 +39,10 @@ class IndexPayload extends RawPayload
         $this->payload['index'] = $indexConfigurator->getName();
     }
 
-
     /**
      * Use an alias.
-     * @param $alias
+     *
+     * @param string $alias
      * @return $this
      * @throws \Exception
      */

@@ -30,6 +30,7 @@ class ElasticMigrateCommand extends Command
 
     /**
      * Get the command arguments.
+     *
      * @return array
      */
     protected function getArguments()
@@ -60,6 +61,7 @@ class ElasticMigrateCommand extends Command
 
     /**
      * Create a target index
+     *
      * @return void
      */
     protected function createTargetIndex()
@@ -86,6 +88,7 @@ class ElasticMigrateCommand extends Command
 
     /**
      * Update the target index.
+     *
      * @throws \Exception
      * @return void
      */
@@ -139,6 +142,7 @@ class ElasticMigrateCommand extends Command
 
     /**
      * Update the target index mapping.
+     *
      * @return void
      */
     protected function updateTargetIndexMapping()
@@ -196,6 +200,7 @@ class ElasticMigrateCommand extends Command
 
     /**
      * Get an alias
+     *
      * @param string $name
      * @return array
      */
@@ -211,6 +216,7 @@ class ElasticMigrateCommand extends Command
 
     /**
      * Delete an alias.
+     *
      * @param string $name
      * @return void
      */
@@ -241,6 +247,7 @@ class ElasticMigrateCommand extends Command
 
     /**
      * Create an alias for the target index
+     *
      * @param string $name
      * @return void
      */
@@ -269,6 +276,7 @@ class ElasticMigrateCommand extends Command
 
     /**
      * Import the documents to the target index.
+     *
      * @return void
      *
      */
@@ -284,6 +292,7 @@ class ElasticMigrateCommand extends Command
 
     /**
      * Delete the source index.
+     *
      * @return void
      */
     protected function deleteSourceIndex()

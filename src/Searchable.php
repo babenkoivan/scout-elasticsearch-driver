@@ -22,6 +22,7 @@ trait Searchable
 
     /**
      * Defines if te model is searchable.
+     *
      * @var bool
      */
     private static $isSearchableTraitBooted = false;
@@ -39,6 +40,7 @@ trait Searchable
 
     /**
      * Get the index configurator.
+     *
      * @return \ScoutElastic\IndexConfigurator
      * @throws \Exception
      */
@@ -63,6 +65,7 @@ trait Searchable
 
     /**
      * Get the mapping.
+     *
      * @return array
      */
     public function getMapping()
@@ -78,6 +81,7 @@ trait Searchable
 
     /**
      * Get the search rules.
+     *
      * @return array
      */
     public function getSearchRules()
@@ -88,6 +92,7 @@ trait Searchable
 
     /**
      * Execute the search.
+     *
      * @param string $query
      * @param callable|null $callback
      * @return \ScoutElastic\Builders\FilterBuilder|\ScoutElastic\Builders\SearchBuilder
@@ -105,6 +110,7 @@ trait Searchable
 
     /**
      * Execute a raw search.
+     *
      * @param array $query
      * @return array
      */
@@ -118,6 +124,7 @@ trait Searchable
 
     /**
      * Set the highlight attribute.
+     *
      * @param \ScoutElastic\Highlight $value
      * @return void
      */
@@ -128,6 +135,7 @@ trait Searchable
 
     /**
      * Get the highlight attribute
+     *
      * @return \ScoutElastic\Highlight|null
      */
     public function getHighlightAttribute()

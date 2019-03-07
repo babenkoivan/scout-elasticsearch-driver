@@ -83,6 +83,7 @@ class ElasticIndexUpdateCommand extends Command
 
     /**
      * Create a write alias.
+     *
      * @return void
      */
     protected function createWriteAlias()
@@ -115,7 +116,6 @@ class ElasticIndexUpdateCommand extends Command
             $configurator->getName()
         ));
     }
-
 
     /**
      * Handle the command.
