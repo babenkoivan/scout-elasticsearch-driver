@@ -22,7 +22,7 @@ trait Model
                 'trashed',
                 'searchableAs',
                 'toSearchableArray',
-                'getIndexConfigurator'
+                'getIndexConfigurator',
             ]
         );
 

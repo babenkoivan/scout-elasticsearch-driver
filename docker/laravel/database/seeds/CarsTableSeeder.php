@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 class CarsTableSeeder extends Seeder
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function run()
     {
@@ -21,7 +21,7 @@ class CarsTableSeeder extends Seeder
             ->saveMany([
                 new Car(['title' => 'A3']),
                 new Car(['title' => 'A4']),
-                new Car(['title' => 'Q3'])
+                new Car(['title' => 'Q3']),
             ]);
 
         Maker::where('title', 'BMW')
@@ -30,7 +30,7 @@ class CarsTableSeeder extends Seeder
             ->saveMany([
                 new Car(['title' => '1 Series']),
                 new Car(['title' => '3 Series']),
-                new Car(['title' => 'X1'])
+                new Car(['title' => 'X1']),
             ]);
 
         Maker::where('title', 'Volkswagen')
@@ -39,7 +39,7 @@ class CarsTableSeeder extends Seeder
             ->saveMany([
                 new Car(['title' => 'Golf']),
                 new Car(['title' => 'Passat']),
-                new Car(['title' => 'Tiguan'])
+                new Car(['title' => 'Tiguan']),
             ]);
 
         Maker::where('title', 'Volvo')
@@ -47,7 +47,7 @@ class CarsTableSeeder extends Seeder
             ->cars()
             ->saveMany([
                 new Car(['title' => 'S60']),
-                new Car(['title' => 'XC40'])
+                new Car(['title' => 'XC40']),
             ]);
 
         Maker::where('title', 'Kia')
@@ -56,7 +56,7 @@ class CarsTableSeeder extends Seeder
             ->saveMany([
                 new Car(['title' => 'Rio']),
                 new Car(['title' => 'Cerato']),
-                new Car(['title' => 'Stinger'])
+                new Car(['title' => 'Stinger']),
             ]);
     }
 }

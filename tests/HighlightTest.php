@@ -10,7 +10,7 @@ class HighlightTest extends AbstractTestCase
     {
         $highlight = new Highlight([
             'title' => ['Title snippet 1'],
-            'description' => ['Description snippet 1', 'Description snippet 2']
+            'description' => ['Description snippet 1', 'Description snippet 2'],
         ]);
 
         $this->assertEquals(

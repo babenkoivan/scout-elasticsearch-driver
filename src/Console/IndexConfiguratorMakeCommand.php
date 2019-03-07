@@ -22,10 +22,10 @@ class IndexConfiguratorMakeCommand extends GeneratorCommand
     protected $type = 'Configurator';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getStub()
     {
-        return __DIR__ . '/stubs/index_configurator.stub';
+        return __DIR__.'/stubs/index_configurator.stub';
     }
 }

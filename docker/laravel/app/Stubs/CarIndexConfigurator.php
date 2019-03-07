@@ -2,8 +2,8 @@
 
 namespace App\Stubs;
 
-use ScoutElastic\IndexConfigurator;
 use ScoutElastic\Migratable;
+use ScoutElastic\IndexConfigurator;
 
 class CarIndexConfigurator extends IndexConfigurator
 {
