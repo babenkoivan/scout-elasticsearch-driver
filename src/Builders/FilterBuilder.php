@@ -8,24 +8,31 @@ use Laravel\Scout\Builder;
 class FilterBuilder extends Builder
 {
     /**
+     * The condition array.
      * @var array
      */
     public $wheres = [
         'must' => [],
-        'must_not' => []
+        'must_not' => [],
     ];
 
     /**
+     * The with array.
+     *
      * @var array|string
      */
     public $with;
 
     /**
+     * The offset
+     *
      * @var int
      */
     public $offset;
 
     /**
+     * The collapse parameter.
+     *
      * @var string
      */
     public $collapse;

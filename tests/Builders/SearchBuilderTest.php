@@ -15,26 +15,21 @@ class SearchBuilderTest extends AbstractTestCase
     {
         $builder = new SearchBuilder($this->mockModel(), 'qwerty');
 
-        $ruleFunc = function(SearchBuilder $builder) {
+        $ruleFunc = function (SearchBuilder $builder) {
             return [
                 'must' => [
                     'match' => [
-                        'foo' => $builder->query
-                    ]
-                ]
+                        'foo' => $builder->query,
+                    ],
+                ],
             ];
         };
 
-        $builder
-            ->rule(SearchRule::class)
-            ->rule($ruleFunc);
+        $builder->rule(SearchRule::class)->rule($ruleFunc);
 
-        $this->assertEquals(
-            [
-                SearchRule::class,
-                $ruleFunc
-            ],
-            $builder->rules
-        );
+        $this->assertEquals([
+            SearchRule::class,
+            $ruleFunc,
+        ], $builder->rules);
     }
 }
