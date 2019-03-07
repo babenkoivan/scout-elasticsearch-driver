@@ -5,7 +5,7 @@ namespace ScoutElastic\Payloads\Features;
 trait HasProtectedKeys
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function set($key, $value)
     {

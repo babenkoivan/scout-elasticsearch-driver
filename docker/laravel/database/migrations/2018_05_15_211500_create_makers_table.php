@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 class CreateMakersTable extends Migration
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function up()
     {
@@ -19,7 +19,7 @@ class CreateMakersTable extends Migration
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function down()
     {

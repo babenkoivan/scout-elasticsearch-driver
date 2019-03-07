@@ -2,9 +2,9 @@
 
 namespace ScoutElastic\Tests\Indexers;
 
-use ScoutElastic\Facades\ElasticClient;
-use ScoutElastic\Indexers\BulkIndexer;
 use ScoutElastic\Tests\Config;
+use ScoutElastic\Indexers\BulkIndexer;
+use ScoutElastic\Facades\ElasticClient;
 
 class BulkIndexerTest extends AbstractIndexerTest
 {
@@ -22,8 +22,8 @@ class BulkIndexerTest extends AbstractIndexerTest
                     ['index' => ['_id' => 1]],
                     ['name' => 'foo'],
                     ['index' => ['_id' => 2]],
-                    ['name' => 'bar']
-                ]
+                    ['name' => 'bar'],
+                ],
             ]);
 
         (new BulkIndexer())
@@ -48,8 +48,8 @@ class BulkIndexerTest extends AbstractIndexerTest
                     ['index' => ['_id' => 2]],
                     ['name' => 'bar', '__soft_deleted' => 0],
                     ['index' => ['_id' => 3]],
-                    ['__soft_deleted' => 0]
-                ]
+                    ['__soft_deleted' => 0],
+                ],
             ]);
 
         (new BulkIndexer())
@@ -73,8 +73,8 @@ class BulkIndexerTest extends AbstractIndexerTest
                     ['index' => ['_id' => 1]],
                     ['name' => 'foo'],
                     ['index' => ['_id' => 2]],
-                    ['name' => 'bar']
-                ]
+                    ['name' => 'bar'],
+                ],
             ]);
 
         (new BulkIndexer())
@@ -94,11 +94,11 @@ class BulkIndexerTest extends AbstractIndexerTest
                 'body' => [
                     ['delete' => ['_id' => 1]],
                     ['delete' => ['_id' => 2]],
-                    ['delete' => ['_id' => 3]]
+                    ['delete' => ['_id' => 3]],
                 ],
                 'client' => [
-                    'ignore' => 404
-                ]
+                    'ignore' => 404,
+                ],
             ]);
 
         (new BulkIndexer())

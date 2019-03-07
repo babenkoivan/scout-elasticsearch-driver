@@ -7,7 +7,7 @@ use ScoutElastic\SearchRule as ElasticSearchRule;
 class SearchRule extends ElasticSearchRule
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function buildHighlightPayload()
     {
@@ -16,12 +16,12 @@ class SearchRule extends ElasticSearchRule
         foreach ($this->builder->select as $field) {
             if (empty($highlight)) {
                 $highlight = [
-                    'fields' => []
+                    'fields' => [],
                 ];
             }
 
             $highlight['fields'][$field] = [
-                'type' => 'plain'
+                'type' => 'plain',
             ];
         }
 

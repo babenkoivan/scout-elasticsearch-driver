@@ -50,7 +50,7 @@ class RawPayloadTest extends AbstractTestCase
                 'zero' => 0,
                 'empty_array' => [],
                 'empty_string' => '',
-                'foo' => 'bar'
+                'foo' => 'bar',
             ],
             $payload->get()
         );

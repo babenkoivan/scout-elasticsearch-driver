@@ -16,7 +16,7 @@ class IndexPayload extends RawPayload
      * @var array
      */
     protected $protectedKeys = [
-        'index'
+        'index',
     ];
 
     /**
@@ -50,7 +50,7 @@ class IndexPayload extends RawPayload
     {
         $aliasGetter = 'get'.ucfirst($alias).'Alias';
 
-        if (!method_exists($this->indexConfigurator, $aliasGetter)) {
+        if (! method_exists($this->indexConfigurator, $aliasGetter)) {
             throw new Exception(sprintf(
                 'The index configurator %s doesn\'t have getter for the %s alias.',
                 get_class($this->indexConfigurator),
