@@ -13,15 +13,20 @@ class ElasticIndexCreateCommand extends Command
     use RequiresIndexConfiguratorArgument;
 
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'elastic:create-index';
 
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Create an Elasticsearch index';
 
+    /**
+     * Create an index.
+     *
+     * @return void
+     */
     protected function createIndex()
     {
         $configurator = $this->getIndexConfigurator();
@@ -40,6 +45,11 @@ class ElasticIndexCreateCommand extends Command
         ));
     }
 
+    /**
+     * Create an write alias.
+     *
+     * @return void
+     */
     protected function createWriteAlias()
     {
         $configurator = $this->getIndexConfigurator();
@@ -62,6 +72,11 @@ class ElasticIndexCreateCommand extends Command
         ));
     }
 
+    /**
+     * Handle the command.
+     *
+     * @return void
+     */
     public function handle()
     {
         $this->createIndex();

@@ -6,18 +6,21 @@ use Illuminate\Console\GeneratorCommand;
 
 class SearchRuleMakeCommand extends GeneratorCommand
 {
+
     /**
-     * @var string
+     * @inheritdoc
      */
     protected $name = 'make:search-rule';
 
+
     /**
-     * @var string
+     * @inheritdoc
      */
     protected $description = 'Create a new search rule';
 
+
     /**
-     * @var string
+     * @inheritdoc
      */
     protected $type = 'Rule';
 

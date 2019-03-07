@@ -18,6 +18,10 @@ use ScoutElastic\Console\SearchRuleMakeCommand;
 
 class ScoutElasticServiceProvider extends ServiceProvider
 {
+    /**
+     * Boot the service provider
+     * @return void
+     */
     public function boot()
     {
         $this->publishes([
@@ -58,6 +62,10 @@ class ScoutElasticServiceProvider extends ServiceProvider
             });
     }
 
+    /**
+     * Register the service provider
+     * @return void
+     */
     public function register()
     {
         $this

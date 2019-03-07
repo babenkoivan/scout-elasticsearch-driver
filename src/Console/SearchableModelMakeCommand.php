@@ -8,17 +8,17 @@ use Symfony\Component\Console\Input\InputOption;
 class SearchableModelMakeCommand extends ModelMakeCommand
 {
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'make:searchable-model';
 
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Create a new searchable model';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getStub()
     {
@@ -50,6 +50,7 @@ class SearchableModelMakeCommand extends ModelMakeCommand
     }
 
     /**
+     * Get the index configurator.
      * @return string
      */
     protected function getIndexConfigurator()
@@ -58,6 +59,7 @@ class SearchableModelMakeCommand extends ModelMakeCommand
     }
 
     /**
+     * Get the search rule.
      * @return string
      */
     protected function getSearchRule()
@@ -66,6 +68,7 @@ class SearchableModelMakeCommand extends ModelMakeCommand
     }
 
     /**
+     * Build the class.
      * @param string $name
      * @return string
      */
@@ -90,6 +93,11 @@ class SearchableModelMakeCommand extends ModelMakeCommand
         return $stub;
     }
 
+    /**
+     * Handle the command.
+     *
+     * @var string
+     */
     public function handle()
     {
         $indexConfigurator = $this->getIndexConfigurator();

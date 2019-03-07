@@ -10,7 +10,9 @@ use Symfony\Component\Console\Input\InputArgument;
 trait RequiresModelArgument
 {
     /**
-     * @return Model
+     * Get the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
      */
     protected function getModel()
     {
@@ -34,6 +36,8 @@ trait RequiresModelArgument
     }
 
     /**
+     * Get the arguments.
+     *
      * @return array
      */
     protected function getArguments()

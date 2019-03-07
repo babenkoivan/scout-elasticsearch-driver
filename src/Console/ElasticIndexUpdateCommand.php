@@ -15,16 +15,24 @@ class ElasticIndexUpdateCommand extends Command
 {
     use RequiresIndexConfiguratorArgument;
 
+
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'elastic:update-index';
 
+
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Update settings and mappings of an Elasticsearch index';
 
+    /**
+     * Update the index.
+     *
+     * @throws \Exception
+     * @return void
+     */
     protected function updateIndex()
     {
         $configurator = $this->getIndexConfigurator();
@@ -73,6 +81,10 @@ class ElasticIndexUpdateCommand extends Command
         ));
     }
 
+    /**
+     * Create a write alias.
+     * @return void
+     */
     protected function createWriteAlias()
     {
         $configurator = $this->getIndexConfigurator();
@@ -104,6 +116,12 @@ class ElasticIndexUpdateCommand extends Command
         ));
     }
 
+
+    /**
+     * Handle the command.
+     *
+     * @var string
+     */
     public function handle()
     {
         $this->updateIndex();

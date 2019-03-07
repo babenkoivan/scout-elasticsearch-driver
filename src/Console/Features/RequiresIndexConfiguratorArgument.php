@@ -9,7 +9,9 @@ use Symfony\Component\Console\Input\InputArgument;
 trait RequiresIndexConfiguratorArgument
 {
     /**
-     * @return IndexConfigurator
+     * Get the index configurator.
+     *
+     * @return \ScoutElastic\IndexConfigurator
      */
     protected function getIndexConfigurator()
     {
@@ -29,6 +31,8 @@ trait RequiresIndexConfiguratorArgument
     }
 
     /**
+     * Get the arguments.
+     *
      * @return array
      */
     protected function getArguments()

@@ -11,6 +11,7 @@ class IndexPayload extends RawPayload
     use HasProtectedKeys;
 
     /**
+     * The protected keys.
      * @var array
      */
     protected $protectedKeys = [
@@ -18,12 +19,16 @@ class IndexPayload extends RawPayload
     ];
 
     /**
-     * @var IndexConfigurator
+     * The index configurator.
+     * @var \ScoutElastic\IndexConfigurator
      */
     protected $indexConfigurator;
 
     /**
-     * @param IndexConfigurator $indexConfigurator
+     * IndexPayload constructor.
+     *
+     * @param \ScoutElastic\IndexConfigurator $indexConfigurator
+     * @return void
      */
     public function __construct(IndexConfigurator $indexConfigurator)
     {
@@ -32,10 +37,12 @@ class IndexPayload extends RawPayload
         $this->payload['index'] = $indexConfigurator->getName();
     }
 
+
     /**
-     * @param string $alias
+     * Use an alias.
+     * @param $alias
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      */
     public function useAlias($alias)
     {

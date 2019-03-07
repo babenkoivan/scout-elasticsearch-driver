@@ -15,24 +15,32 @@ use stdClass;
 
 class ElasticEngine extends Engine
 {
+
     /**
-     * @var IndexerInterface
+     * The indexer interface.
+     * @var \ScoutElastic\Indexers\IndexerInterface
      */
     protected $indexer;
 
     /**
+     * Should the mapping be updated.
      * @var bool
      */
     protected $updateMapping;
 
     /**
+     * The updated mappings.
      * @var array
      */
     static protected $updatedMappings = [];
 
+
     /**
-     * @param IndexerInterface $indexer
-     * @param $updateMapping
+     * ElasticEngine constructor.
+     *
+     * @param \ScoutElastic\Indexers\IndexerInterface $indexer
+     * @param bool $updateMapping
+     * @return void
      */
     public function __construct(IndexerInterface $indexer, $updateMapping)
     {
@@ -78,10 +86,12 @@ class ElasticEngine extends Engine
         $this->indexer->delete($models);
     }
 
+
     /**
-     * @param Builder $builder
+     * Build the payload collection.
+     * @param \Laravel\Scout\Builder $builder
      * @param array $options
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public function buildSearchQueryPayloadCollection(Builder $builder, array $options = [])
     {
@@ -146,9 +156,10 @@ class ElasticEngine extends Engine
     }
 
     /**
-     * @param Builder $builder
+     * Perform the search.
+     * @param \Laravel\Scout\Builder $builder
      * @param array $options
-     * @return array
+     * @return array|mixed
      */
     protected function performSearch(Builder $builder, array $options = [])
     {
@@ -199,8 +210,9 @@ class ElasticEngine extends Engine
     }
 
     /**
-     * @param Builder $builder
-     * @return array
+     * Explain the search.
+     * @param \Laravel\Scout\Builder $builder
+     * @return array|mixed
      */
     public function explain(Builder $builder)
     {
@@ -210,8 +222,9 @@ class ElasticEngine extends Engine
     }
 
     /**
-     * @param Builder $builder
-     * @return array
+     * Profile the search
+     * @param \Laravel\Scout\Builder $builder
+     * @return array|mixed
      */
     public function profile(Builder $builder)
     {
@@ -220,8 +233,10 @@ class ElasticEngine extends Engine
         ]);
     }
 
+
     /**
-     * @param Builder $builder
+     * Return the number of documents found.
+     * @param \Laravel\Scout\Builder $builder
      * @return int
      */
     public function count(Builder $builder)
@@ -244,9 +259,10 @@ class ElasticEngine extends Engine
     }
 
     /**
-     * @param Model $model
+     * Make a raw search.
+     * @param \Illuminate\Database\Eloquent\Model $model
      * @param array $query
-     * @return array
+     * @return mixed
      */
     public function searchRaw(Model $model, $query)
     {

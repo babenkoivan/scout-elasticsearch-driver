@@ -7,12 +7,16 @@ use ScoutElastic\Builders\SearchBuilder;
 class SearchRule
 {
     /**
-     * @var SearchBuilder
+     * The builder
+     * @var \ScoutElastic\Builders\SearchBuilder
      */
     protected $builder;
 
     /**
-     * @param SearchBuilder $builder
+     * SearchRule constructor.
+     *
+     * @param \ScoutElastic\Builders\SearchBuilder $builder
+     * @return void
      */
     public function __construct(SearchBuilder $builder)
     {
@@ -20,6 +24,7 @@ class SearchRule
     }
 
     /**
+     * Check if this is applicable.
      * @return bool
      */
     public function isApplicable()
@@ -28,6 +33,7 @@ class SearchRule
     }
 
     /**
+     * Build the highlight payload.
      * @return array|null
      */
     public function buildHighlightPayload()
@@ -36,6 +42,7 @@ class SearchRule
     }
 
     /**
+     * Build the query payload.
      * @return array
      */
     public function buildQueryPayload()
