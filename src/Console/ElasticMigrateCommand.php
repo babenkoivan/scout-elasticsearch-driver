@@ -19,16 +19,18 @@ class ElasticMigrateCommand extends Command
     }
 
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'elastic:migrate';
 
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Migrate model to another index';
 
     /**
+     * Get the command arguments.
+     *
      * @return array
      */
     protected function getArguments()
@@ -41,6 +43,8 @@ class ElasticMigrateCommand extends Command
     }
 
     /**
+     * Checks if the target index exists.
+     *
      * @return bool
      */
     protected function isTargetIndexExists()
@@ -55,6 +59,11 @@ class ElasticMigrateCommand extends Command
             ->exists($payload);
     }
 
+    /**
+     * Create a target index
+     *
+     * @return void
+     */
     protected function createTargetIndex()
     {
         $targetIndex = $this->argument('target-index');
@@ -77,6 +86,12 @@ class ElasticMigrateCommand extends Command
         ));
     }
 
+    /**
+     * Update the target index.
+     *
+     * @throws \Exception
+     * @return void
+     */
     protected function updateTargetIndex()
     {
         $targetIndex = $this->argument('target-index');
@@ -125,6 +140,11 @@ class ElasticMigrateCommand extends Command
         ));
     }
 
+    /**
+     * Update the target index mapping.
+     *
+     * @return void
+     */
     protected function updateTargetIndexMapping()
     {
         $sourceModel = $this->getModel();
@@ -163,6 +183,8 @@ class ElasticMigrateCommand extends Command
     }
 
     /**
+     * Check if an alias exists.
+     *
      * @param string $name
      * @return bool
      */
@@ -177,7 +199,9 @@ class ElasticMigrateCommand extends Command
     }
 
     /**
-     * @param $name
+     * Get an alias
+     *
+     * @param string $name
      * @return array
      */
     protected function getAlias($name)
@@ -191,7 +215,10 @@ class ElasticMigrateCommand extends Command
     }
 
     /**
+     * Delete an alias.
+     *
      * @param string $name
+     * @return void
      */
     protected function deleteAlias($name)
     {
@@ -219,7 +246,10 @@ class ElasticMigrateCommand extends Command
     }
 
     /**
+     * Create an alias for the target index
+     *
      * @param string $name
+     * @return void
      */
     protected function createAliasForTargetIndex($name)
     {
@@ -244,6 +274,12 @@ class ElasticMigrateCommand extends Command
         ));
     }
 
+    /**
+     * Import the documents to the target index.
+     *
+     * @return void
+     *
+     */
     protected function importDocumentsToTargetIndex()
     {
         $sourceModel = $this->getModel();
@@ -254,6 +290,11 @@ class ElasticMigrateCommand extends Command
         );
     }
 
+    /**
+     * Delete the source index.
+     *
+     * @return void
+     */
     protected function deleteSourceIndex()
     {
         $sourceIndexConfigurator = $this
@@ -290,6 +331,11 @@ class ElasticMigrateCommand extends Command
         }
     }
 
+    /**
+     * Handle the command.
+     *
+     * @return void
+     */
     public function handle()
     {
         $sourceModel = $this->getModel();

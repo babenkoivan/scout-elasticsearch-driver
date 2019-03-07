@@ -8,37 +8,50 @@ use Laravel\Scout\Builder;
 class FilterBuilder extends Builder
 {
     /**
+     * The condition array.
+     *
      * @var array
      */
     public $wheres = [
         'must' => [],
-        'must_not' => []
+        'must_not' => [],
     ];
 
     /**
+     * The with array.
+     *
      * @var array|string
      */
     public $with;
 
     /**
+     * The offset
+     *
      * @var int
      */
     public $offset;
 
     /**
+     * The collapse parameter.
+     *
      * @var string
      */
     public $collapse;
 
     /**
+     * The select array.
+     *
      * @var array
      */
     public $select = [];
 
     /**
-     * @param Model $model
+     * FilterBuilder constructor.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $model
      * @param callable|null $callback
      * @param bool $softDelete
+     * @return void
      */
     public function __construct(Model $model, $callback = null, $softDelete = false)
     {
@@ -55,6 +68,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Add a where condition.
+     *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html Term query
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-range-query.html Range query
      *
@@ -136,6 +151,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Add a whereIn condition.
+     *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html Terms query
      *
      * @param string $field
@@ -154,6 +171,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Add a whereNotIn condition.
+     *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html Terms query
      *
      * @param string $field
@@ -172,6 +191,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Add a whereBetween condition.
+     *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-range-query.html Range query
      *
      * @param string $field
@@ -193,6 +214,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Add a whereNotBetween condition.
+     *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-range-query.html Range query
      *
      * @param string $field
@@ -214,6 +237,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Add a whereExists condition.
+     *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-exists-query.html Exists query
      *
      * @param string $field
@@ -231,6 +256,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Add a whereNotExists condition
+     *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-exists-query.html Exists query
      *
      * @param string $field
@@ -248,6 +275,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Add a whereRegexp condition.
+     *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html Regexp query
      *
      * @param string $field
@@ -270,6 +299,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Add a whereGeoDistance condition.
+     *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html Geo distance query
      *
      * @param string $field
@@ -290,6 +321,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Add a whereGeoBoundingBox condition.
+     *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html Geo bounding box query
      *
      * @param string $field
@@ -308,6 +341,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Add a whereGeoPolygon condition.
+     *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-query.html Geo polygon query
      *
      * @param string $field
@@ -326,8 +361,10 @@ class FilterBuilder extends Builder
 
         return $this;
     }
-    
+
     /**
+     * Add a whereGeoShape condition.
+     *
      * @see https://www.elastic.co/guide/en/elasticsearch/guide/current/querying-geo-shapes.html Querying Geo Shapes
      *
      * @param string $field
@@ -346,8 +383,10 @@ class FilterBuilder extends Builder
 
         return $this;
     }
-    
+
     /**
+     * Add a orderBy clause.
+     *
      * @param string $field
      * @param string $direction
      * @return $this
@@ -362,6 +401,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Explain the request.
+     *
      * @return array
      */
     public function explain()
@@ -372,6 +413,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Profile the request.
+     *
      * @return array
      */
     public function profile()
@@ -382,6 +425,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Build the payload.
+     *
      * @return array
      */
     public function buildPayload()
@@ -392,6 +437,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Eager load some some relations.
+     *
      * @param array|string $relations
      * @return $this
      */
@@ -403,6 +450,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Set the query offset.
+     *
      * @param int $offset
      * @return $this
      */
@@ -444,6 +493,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Collapse by a field.
+     *
      * @param string $field
      * @return $this
      */
@@ -455,6 +506,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Select one or many fields.
+     *
      * @param mixed $fields
      * @return $this
      */
@@ -469,6 +522,8 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Get the count.
+     *
      * @return int
      */
     public function count()

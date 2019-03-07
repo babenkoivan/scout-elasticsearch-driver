@@ -5,11 +5,15 @@ namespace ScoutElastic\Payloads;
 class RawPayload
 {
     /**
+     * The payload.
+     *
      * @var array
      */
     protected $payload = [];
 
     /**
+     * Set a value.
+     *
      * @param string $key
      * @param mixed $value
      * @return $this
@@ -24,6 +28,8 @@ class RawPayload
     }
 
     /**
+     * Set a value if it's not empty.
+     *
      * @param string $key
      * @param mixed $value
      * @return $this
@@ -38,6 +44,8 @@ class RawPayload
     }
 
     /**
+     * Set a value if it's not null.
+     *
      * @param string $key
      * @param mixed $value
      * @return $this
@@ -52,6 +60,8 @@ class RawPayload
     }
 
     /**
+     * Checks that the payload key has a value.
+     *
      * @param string $key
      * @return bool
      */
@@ -61,6 +71,8 @@ class RawPayload
     }
 
     /**
+     * Add a value.
+     *
      * @param string $key
      * @param mixed $value
      * @return $this
@@ -83,6 +95,8 @@ class RawPayload
     }
 
     /**
+     * Add a value if it's not empty.
+     *
      * @param string $key
      * @param mixed $value
      * @return $this
@@ -97,6 +111,8 @@ class RawPayload
     }
 
     /**
+     * Get value.
+     *
      * @param string|null $key
      * @param mixed|null $default
      * @return mixed

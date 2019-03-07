@@ -7,17 +7,17 @@ use Illuminate\Console\GeneratorCommand;
 class IndexConfiguratorMakeCommand extends GeneratorCommand
 {
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'make:index-configurator';
 
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Create a new Elasticsearch index configurator';
 
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $type = 'Configurator';
 

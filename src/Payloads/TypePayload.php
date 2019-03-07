@@ -9,13 +9,18 @@ use ScoutElastic\Searchable;
 class TypePayload extends IndexPayload
 {
     /**
-     * @var Model
+     * The model.
+     *
+     * @var \Illuminate\Database\Eloquent\Model
      */
     protected $model;
 
     /**
-     * @param Model $model
-     * @throws Exception
+     * TypePayload constructor.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @throws \Exception
+     * @return void
      */
     public function __construct(Model $model)
     {
