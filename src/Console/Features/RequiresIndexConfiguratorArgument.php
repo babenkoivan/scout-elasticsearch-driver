@@ -9,7 +9,9 @@ use Symfony\Component\Console\Input\InputArgument;
 trait RequiresIndexConfiguratorArgument
 {
     /**
-     * @return IndexConfigurator
+     * Get the index configurator.
+     *
+     * @return \ScoutElastic\IndexConfigurator
      */
     protected function getIndexConfigurator()
     {
@@ -17,7 +19,7 @@ trait RequiresIndexConfiguratorArgument
 
         $configuratorInstance = new $configuratorClass;
 
-        if (!($configuratorInstance instanceof IndexConfigurator)) {
+        if (! ($configuratorInstance instanceof IndexConfigurator)) {
             throw new InvalidArgumentException(sprintf(
                 'The class %s must extend %s.',
                 $configuratorClass,
@@ -25,10 +27,12 @@ trait RequiresIndexConfiguratorArgument
             ));
         }
 
-        return (new $configuratorClass);
+        return new $configuratorClass;
     }
 
     /**
+     * Get the arguments.
+     *
      * @return array
      */
     protected function getArguments()
@@ -37,8 +41,8 @@ trait RequiresIndexConfiguratorArgument
             [
                 'index-configurator',
                 InputArgument::REQUIRED,
-                'The index configurator class'
-            ]
+                'The index configurator class',
+            ],
         ];
     }
 }

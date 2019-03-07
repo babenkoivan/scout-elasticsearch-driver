@@ -1,15 +1,15 @@
 <?php
 
 use App\Stubs\CarIndexConfigurator;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateCarsTable extends Migration
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function up()
     {
@@ -27,7 +27,7 @@ class CreateCarsTable extends Migration
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function down()
     {
@@ -35,7 +35,7 @@ class CreateCarsTable extends Migration
             'elastic:drop-index',
             ['index-configurator' => CarIndexConfigurator::class]
         );
-        
+
         Schema::dropIfExists('cars');
     }
 }

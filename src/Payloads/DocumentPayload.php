@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class DocumentPayload extends TypePayload
 {
     /**
-     * @param Model $model
-     * @throws Exception
+     * DocumentPayload constructor.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @throws \Exception
+     * @return void
      */
     public function __construct(Model $model)
     {

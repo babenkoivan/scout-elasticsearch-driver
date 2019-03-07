@@ -2,9 +2,9 @@
 
 namespace ScoutElastic\Tests\Indexers;
 
-use Illuminate\Database\Eloquent\Collection;
 use ScoutElastic\Tests\AbstractTestCase;
 use ScoutElastic\Tests\Dependencies\Model;
+use Illuminate\Database\Eloquent\Collection;
 
 abstract class AbstractIndexerTest extends AbstractTestCase
 {
@@ -22,21 +22,21 @@ abstract class AbstractIndexerTest extends AbstractTestCase
                 'key' => 1,
                 'trashed' => true,
                 'searchable_array' => [
-                    'name' => 'foo'
-                ]
+                    'name' => 'foo',
+                ],
             ]),
             $this->mockModel([
                 'key' => 2,
                 'trashed' => false,
                 'searchable_array' => [
-                    'name' => 'bar'
-                ]
+                    'name' => 'bar',
+                ],
             ]),
             $this->mockModel([
                 'key' => 3,
                 'trashed' => false,
-                'searchable_array' => []
-            ])
+                'searchable_array' => [],
+            ]),
         ]);
     }
 }

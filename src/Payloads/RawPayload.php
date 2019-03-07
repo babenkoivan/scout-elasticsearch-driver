@@ -5,18 +5,22 @@ namespace ScoutElastic\Payloads;
 class RawPayload
 {
     /**
+     * The payload.
+     *
      * @var array
      */
     protected $payload = [];
 
     /**
+     * Set a value.
+     *
      * @param string $key
      * @param mixed $value
      * @return $this
      */
     public function set($key, $value)
     {
-        if (!is_null($key)) {
+        if (! is_null($key)) {
             array_set($this->payload, $key, $value);
         }
 
@@ -24,6 +28,8 @@ class RawPayload
     }
 
     /**
+     * Set a value if it's not empty.
+     *
      * @param string $key
      * @param mixed $value
      * @return $this
@@ -38,6 +44,8 @@ class RawPayload
     }
 
     /**
+     * Set a value if it's not null.
+     *
      * @param string $key
      * @param mixed $value
      * @return $this
@@ -52,6 +60,8 @@ class RawPayload
     }
 
     /**
+     * Checks that the payload key has a value.
+     *
      * @param string $key
      * @return bool
      */
@@ -61,16 +71,18 @@ class RawPayload
     }
 
     /**
+     * Add a value.
+     *
      * @param string $key
      * @param mixed $value
      * @return $this
      */
     public function add($key, $value)
     {
-        if (!is_null($key)) {
+        if (! is_null($key)) {
             $currentValue = array_get($this->payload, $key, []);
 
-            if (!is_array($currentValue)) {
+            if (! is_array($currentValue)) {
                 $currentValue = array_wrap($currentValue);
             }
 
@@ -83,6 +95,8 @@ class RawPayload
     }
 
     /**
+     * Add a value if it's not empty.
+     *
      * @param string $key
      * @param mixed $value
      * @return $this
@@ -97,6 +111,8 @@ class RawPayload
     }
 
     /**
+     * Get value.
+     *
      * @param string|null $key
      * @param mixed|null $default
      * @return mixed

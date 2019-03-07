@@ -3,29 +3,34 @@
 namespace ScoutElastic\Console;
 
 use LogicException;
-use Illuminate\Console\Command;
-use ScoutElastic\Console\Features\RequiresModelArgument;
-use ScoutElastic\Facades\ElasticClient;
 use ScoutElastic\Migratable;
+use Illuminate\Console\Command;
 use ScoutElastic\Payloads\TypePayload;
+use ScoutElastic\Facades\ElasticClient;
+use ScoutElastic\Console\Features\RequiresModelArgument;
 
 class ElasticUpdateMappingCommand extends Command
 {
     use RequiresModelArgument;
 
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'elastic:update-mapping';
 
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Update a model mapping';
 
+    /**
+     * Handle the command.
+     *
+     * @return void
+     */
     public function handle()
     {
-        if (!$model = $this->getModel()) {
+        if (! $model = $this->getModel()) {
             return;
         }
 
@@ -46,7 +51,7 @@ class ElasticUpdateMappingCommand extends Command
             $payload->useAlias('write');
         }
 
-        $payload->set('body.' . $model->searchableAs(), $mapping);
+        $payload->set('body.'.$model->searchableAs(), $mapping);
 
         ElasticClient::indices()
             ->putMapping($payload->get());

@@ -2,9 +2,9 @@
 
 namespace ScoutElastic\Tests\Indexers;
 
+use ScoutElastic\Tests\Config;
 use ScoutElastic\Facades\ElasticClient;
 use ScoutElastic\Indexers\SingleIndexer;
-use ScoutElastic\Tests\Config;
 
 class SingleIndexerTest extends AbstractIndexerTest
 {
@@ -20,8 +20,8 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'type' => 'test',
                 'id' => 1,
                 'body' => [
-                    'name' => 'foo'
-                ]
+                    'name' => 'foo',
+                ],
             ])
             ->shouldReceive('index')
             ->once()
@@ -30,8 +30,8 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'type' => 'test',
                 'id' => 2,
                 'body' => [
-                    'name' => 'bar'
-                ]
+                    'name' => 'bar',
+                ],
             ]);
 
         (new SingleIndexer())
@@ -53,8 +53,8 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'id' => 1,
                 'body' => [
                     'name' => 'foo',
-                    '__soft_deleted' => 1
-                ]
+                    '__soft_deleted' => 1,
+                ],
             ])
             ->shouldReceive('index')
             ->once()
@@ -64,8 +64,8 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'id' => 2,
                 'body' => [
                     'name' => 'bar',
-                    '__soft_deleted' => 0
-                ]
+                    '__soft_deleted' => 0,
+                ],
             ])
             ->shouldReceive('index')
             ->once()
@@ -74,8 +74,8 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'type' => 'test',
                 'id' => 3,
                 'body' => [
-                    '__soft_deleted' => 0
-                ]
+                    '__soft_deleted' => 0,
+                ],
             ]);
 
         (new SingleIndexer())
@@ -97,8 +97,8 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'refresh' => 'true',
                 'id' => 1,
                 'body' => [
-                    'name' => 'foo'
-                ]
+                    'name' => 'foo',
+                ],
             ])
             ->shouldReceive('index')
             ->once()
@@ -108,8 +108,8 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'refresh' => 'true',
                 'id' => 2,
                 'body' => [
-                    'name' => 'bar'
-                ]
+                    'name' => 'bar',
+                ],
             ]);
 
         (new SingleIndexer())
@@ -128,8 +128,8 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'type' => 'test',
                 'id' => 1,
                 'client' => [
-                    'ignore' => 404
-                ]
+                    'ignore' => 404,
+                ],
             ])
             ->shouldReceive('delete')
             ->once()
@@ -138,8 +138,8 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'type' => 'test',
                 'id' => 2,
                 'client' => [
-                    'ignore' => 404
-                ]
+                    'ignore' => 404,
+                ],
             ])
             ->shouldReceive('delete')
             ->once()
@@ -148,8 +148,8 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'type' => 'test',
                 'id' => 3,
                 'client' => [
-                    'ignore' => 404
-                ]
+                    'ignore' => 404,
+                ],
             ]);
 
         (new SingleIndexer())

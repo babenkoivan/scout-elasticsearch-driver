@@ -10,4 +10,4 @@ before_script:
   - sh ./travis/dependencies_check.sh
 
 script:
-  - docker-compose -f docker-compose.yml exec php /app/driver/vendor/bin/phpunit -c /app/driver/phpunit.xml
+  - docker-compose -f docker-compose.yml exec php /app/driver/vendor/bin/phpunit -c /app/driver/phpunit.xml.dist

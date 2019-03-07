@@ -7,25 +7,25 @@ use Illuminate\Console\GeneratorCommand;
 class IndexConfiguratorMakeCommand extends GeneratorCommand
 {
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'make:index-configurator';
 
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Create a new Elasticsearch index configurator';
 
     /**
-     * @var string
+     * {@inheritdoc}
      */
     protected $type = 'Configurator';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getStub()
     {
-        return __DIR__ . '/stubs/index_configurator.stub';
+        return __DIR__.'/stubs/index_configurator.stub';
     }
 }

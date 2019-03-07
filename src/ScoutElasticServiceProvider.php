@@ -2,26 +2,31 @@
 
 namespace ScoutElastic;
 
+use InvalidArgumentException;
+use Elasticsearch\ClientBuilder;
+use Laravel\Scout\EngineManager;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
-use Elasticsearch\ClientBuilder;
-use InvalidArgumentException;
-use ScoutElastic\Console\ElasticIndexCreateCommand;
-use ScoutElastic\Console\ElasticIndexDropCommand;
-use ScoutElastic\Console\ElasticIndexUpdateCommand;
 use ScoutElastic\Console\ElasticMigrateCommand;
+use ScoutElastic\Console\SearchRuleMakeCommand;
+use ScoutElastic\Console\ElasticIndexDropCommand;
+use ScoutElastic\Console\ElasticIndexCreateCommand;
+use ScoutElastic\Console\ElasticIndexUpdateCommand;
+use ScoutElastic\Console\SearchableModelMakeCommand;
 use ScoutElastic\Console\ElasticUpdateMappingCommand;
 use ScoutElastic\Console\IndexConfiguratorMakeCommand;
-use ScoutElastic\Console\SearchableModelMakeCommand;
-use Laravel\Scout\EngineManager;
-use ScoutElastic\Console\SearchRuleMakeCommand;
 
 class ScoutElasticServiceProvider extends ServiceProvider
 {
+    /**
+     * Boot the service provider.
+     *
+     * @return void
+     */
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/scout_elastic.php' => config_path('scout_elastic.php'),
+            __DIR__.'/../config/scout_elastic.php' => config_path('scout_elastic.php'),
         ]);
 
         $this->commands([
@@ -35,7 +40,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
             ElasticIndexUpdateCommand::class,
             ElasticIndexDropCommand::class,
             ElasticUpdateMappingCommand::class,
-            ElasticMigrateCommand::class
+            ElasticMigrateCommand::class,
         ]);
 
         $this
@@ -47,7 +52,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
 
                 $indexerClass = '\\ScoutElastic\\Indexers\\'.ucfirst($indexerType).'Indexer';
 
-                if (!class_exists($indexerClass)) {
+                if (! class_exists($indexerClass)) {
                     throw new InvalidArgumentException(sprintf(
                         'The %s indexer doesn\'t exist.',
                         $indexerType
@@ -58,12 +63,18 @@ class ScoutElasticServiceProvider extends ServiceProvider
             });
     }
 
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
     public function register()
     {
         $this
             ->app
-            ->singleton('scout_elastic.client', function() {
+            ->singleton('scout_elastic.client', function () {
                 $config = Config::get('scout_elastic.client');
+
                 return ClientBuilder::fromConfig($config);
             });
     }

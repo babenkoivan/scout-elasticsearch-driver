@@ -14,36 +14,27 @@ trait IndexConfigurator
     {
         $name = $params['name'] ?? 'test';
 
-        $methods = array_merge(
-            $params['methods'] ?? [],
-            [
+        $methods = array_merge($params['methods'] ?? [], [
                 'getName',
                 'getSettings',
                 'getDefaultMapping',
-                'getWriteAlias'
-            ]
-        );
+                'getWriteAlias',
+            ]);
 
-        $mock = $this
-            ->getMockBuilder(ElasticIndexConfigurator::class)
-            ->setMethods($methods)
-            ->getMock();
+        $mock = $this->getMockBuilder(ElasticIndexConfigurator::class)
+                     ->setMethods($methods)->getMock();
 
-        $mock
-            ->method('getName')
-            ->willReturn($name);
+        $mock->method('getName')
+             ->willReturn($name);
 
-        $mock
-            ->method('getSettings')
-            ->willReturn($params['settings'] ?? []);
+        $mock->method('getSettings')
+             ->willReturn($params['settings'] ?? []);
 
-        $mock
-            ->method('getDefaultMapping')
-            ->willReturn($params['default_mapping'] ?? []);
+        $mock->method('getDefaultMapping')
+             ->willReturn($params['default_mapping'] ?? []);
 
-        $mock
-            ->method('getWriteAlias')
-            ->willReturn($name . '_write');
+        $mock->method('getWriteAlias')
+             ->willReturn($name.'_write');
 
         return $mock;
     }

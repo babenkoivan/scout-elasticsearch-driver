@@ -7,13 +7,17 @@ use Illuminate\Database\Eloquent\Collection;
 interface IndexerInterface
 {
     /**
-     * @param Collection $models
+     * Update documents.
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $models
      * @return array
      */
     public function update(Collection $models);
 
     /**
-     * @param Collection $models
+     * Delete documents.
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $models
      * @return array
      */
     public function delete(Collection $models);
