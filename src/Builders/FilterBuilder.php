@@ -2,8 +2,8 @@
 
 namespace ScoutElastic\Builders;
 
-use Illuminate\Support\Arr;
 use Laravel\Scout\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model;
 
 class FilterBuilder extends Builder

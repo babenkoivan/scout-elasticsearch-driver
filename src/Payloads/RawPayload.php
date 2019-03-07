@@ -22,7 +22,7 @@ class RawPayload
      */
     public function set($key, $value)
     {
-        if (!is_null($key)) {
+        if (! is_null($key)) {
             Arr::set($this->payload, $key, $value);
         }
 
@@ -81,10 +81,10 @@ class RawPayload
      */
     public function add($key, $value)
     {
-        if (!is_null($key)) {
+        if (! is_null($key)) {
             $currentValue = Arr::get($this->payload, $key, []);
 
-            if (!is_array($currentValue)) {
+            if (! is_array($currentValue)) {
                 $currentValue = Arr::wrap($currentValue);
             }
 

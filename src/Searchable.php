@@ -2,8 +2,8 @@
 
 namespace ScoutElastic;
 
-use Illuminate\Support\Arr;
 use Exception;
+use Illuminate\Support\Arr;
 use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
 use Laravel\Scout\Searchable as ScoutSearchable;
