@@ -3,3 +3,4 @@ vendor
 !.gitkeep
 composer.lock
 phpunit.xml
+.phpunit.result.cache
