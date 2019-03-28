@@ -402,6 +402,18 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Add complex sort array
+     * @param array $sort
+     * @return $this
+     */
+    public function sort($sort)
+    {
+        $this->orders[] = $sort;
+
+        return $this;
+    }
+
+    /**
      * Explain the request.
      *
      * @return array
