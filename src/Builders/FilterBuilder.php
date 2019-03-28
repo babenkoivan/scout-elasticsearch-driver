@@ -402,7 +402,7 @@ class FilterBuilder extends Builder
     }
 
     /**
-     * Add complex sort array
+     * Add complex sort array.
      * @param array $sort
      * @return $this
      */
