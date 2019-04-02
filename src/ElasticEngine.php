@@ -324,6 +324,10 @@ class ElasticEngine extends Engine
                     if (isset($hit['highlight'])) {
                         $model->highlight = new Highlight($hit['highlight']);
                     }
+                    
+                    if (isset($hit['sort'])) {
+                        $model->sort = $hit['sort'][0];
+                    }
 
                     return $model;
                 }
