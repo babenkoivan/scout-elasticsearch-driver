@@ -143,4 +143,42 @@ trait Searchable
     {
         return $this->highlight;
     }
+
+    /**
+     * Set the databaseStore attribute.
+     *
+     * @param bool $value
+     * @return void
+     */
+    public function setDatabaseStoreAttribute(bool $value)
+    {
+        $this->databaseStore = $value;
+    }
+
+    /**
+     * Get the databaseStore attribute.
+     *
+     * @return bool
+     */
+    public function getDatabaseStoreAttribute()
+    {
+        return isset($this->databaseStore) ? $this->databaseStore : true;
+    }
+
+    /**
+     * @param array $options
+     * @return bool
+     */
+    public function save(array $options = [])
+    {
+        if ($this->getDatabaseStoreAttribute()) {
+            return parent::save($options);
+        } else {
+            $this->setKeyName(false);
+
+            $this->finishSave($options);
+
+            return true;
+        }
+    }
 }
