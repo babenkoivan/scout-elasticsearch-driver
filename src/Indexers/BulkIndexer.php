@@ -17,6 +17,7 @@ class BulkIndexer implements IndexerInterface
     {
         $model = $models->first();
         $indexConfigurator = $model->getIndexConfigurator();
+        $relations = $model->searchableRelations ?? [];
 
         $bulkPayload = new TypePayload($model);
 
@@ -28,7 +29,8 @@ class BulkIndexer implements IndexerInterface
             $bulkPayload->set('refresh', $documentRefresh);
         }
 
-        $models->each(function ($model) use ($bulkPayload) {
+        $models->loadMissing($relations)
+            ->each(function ($model) use ($bulkPayload) {
             if ($model::usesSoftDelete() && config('scout.soft_delete', false)) {
                 $model->pushSoftDeleteMetadata();
             }
