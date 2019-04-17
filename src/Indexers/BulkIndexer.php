@@ -31,26 +31,26 @@ class BulkIndexer implements IndexerInterface
 
         $models->loadMissing($relations)
             ->each(function ($model) use ($bulkPayload) {
-            if ($model::usesSoftDelete() && config('scout.soft_delete', false)) {
-                $model->pushSoftDeleteMetadata();
-            }
+                if ($model::usesSoftDelete() && config('scout.soft_delete', false)) {
+                    $model->pushSoftDeleteMetadata();
+                }
 
-            $modelData = array_merge(
-                $model->toSearchableArray(),
-                $model->scoutMetadata()
-            );
+                $modelData = array_merge(
+                    $model->toSearchableArray(),
+                    $model->scoutMetadata()
+                );
 
-            if (empty($modelData)) {
-                return true;
-            }
+                if (empty($modelData)) {
+                    return true;
+                }
 
-            $actionPayload = (new RawPayload())
-                ->set('index._id', $model->getKey());
+                $actionPayload = (new RawPayload())
+                    ->set('index._id', $model->getKey());
 
-            $bulkPayload
-                ->add('body', $actionPayload->get())
-                ->add('body', $modelData);
-        });
+                $bulkPayload
+                    ->add('body', $actionPayload->get())
+                    ->add('body', $modelData);
+            });
 
         ElasticClient::bulk($bulkPayload->get());
     }
