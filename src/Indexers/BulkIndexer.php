@@ -11,7 +11,10 @@ use Illuminate\Database\Eloquent\Collection;
 class BulkIndexer implements IndexerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param Collection $models
+     *
+     * @return array|void
+     * @throws \Exception
      */
     public function update(Collection $models)
     {
@@ -50,7 +53,20 @@ class BulkIndexer implements IndexerInterface
                 ->add('body', $modelData);
         });
 
-        ElasticClient::bulk($bulkPayload->get());
+        $response = ElasticClient::bulk($bulkPayload->get());
+
+        if ($response['errors']) {
+
+            // Response included every record's status which is a lot to dig through when chunking by thousand
+            // Sort through the items to only log the failed items
+            foreach ($response['items'] as $item) {
+                if ($item['index']['error']) {
+                    Log::error($item);
+                }
+            }
+
+            throw new Exception('ElasticSearch responded with an error');
+        }
     }
 
     /**
