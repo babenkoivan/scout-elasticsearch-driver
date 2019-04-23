@@ -295,24 +295,7 @@ class ElasticEngine extends Engine
             return Collection::make();
         }
 
-        $primaryKey = $model->getKeyName();
-
-        $columns = Arr::get($results, '_payload.body._source');
-
-        if (is_null($columns)) {
-            $columns = ['*'];
-        } else {
-            $columns[] = $primaryKey;
-        }
-
-        $ids = $this->mapIds($results)->all();
-
-        $query = $model::usesSoftDelete() ? $model->withTrashed() : $model->newQuery();
-
-        $models = $query
-            ->whereIn($primaryKey, $ids)
-            ->get($columns)
-            ->keyBy($primaryKey);
+        $models = $this->hydrateModels($model, $results);
 
         return Collection::make($results['hits']['hits'])
             ->map(function ($hit) use ($models) {
@@ -330,6 +313,49 @@ class ElasticEngine extends Engine
             })
             ->filter()
             ->values();
+    }
+
+    /**
+     * @param $model
+     * @param $results
+     * @return Collection
+     */
+    public function hydrateModels($model, $results)
+    {
+        // Hydrate models from elastic index
+        if ($model->databaseHydrate === false) {
+            $hits = collect($results['hits']['hits']);
+            $className = get_class($model);
+            $models = new Collection();
+
+            $hits->each(function($item, $key) use ($className, $model, $models) {
+                $attributes = $item['_source'];
+                $models->put($item['_id'], new $className($attributes));
+            });
+        }
+        // Hydrate models from database
+        else {
+            $primaryKey = $model->getKeyName();
+
+            $columns = Arr::get($results, '_payload.body._source');
+
+            if (is_null($columns)) {
+                $columns = ['*'];
+            } else {
+                $columns[] = $primaryKey;
+            }
+
+            $ids = $this->mapIds($results)->all();
+
+            $query = $model::usesSoftDelete() ? $model->withTrashed() : $model->newQuery();
+
+            $models = $query
+                ->whereIn($primaryKey, $ids)
+                ->get($columns)
+                ->keyBy($primaryKey);
+        }
+
+        return $models;
     }
 
     /**
