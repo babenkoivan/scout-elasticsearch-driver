@@ -327,7 +327,7 @@ class ElasticEngine extends Engine
             $className = get_class($model);
             $models = new Collection();
 
-            $hits->each(function($item, $key) use ($className, $model, $models) {
+            $hits->each(function ($item, $key) use ($className, $model, $models) {
                 $attributes = array_get($item['_source'], $model->indexAttributesPrefix);
                 $models->put($item['_id'], new $className($attributes));
             });
