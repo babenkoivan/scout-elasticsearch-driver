@@ -4,7 +4,6 @@ namespace ScoutElastic;
 
 use stdClass;
 use Laravel\Scout\Builder;
-use Illuminate\Support\Arr;
 use Laravel\Scout\Engines\Engine;
 use ScoutElastic\Payloads\TypePayload;
 use Illuminate\Database\Eloquent\Model;
