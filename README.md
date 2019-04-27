@@ -171,11 +171,12 @@ class MyModel extends Model
         //
     ];
 
-    // Here you can specify a mapping for a model fields.
+    // Here you can specify a mapping for model fields
     protected $mapping = [
         'properties' => [
-            'text' => [
+            'title' => [
                 'type' => 'text',
+                // Also you can configure multi-fields, more details you can find here https://www.elastic.co/guide/en/elasticsearch/reference/current/multi-fields.html
                 'fields' => [
                     'raw' => [
                         'type' => 'keyword',
