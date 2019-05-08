@@ -27,4 +27,11 @@ class DummyClass extends Model
     protected $mapping = [
         //
     ];
+
+    /**
+     * @var array
+     */
+    public $searchableRelations = [
+        //
+    ];
 }

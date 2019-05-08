@@ -17,6 +17,7 @@ class BulkIndexer implements IndexerInterface
     {
         $model = $models->first();
         $indexConfigurator = $model->getIndexConfigurator();
+        $relations = $model->searchableRelations ?? [];
 
         $bulkPayload = new TypePayload($model);
 
@@ -28,27 +29,28 @@ class BulkIndexer implements IndexerInterface
             $bulkPayload->set('refresh', $documentRefresh);
         }
 
-        $models->each(function ($model) use ($bulkPayload) {
-            if ($model::usesSoftDelete() && config('scout.soft_delete', false)) {
-                $model->pushSoftDeleteMetadata();
-            }
+        $models->loadMissing($relations)
+            ->each(function ($model) use ($bulkPayload) {
+                if ($model::usesSoftDelete() && config('scout.soft_delete', false)) {
+                    $model->pushSoftDeleteMetadata();
+                }
 
-            $modelData = array_merge(
-                $model->toSearchableArray(),
-                $model->scoutMetadata()
-            );
+                $modelData = array_merge(
+                    $model->toSearchableArray(),
+                    $model->scoutMetadata()
+                );
 
-            if (empty($modelData)) {
-                return true;
-            }
+                if (empty($modelData)) {
+                    return true;
+                }
 
-            $actionPayload = (new RawPayload())
-                ->set('index._id', $model->getKey());
+                $actionPayload = (new RawPayload())
+                    ->set('index._id', $model->getKey());
 
-            $bulkPayload
-                ->add('body', $actionPayload->get())
-                ->add('body', $modelData);
-        });
+                $bulkPayload
+                    ->add('body', $actionPayload->get())
+                    ->add('body', $modelData);
+            });
 
         ElasticClient::bulk($bulkPayload->get());
     }
