@@ -461,7 +461,7 @@ php artisan elastic:update-index "App\MyIndexConfigurator"
 When you are ready, make changes in the model mapping and run the `elastic:migrate` command using the model class as the first argument and desired index name as the second argument:
 
 ```
-php artisan elastic:migrate "App\MyModel my_index_v2"
+php artisan elastic:migrate "App\MyModel" my_index_v2
 ``` 
 
 Note, that if you need just to add new fields in your mapping, use the `elastic:update-mapping` command.
