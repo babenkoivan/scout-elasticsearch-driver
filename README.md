@@ -91,6 +91,9 @@ document_refresh | This option controls when updated documents appear in the sea
 
 Note, that if you use the bulk document indexing you'll probably want to change the chunk size, you can do that in the `config/scout.php` file.
 
+### ENV File
+Set your `SCOUT_DRIVER` env variable to `elastic`.
+
 ## Index configurator
 
 An index configurator class is used to set up settings for an Elasticsearch index.
