@@ -1,13 +1,20 @@
-sudo: required
+sudo: false
 
-services:
-  - docker
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+language: php
+
+php:
+  - 7.3
+  - 7.2
+  - 7.1
+  - 7.0
 
 before_script:
-  - docker-compose -f docker-compose.yml up --build --force-recreate -d
-  - sh ./travis/connection_check.sh elastic 9200
-  - sh ./travis/connection_check.sh mysql 3306
-  - sh ./travis/dependencies_check.sh
+  - composer global require --no-interaction --prefer-dist --update-no-dev hirak/prestissimo
+  - composer install --no-interaction --prefer-dist
 
 script:
-  - docker-compose -f docker-compose.yml exec php /app/driver/vendor/bin/phpunit -c /app/driver/phpunit.xml.dist
+  - vendor/bin/phpunit --colors=always

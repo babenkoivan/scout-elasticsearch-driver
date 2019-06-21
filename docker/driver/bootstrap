@@ -1,4 +1,0 @@
-#!/bin/sh
-
-# Install dependencies
-composer install --no-interaction
