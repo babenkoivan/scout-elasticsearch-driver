@@ -50,7 +50,7 @@ The package has been tested in the following configuration:
 
 * PHP version &gt;= 7.1.3
 * Laravel Framework version &gt;= 5.6
-* Elasticsearch version &gt;= 6
+* Elasticsearch version &gt;= 6 &lt;7
 
 ## Installation
 
