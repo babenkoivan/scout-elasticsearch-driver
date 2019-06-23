@@ -19,6 +19,7 @@ trait Model
             $params['methods'] ?? [],
             [
                 'getKey',
+                'getScoutKey',
                 'trashed',
                 'searchableAs',
                 'toSearchableArray',
@@ -33,6 +34,10 @@ trait Model
 
         $mock
             ->method('getKey')
+            ->willReturn($params['key'] ?? 1);
+
+        $mock
+            ->method('getScoutKey')
             ->willReturn($params['key'] ?? 1);
 
         $mock
