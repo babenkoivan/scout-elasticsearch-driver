@@ -350,8 +350,10 @@ class FilterBuilderTest extends AbstractTestCase
             ],
         ];
 
+        $relation = 'WITHIN';
+        
         $builder = (new FilterBuilder($this->mockModel()))
-            ->whereGeoShape('foo', $shape);
+            ->whereGeoShape('foo', $shape, $relation);
 
         $this->assertEquals(
             [
@@ -360,6 +362,7 @@ class FilterBuilderTest extends AbstractTestCase
                         'geo_shape' => [
                             'foo' => [
                                 'shape' => $shape,
+                                'relation' => $relation
                             ],
                         ],
                     ],
