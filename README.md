@@ -134,7 +134,7 @@ More about index settings you can find in the [index management section](https:/
 To create an index just run the artisan command:
  
 ```
-php artisan elastic:create-index App\\MyIndexConfigurator
+php artisan elastic:create-index "App\MyIndexConfigurator"
 ```
 
 Note, that every searchable model requires its own index configurator.
@@ -200,7 +200,7 @@ We'll take a closer look at it in [the search rules section](#search-rules).
 After setting up a mapping in your model you can update an Elasticsearch type mapping:
 
 ```
-php artisan elastic:update-mapping App\\MyModel
+php artisan elastic:update-mapping "App\MyModel"
 ```
 
 ## Usage
@@ -461,13 +461,13 @@ Before you run the command, make sure that your index configurator uses the `Sco
 If it's not, add the trait and run the artisan `elastic:update-index` command using your index configurator class name as an argument:
 
 ```
-php artisan elastic:update-index App\\MyIndexConfigurator
+php artisan elastic:update-index "App\MyIndexConfigurator"
 ```
 
 When you are ready, make changes in the model mapping and run the `elastic:migrate` command using the model class as the first argument and desired index name as the second argument:
 
 ```
-php artisan elastic:migrate App\\MyModel my_index_v2
+php artisan elastic:migrate "App\MyModel" my_index_v2
 ``` 
 
 Note, that if you need just to add new fields in your mapping, use the `elastic:update-mapping` command.
