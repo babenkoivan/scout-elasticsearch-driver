@@ -366,19 +366,21 @@ class FilterBuilder extends Builder
     /**
      * Add a whereGeoShape condition.
      *
-     * @see https://www.elastic.co/guide/en/elasticsearch/guide/current/querying-geo-shapes.html Querying Geo Shapes
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-shape-query.html Querying Geo Shapes
      *
      * @param string $field
      * @param array $shape
+     * @param string $relation 
      * @return $this
      */
-    public function whereGeoShape($field, array $shape)
+    public function whereGeoShape($field, array $shape, $relation = 'INTERSECTS')
     {
         $this->wheres['must'][] = [
             'geo_shape' => [
                 $field => [
                     'shape' => $shape,
-                ],
+                    'relation' => $relation
+                ]
             ],
         ];
 
