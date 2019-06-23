@@ -27,17 +27,17 @@ trait Searchable
      *
      * @var bool
      */
-    private static $isSearchableTraitBooted = false;
+    protected static $isSearchableTraitBooted = false;
 
     public static function bootSearchable()
     {
-        if (self::$isSearchableTraitBooted) {
+        if (static::$isSearchableTraitBooted) {
             return;
         }
 
         self::sourceBootSearchable();
 
-        self::$isSearchableTraitBooted = true;
+        static::$isSearchableTraitBooted = true;
     }
 
     /**
