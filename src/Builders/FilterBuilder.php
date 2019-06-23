@@ -370,7 +370,7 @@ class FilterBuilder extends Builder
      *
      * @param string $field
      * @param array $shape
-     * @param string $relation 
+     * @param string $relation
      * @return $this
      */
     public function whereGeoShape($field, array $shape, $relation = 'INTERSECTS')
