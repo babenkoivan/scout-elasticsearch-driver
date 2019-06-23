@@ -84,7 +84,7 @@ class FilterBuilder extends Builder
         $args = func_get_args();
 
         if (count($args) == 3) {
-            list($field, $operator, $value) = $args;
+            [$field, $operator, $value] = $args;
         } else {
             $operator = '=';
         }
