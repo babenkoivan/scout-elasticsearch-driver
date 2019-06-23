@@ -84,7 +84,7 @@ class FilterBuilder extends Builder
         $args = func_get_args();
 
         if (count($args) == 3) {
-            list($field, $operator, $value) = $args;
+            [$field, $operator, $value] = $args;
         } else {
             $operator = '=';
         }
@@ -370,7 +370,7 @@ class FilterBuilder extends Builder
      *
      * @param string $field
      * @param array $shape
-     * @param string $relation 
+     * @param string $relation
      * @return $this
      */
     public function whereGeoShape($field, array $shape, $relation = 'INTERSECTS')
@@ -379,8 +379,8 @@ class FilterBuilder extends Builder
             'geo_shape' => [
                 $field => [
                     'shape' => $shape,
-                    'relation' => $relation
-                ]
+                    'relation' => $relation,
+                ],
             ],
         ];
 

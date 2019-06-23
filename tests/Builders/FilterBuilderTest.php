@@ -351,7 +351,7 @@ class FilterBuilderTest extends AbstractTestCase
         ];
 
         $relation = 'WITHIN';
-        
+
         $builder = (new FilterBuilder($this->mockModel()))
             ->whereGeoShape('foo', $shape, $relation);
 
@@ -362,7 +362,7 @@ class FilterBuilderTest extends AbstractTestCase
                         'geo_shape' => [
                             'foo' => [
                                 'shape' => $shape,
-                                'relation' => $relation
+                                'relation' => $relation,
                             ],
                         ],
                     ],
