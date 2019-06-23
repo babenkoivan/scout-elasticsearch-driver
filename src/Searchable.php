@@ -23,12 +23,17 @@ trait Searchable
     private $highlight = null;
 
     /**
-     * Defines if te model is searchable.
+     * Defines if the model is searchable.
      *
      * @var bool
      */
     protected static $isSearchableTraitBooted = false;
 
+    /**
+     * Boot the trait.
+     *
+     * @return void
+     */
     public static function bootSearchable()
     {
         if (static::$isSearchableTraitBooted) {
