@@ -19,11 +19,11 @@ class FilterBuilderTest extends AbstractTestCase
                 'must' => [
                     [
                         'term' => [
-                            '__soft_deleted' => 0
-                        ]
-                    ]
+                            '__soft_deleted' => 0,
+                        ],
+                    ],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -36,7 +36,7 @@ class FilterBuilderTest extends AbstractTestCase
         $this->assertEquals(
             [
                 'must' => [],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -52,9 +52,9 @@ class FilterBuilderTest extends AbstractTestCase
             [
                 'must' => [
                     ['term' => ['foo' => 0]],
-                    ['term' => ['bar' => 1]]
+                    ['term' => ['bar' => 1]],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -69,8 +69,8 @@ class FilterBuilderTest extends AbstractTestCase
             [
                 'must' => [],
                 'must_not' => [
-                    ['term' => ['foo' => 'bar']]
-                ]
+                    ['term' => ['foo' => 'bar']],
+                ],
             ],
             $builder->wheres
         );
@@ -84,9 +84,9 @@ class FilterBuilderTest extends AbstractTestCase
         $this->assertEquals(
             [
                 'must' => [
-                    ['range' => ['foo' => ['gt' => 0]]]
+                    ['range' => ['foo' => ['gt' => 0]]],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -100,9 +100,9 @@ class FilterBuilderTest extends AbstractTestCase
         $this->assertEquals(
             [
                 'must' => [
-                    ['range' => ['foo' => ['gte' => 0]]]
+                    ['range' => ['foo' => ['gte' => 0]]],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -116,9 +116,9 @@ class FilterBuilderTest extends AbstractTestCase
         $this->assertEquals(
             [
                 'must' => [
-                    ['range' => ['foo' => ['lt' => 0]]]
+                    ['range' => ['foo' => ['lt' => 0]]],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -132,9 +132,9 @@ class FilterBuilderTest extends AbstractTestCase
         $this->assertEquals(
             [
                 'must' => [
-                    ['range' => ['foo' => ['gte' => 0]]]
+                    ['range' => ['foo' => ['gte' => 0]]],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -148,9 +148,9 @@ class FilterBuilderTest extends AbstractTestCase
         $this->assertEquals(
             [
                 'must' => [
-                    ['terms' => ['foo' => [0, 1]]]
+                    ['terms' => ['foo' => [0, 1]]],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -165,8 +165,8 @@ class FilterBuilderTest extends AbstractTestCase
             [
                 'must' => [],
                 'must_not' => [
-                    ['terms' => ['foo' => [0, 1]]]
-                ]
+                    ['terms' => ['foo' => [0, 1]]],
+                ],
             ],
             $builder->wheres
         );
@@ -180,9 +180,9 @@ class FilterBuilderTest extends AbstractTestCase
         $this->assertEquals(
             [
                 'must' => [
-                    ['range' => ['foo' => ['gte' => 0, 'lte' => 10]]]
+                    ['range' => ['foo' => ['gte' => 0, 'lte' => 10]]],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -197,8 +197,8 @@ class FilterBuilderTest extends AbstractTestCase
             [
                 'must' => [],
                 'must_not' => [
-                    ['range' => ['foo' => ['gte' => 0, 'lte' => 10]]]
-                ]
+                    ['range' => ['foo' => ['gte' => 0, 'lte' => 10]]],
+                ],
             ],
             $builder->wheres
         );
@@ -212,9 +212,9 @@ class FilterBuilderTest extends AbstractTestCase
         $this->assertEquals(
             [
                 'must' => [
-                    ['exists' => ['field' => 'foo']]
+                    ['exists' => ['field' => 'foo']],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -229,8 +229,8 @@ class FilterBuilderTest extends AbstractTestCase
             [
                 'must' => [],
                 'must_not' => [
-                    ['exists' => ['field' => 'foo']]
-                ]
+                    ['exists' => ['field' => 'foo']],
+                ],
             ],
             $builder->wheres
         );
@@ -246,9 +246,9 @@ class FilterBuilderTest extends AbstractTestCase
             [
                 'must' => [
                     ['regexp' => ['foo' => ['value' => '.*', 'flags' => 'ALL']]],
-                    ['regexp' => ['bar' => ['value' => '^test.*', 'flags' => 'EMPTY|NONE']]]
+                    ['regexp' => ['bar' => ['value' => '^test.*', 'flags' => 'EMPTY|NONE']]],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -283,9 +283,9 @@ class FilterBuilderTest extends AbstractTestCase
             [
                 'must' => [
                     ['term' => ['case2' => 2]],
-                    ['term' => ['case3' => 3]]
+                    ['term' => ['case3' => 3]],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -299,9 +299,9 @@ class FilterBuilderTest extends AbstractTestCase
         $this->assertEquals(
             [
                 'must' => [
-                    ['geo_distance' => ['distance' => '10m', 'foo' => [-20, 30]]]
+                    ['geo_distance' => ['distance' => '10m', 'foo' => [-20, 30]]],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -315,9 +315,9 @@ class FilterBuilderTest extends AbstractTestCase
         $this->assertEquals(
             [
                 'must' => [
-                    ['geo_bounding_box' => ['foo' => ['top_left' => [-5, 10], 'bottom_right' => [-20, 30]]]]
+                    ['geo_bounding_box' => ['foo' => ['top_left' => [-5, 10], 'bottom_right' => [-20, 30]]]],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -331,9 +331,9 @@ class FilterBuilderTest extends AbstractTestCase
         $this->assertEquals(
             [
                 'must' => [
-                    ['geo_polygon' => ['foo' => ['points' => [[-70, 40], [-80, 30], [-90, 20]]]]]
+                    ['geo_polygon' => ['foo' => ['points' => [[-70, 40], [-80, 30], [-90, 20]]]]],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -346,11 +346,11 @@ class FilterBuilderTest extends AbstractTestCase
             'radius' => '1km',
             'coordinates' => [
                 4.89994,
-                52.37815
-            ]
+                52.37815,
+            ],
         ];
 
-        $relation = 'intersects';
+        $relation = 'WITHIN';
         
         $builder = (new FilterBuilder($this->mockModel()))
             ->whereGeoShape('foo', $shape, $relation);
@@ -363,11 +363,11 @@ class FilterBuilderTest extends AbstractTestCase
                             'foo' => [
                                 'shape' => $shape,
                                 'relation' => $relation
-                            ]
-                        ]
-                    ]
+                            ],
+                        ],
+                    ],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -449,11 +449,11 @@ class FilterBuilderTest extends AbstractTestCase
                 'must' => [
                     [
                         'term' => [
-                            'foo' => 'bar'
-                        ]
-                    ]
+                            'foo' => 'bar',
+                        ],
+                    ],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -470,16 +470,16 @@ class FilterBuilderTest extends AbstractTestCase
                 'must' => [
                     [
                         'term' => [
-                            '__soft_deleted' => 1
-                        ]
+                            '__soft_deleted' => 1,
+                        ],
                     ],
                     [
                         'term' => [
-                            'foo' => 'bar'
-                        ]
-                    ]
+                            'foo' => 'bar',
+                        ],
+                    ],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );

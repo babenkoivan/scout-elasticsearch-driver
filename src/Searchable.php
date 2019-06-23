@@ -2,10 +2,11 @@
 
 namespace ScoutElastic;
 
-use Laravel\Scout\Searchable as ScoutSearchable;
+use Exception;
+use Illuminate\Support\Arr;
 use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
-use \Exception;
+use Laravel\Scout\Searchable as ScoutSearchable;
 
 trait Searchable
 {
@@ -14,11 +15,15 @@ trait Searchable
     }
 
     /**
-     * @var Highlight|null
+     * The highligths.
+     *
+     * @var \ScoutElastic\Highlight|null
      */
     private $highlight = null;
 
     /**
+     * Defines if te model is searchable.
+     *
      * @var bool
      */
     private static $isSearchableTraitBooted = false;
@@ -35,15 +40,17 @@ trait Searchable
     }
 
     /**
-     * @return IndexConfigurator
-     * @throws Exception
+     * Get the index configurator.
+     *
+     * @return \ScoutElastic\IndexConfigurator
+     * @throws \Exception
      */
     public function getIndexConfigurator()
     {
         static $indexConfigurator;
 
-        if (!$indexConfigurator) {
-            if (!isset($this->indexConfigurator) || empty($this->indexConfigurator)) {
+        if (! $indexConfigurator) {
+            if (! isset($this->indexConfigurator) || empty($this->indexConfigurator)) {
                 throw new Exception(sprintf(
                     'An index configurator for the %s model is not specified.',
                     __CLASS__
@@ -58,6 +65,8 @@ trait Searchable
     }
 
     /**
+     * Get the mapping.
+     *
      * @return array
      */
     public function getMapping()
@@ -65,13 +74,15 @@ trait Searchable
         $mapping = $this->mapping ?? [];
 
         if ($this::usesSoftDelete() && config('scout.soft_delete', false)) {
-            array_set($mapping, 'properties.__soft_deleted', ['type' => 'integer']);
+            Arr::set($mapping, 'properties.__soft_deleted', ['type' => 'integer']);
         }
 
         return $mapping;
     }
 
     /**
+     * Get the search rules.
+     *
      * @return array
      */
     public function getSearchRules()
@@ -81,9 +92,11 @@ trait Searchable
     }
 
     /**
-     * @param $query
-     * @param null $callback
-     * @return FilterBuilder|SearchBuilder
+     * Execute the search.
+     *
+     * @param string $query
+     * @param callable|null $callback
+     * @return \ScoutElastic\Builders\FilterBuilder|\ScoutElastic\Builders\SearchBuilder
      */
     public static function search($query, $callback = null)
     {
@@ -97,6 +110,8 @@ trait Searchable
     }
 
     /**
+     * Execute a raw search.
+     *
      * @param array $query
      * @return array
      */
@@ -109,7 +124,10 @@ trait Searchable
     }
 
     /**
-     * @param Highlight $value
+     * Set the highlight attribute.
+     *
+     * @param \ScoutElastic\Highlight $value
+     * @return void
      */
     public function setHighlightAttribute(Highlight $value)
     {
@@ -117,7 +135,9 @@ trait Searchable
     }
 
     /**
-     * @return Highlight|null
+     * Get the highlight attribute.
+     *
+     * @return \ScoutElastic\Highlight|null
      */
     public function getHighlightAttribute()
     {

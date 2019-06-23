@@ -5,13 +5,13 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function run()
     {
         $this->call([
             MakersTableSeeder::class,
-            CarsTableSeeder::class
+            CarsTableSeeder::class,
         ]);
     }
 }

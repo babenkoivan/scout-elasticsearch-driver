@@ -24,7 +24,7 @@ class IndexPayloadTest extends AbstractTestCase
     public function testUseAlias()
     {
         $indexConfigurator = $this->mockIndexConfigurator([
-            'name' => 'foo'
+            'name' => 'foo',
         ]);
 
         $payload = (new IndexPayload($indexConfigurator))
@@ -39,7 +39,7 @@ class IndexPayloadTest extends AbstractTestCase
     public function testSet()
     {
         $indexConfigurator = $this->mockIndexConfigurator([
-            'name' => 'foo'
+            'name' => 'foo',
         ]);
 
         $payload = (new IndexPayload($indexConfigurator))
@@ -49,7 +49,7 @@ class IndexPayloadTest extends AbstractTestCase
         $this->assertEquals(
             [
                 'index' => 'foo',
-                'settings' => ['key' => 'value']
+                'settings' => ['key' => 'value'],
             ],
             $payload->get()
         );

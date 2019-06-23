@@ -2,6 +2,8 @@
 
 namespace ScoutElastic\Tests;
 
+use Illuminate\Support\Arr;
+
 class Config
 {
     /**
@@ -15,7 +17,7 @@ class Config
      */
     public static function set($key, $value)
     {
-        array_set(static::$values, $key, $value);
+        Arr::set(static::$values, $key, $value);
     }
 
     /**
@@ -25,7 +27,7 @@ class Config
      */
     public static function get($key = null, $default = null)
     {
-        return array_get(static::$values, $key, $default);
+        return Arr::get(static::$values, $key, $default);
     }
 
     /**

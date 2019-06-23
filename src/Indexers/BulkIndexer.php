@@ -2,16 +2,16 @@
 
 namespace ScoutElastic\Indexers;
 
-use Illuminate\Database\Eloquent\Collection;
-use ScoutElastic\Facades\ElasticClient;
 use ScoutElastic\Migratable;
 use ScoutElastic\Payloads\RawPayload;
 use ScoutElastic\Payloads\TypePayload;
+use ScoutElastic\Facades\ElasticClient;
+use Illuminate\Database\Eloquent\Collection;
 
 class BulkIndexer implements IndexerInterface
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function update(Collection $models)
     {
@@ -54,7 +54,7 @@ class BulkIndexer implements IndexerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function delete(Collection $models)
     {
@@ -68,6 +68,8 @@ class BulkIndexer implements IndexerInterface
 
             $bulkPayload->add('body', $actionPayload->get());
         });
+
+        $bulkPayload->set('client.ignore', 404);
 
         ElasticClient::bulk($bulkPayload->get());
     }

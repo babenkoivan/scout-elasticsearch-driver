@@ -5,12 +5,17 @@ namespace ScoutElastic;
 class Highlight
 {
     /**
+     * The highlight array.
+     *
      * @var array
      */
     private $highlight;
 
     /**
+     * Highlight constructor.
+     *
      * @param array $highlight
+     * @return void
      */
     public function __construct(array $highlight)
     {
@@ -18,8 +23,10 @@ class Highlight
     }
 
     /**
-     * @param $key
-     * @return array|string|null
+     * Get a value.
+     *
+     * @param string $key
+     * @return mixed|string|null
      */
     public function __get($key)
     {
@@ -27,9 +34,10 @@ class Highlight
 
         if (isset($this->highlight[$field])) {
             $value = $this->highlight[$field];
+
             return $field == $key ? $value : implode(' ', $value);
         } else {
-            return null;
+            return;
         }
     }
 }

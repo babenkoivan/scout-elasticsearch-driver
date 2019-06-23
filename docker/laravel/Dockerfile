@@ -1,10 +1,9 @@
-ARG version
-
 FROM composer:latest
 
 WORKDIR /app/laravel
 
 # Install Laravel
+ARG version
 RUN composer create-project --no-interaction --prefer-dist laravel/laravel . $version
 
 # Setup environment

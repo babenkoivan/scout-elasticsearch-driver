@@ -6,7 +6,8 @@ FROM php:${version}-cli
 RUN apt-get update -y && apt-get install -y \
     unzip \
     zlib1g-dev \
-    git
+    git \
+    netcat
 
 # Install php extensions
 RUN docker-php-ext-install \

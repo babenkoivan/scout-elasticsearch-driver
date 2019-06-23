@@ -2,8 +2,8 @@
 
 namespace ScoutElastic\Tests\Payloads;
 
-use ScoutElastic\Payloads\DocumentPayload;
 use ScoutElastic\Tests\AbstractTestCase;
+use ScoutElastic\Payloads\DocumentPayload;
 use ScoutElastic\Tests\Dependencies\Model;
 
 class DocumentPayloadTest extends AbstractTestCase
@@ -20,7 +20,7 @@ class DocumentPayloadTest extends AbstractTestCase
             [
                 'index' => 'test',
                 'type' => 'test',
-                'id' => 1
+                'id' => 1,
             ],
             $payload->get()
         );
@@ -29,12 +29,12 @@ class DocumentPayloadTest extends AbstractTestCase
     public function testSet()
     {
         $indexConfigurator = $this->mockIndexConfigurator([
-            'name' => 'foo'
+            'name' => 'foo',
         ]);
 
         $model = $this->mockModel([
             'searchable_as' => 'bar',
-            'index_configurator' => $indexConfigurator
+            'index_configurator' => $indexConfigurator,
         ]);
 
         $payload = (new DocumentPayload($model))
@@ -48,7 +48,7 @@ class DocumentPayloadTest extends AbstractTestCase
                 'index' => 'foo',
                 'type' => 'bar',
                 'id' => 1,
-                'body' => []
+                'body' => [],
             ],
             $payload->get()
         );
