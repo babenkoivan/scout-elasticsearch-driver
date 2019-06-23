@@ -6,12 +6,13 @@ use Exception;
 use Illuminate\Support\Arr;
 use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
-use Laravel\Scout\Searchable as ScoutSearchable;
+use Laravel\Scout\Searchable as SourceSearchable;
 
 trait Searchable
 {
-    use ScoutSearchable {
-        ScoutSearchable::bootSearchable as bootScoutSearchable;
+    use SourceSearchable {
+        SourceSearchable::bootSearchable as sourceBootSearchable;
+        SourceSearchable::getScoutKeyName as sourceGetScoutKeyName;
     }
 
     /**
@@ -34,7 +35,7 @@ trait Searchable
             return;
         }
 
-        self::bootScoutSearchable();
+        self::sourceBootSearchable();
 
         self::$isSearchableTraitBooted = true;
     }
@@ -49,8 +50,8 @@ trait Searchable
     {
         static $indexConfigurator;
 
-        if (! $indexConfigurator) {
-            if (! isset($this->indexConfigurator) || empty($this->indexConfigurator)) {
+        if (!$indexConfigurator) {
+            if (!isset($this->indexConfigurator) || empty($this->indexConfigurator)) {
                 throw new Exception(sprintf(
                     'An index configurator for the %s model is not specified.',
                     __CLASS__
@@ -142,5 +143,15 @@ trait Searchable
     public function getHighlightAttribute()
     {
         return $this->highlight;
+    }
+
+    /**
+     * Get the key name used to index the model.
+     *
+     * @return mixed
+     */
+    public function getScoutKeyName()
+    {
+        return $this->getKeyName();
     }
 }

@@ -295,14 +295,14 @@ class ElasticEngine extends Engine
             return Collection::make();
         }
 
-        $primaryKey = $model->getKeyName();
+        $scoutKeyName = $model->getScoutKeyName();
 
         $columns = Arr::get($results, '_payload.body._source');
 
         if (is_null($columns)) {
             $columns = ['*'];
         } else {
-            $columns[] = $primaryKey;
+            $columns[] = $scoutKeyName;
         }
 
         $ids = $this->mapIds($results)->all();
@@ -310,9 +310,9 @@ class ElasticEngine extends Engine
         $query = $model::usesSoftDelete() ? $model->withTrashed() : $model->newQuery();
 
         $models = $query
-            ->whereIn($primaryKey, $ids)
+            ->whereIn($scoutKeyName, $ids)
             ->get($columns)
-            ->keyBy($primaryKey);
+            ->keyBy($scoutKeyName);
 
         return Collection::make($results['hits']['hits'])
             ->map(function ($hit) use ($models) {
@@ -348,7 +348,7 @@ class ElasticEngine extends Engine
         $query = $model::usesSoftDelete() ? $model->withTrashed() : $model->newQuery();
 
         $query
-            ->orderBy($model->getKeyName())
+            ->orderBy($model->getScoutKeyName())
             ->unsearchable();
     }
 }
