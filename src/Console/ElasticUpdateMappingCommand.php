@@ -30,7 +30,7 @@ class ElasticUpdateMappingCommand extends Command
      */
     public function handle()
     {
-        if (! $model = $this->getModel()) {
+        if (!$model = $this->getModel()) {
             return;
         }
 
@@ -45,13 +45,13 @@ class ElasticUpdateMappingCommand extends Command
             throw new LogicException('Nothing to update: the mapping is not specified.');
         }
 
-        $payload = new TypePayload($model);
+        $payload = (new TypePayload($model))
+            ->set('body.' . $model->searchableAs(), $mapping)
+            ->set('include_type_name', 'true');
 
         if (in_array(Migratable::class, class_uses_recursive($configurator))) {
             $payload->useAlias('write');
         }
-
-        $payload->set('body.'.$model->searchableAs(), $mapping);
 
         ElasticClient::indices()
             ->putMapping($payload->get());

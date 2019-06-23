@@ -39,7 +39,7 @@ class ElasticIndexUpdateCommand extends Command
 
         $indices = ElasticClient::indices();
 
-        if (! $indices->exists($indexPayload)) {
+        if (!$indices->exists($indexPayload)) {
             throw new LogicException(sprintf(
                 'Index %s doesn\'t exist',
                 $configurator->getName()
@@ -55,15 +55,6 @@ class ElasticIndexUpdateCommand extends Command
                     ->get();
 
                 $indices->putSettings($indexSettingsPayload);
-            }
-
-            if ($defaultMapping = $configurator->getDefaultMapping()) {
-                $indexMappingPayload = (new IndexPayload($configurator))
-                    ->set('type', '_default_')
-                    ->set('body._default_', $defaultMapping)
-                    ->get();
-
-                $indices->putMapping($indexMappingPayload);
             }
 
             $indices->open($indexPayload);
@@ -88,7 +79,7 @@ class ElasticIndexUpdateCommand extends Command
     {
         $configurator = $this->getIndexConfigurator();
 
-        if (! in_array(Migratable::class, class_uses_recursive($configurator))) {
+        if (!in_array(Migratable::class, class_uses_recursive($configurator))) {
             return;
         }
 
