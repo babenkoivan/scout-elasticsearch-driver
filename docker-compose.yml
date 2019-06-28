@@ -27,4 +27,6 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: app
   elastic:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    image: elasticsearch:7.1.1
+    environment:
+      discovery.type: single-node

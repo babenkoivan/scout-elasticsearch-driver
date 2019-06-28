@@ -33,7 +33,6 @@ class ElasticIndexCreateCommand extends Command
 
         $payload = (new IndexPayload($configurator))
             ->setIfNotEmpty('body.settings', $configurator->getSettings())
-            ->setIfNotEmpty('body.mappings._default_', $configurator->getDefaultMapping())
             ->get();
 
         ElasticClient::indices()
@@ -54,7 +53,7 @@ class ElasticIndexCreateCommand extends Command
     {
         $configurator = $this->getIndexConfigurator();
 
-        if (! in_array(Migratable::class, class_uses_recursive($configurator))) {
+        if (!in_array(Migratable::class, class_uses_recursive($configurator))) {
             return;
         }
 
