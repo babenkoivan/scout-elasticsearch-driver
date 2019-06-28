@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   php:
-    image: babenkoivan/scout-elasticsearch-driver-php-cli:1.0.1
+    image: babenkoivan/scout-elasticsearch-driver-php-cli:php7.2-laravel5.8
     command: >
       sh -c 'check-connection mysql 3306 &&
              check-connection elastic 9200 &&
