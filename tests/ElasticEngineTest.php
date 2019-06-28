@@ -444,7 +444,10 @@ class ElasticEngineTest extends AbstractTestCase
     {
         $results = [
             'hits' => [
-                'total' => 100,
+                'total' => [
+                    'value' => 100,
+                    'relation' => 'eq',
+                ],
             ],
         ];
 
