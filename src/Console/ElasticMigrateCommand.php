@@ -73,6 +73,7 @@ class ElasticMigrateCommand extends Command
         $payload = (new RawPayload())
             ->set('index', $targetIndex)
             ->setIfNotEmpty('body.settings', $sourceIndexConfigurator->getSettings())
+            ->setIfNotEmpty('body.mappings._default_', $sourceIndexConfigurator->getDefaultMapping())
             ->get();
 
         ElasticClient::indices()
@@ -113,6 +114,16 @@ class ElasticMigrateCommand extends Command
                     ->get();
 
                 $indices->putSettings($targetIndexSettingsPayload);
+            }
+
+            if ($defaultMapping = $sourceIndexConfigurator->getDefaultMapping()) {
+                $targetIndexMappingPayload = (new RawPayload())
+                    ->set('index', $targetIndex)
+                    ->set('type', '_default_')
+                    ->set('body._default_', $defaultMapping)
+                    ->get();
+
+                $indices->putMapping($targetIndexMappingPayload);
             }
 
             $indices->open($targetIndexPayload);
@@ -158,8 +169,7 @@ class ElasticMigrateCommand extends Command
         $payload = (new RawPayload())
             ->set('index', $targetIndex)
             ->set('type', $targetType)
-            ->set('include_type_name', 'true')
-            ->set('body.' . $targetType, $mapping)
+            ->set('body.'.$targetType, $mapping)
             ->get();
 
         ElasticClient::indices()
@@ -329,7 +339,7 @@ class ElasticMigrateCommand extends Command
         $sourceModel = $this->getModel();
         $sourceIndexConfigurator = $sourceModel->getIndexConfigurator();
 
-        if (!in_array(Migratable::class, class_uses_recursive($sourceIndexConfigurator))) {
+        if (! in_array(Migratable::class, class_uses_recursive($sourceIndexConfigurator))) {
             $this->error(sprintf(
                 'The %s index configurator must use the %s trait.',
                 get_class($sourceIndexConfigurator),

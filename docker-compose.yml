@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   php:
-    image: babenkoivan/scout-elasticsearch-driver-php-cli:php7.2-laravel5.8
+    image: babenkoivan/scout-elasticsearch-driver-php-cli:1.0.1
     command: >
       sh -c 'check-connection mysql 3306 &&
              check-connection elastic 9200 &&
@@ -27,6 +27,4 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: app
   elastic:
-    image: elasticsearch:7.1.1
-    environment:
-      discovery.type: single-node
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
