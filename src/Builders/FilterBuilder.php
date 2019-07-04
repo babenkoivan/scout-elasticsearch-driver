@@ -560,4 +560,18 @@ class FilterBuilder extends Builder
             $this->wheres['must'][] = ['term' => ['__soft_deleted' => 1]];
         });
     }
+
+    /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call($method, $parameters)
+    {
+        $this->model->$method(...$parameters);
+    }
 }
