@@ -355,7 +355,7 @@ class ElasticEngine extends Engine
                     }
 
                     if (isset($hit['sort'])) {
-                        $model->sort = $hit['sort'][0];
+                        $model->sort = $hit['sort'];
                     }
 
                     return $model;
