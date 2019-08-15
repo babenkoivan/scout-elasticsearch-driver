@@ -136,6 +136,7 @@ class ElasticEngine extends Engine
                 ->setIfNotEmpty('body._source', $builder->select)
                 ->setIfNotEmpty('body.collapse.field', $builder->collapse)
                 ->setIfNotEmpty('body.sort', $builder->orders)
+                ->setIfNotEmpty('body.aggs', $builder->aggregates)
                 ->setIfNotEmpty('body.explain', $options['explain'] ?? null)
                 ->setIfNotEmpty('body.profile', $options['profile'] ?? null)
                 ->setIfNotNull('body.from', $builder->offset)
