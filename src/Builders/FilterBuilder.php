@@ -47,6 +47,15 @@ class FilterBuilder extends Builder
     public $select = [];
 
     /**
+     * @var array
+     */
+    public $aggregates = [];
+    /**
+     * @var array
+     */
+    public $aggregateRules = [];
+
+    /**
      * FilterBuilder constructor.
      *
      * @param \Illuminate\Database\Eloquent\Model $model
@@ -559,5 +568,42 @@ class FilterBuilder extends Builder
         return tap($this->withTrashed(), function () {
             $this->wheres['must'][] = ['term' => ['__soft_deleted' => 1]];
         });
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/returning-only-agg-results.html
+     *
+     * @param int $size
+     * @return $this
+     */
+    public function aggregate($size = 0)
+    {
+        $this->take($size);
+        $payloadCollection = [];
+        $aggregateRules = $this->aggregateRules ?: $this->model->getAggregateRules();
+        foreach ($aggregateRules as $rule) {
+            if (is_callable($rule)) {
+                $payloadCollection[] = call_user_func($rule);
+            } else {
+                $ruleEntity = new $rule;
+                if ($aggregatePayload = $ruleEntity->buildAggregatePayload()) {
+                    $payloadCollection[] = $aggregatePayload;
+                }
+            }
+        }
+        $this->aggregates = array_reduce($payloadCollection, 'array_merge', []);
+        return $this->engine()->search($this);
+    }
+
+    /**
+     * Adds rule to the aggregate rules of the builder.
+     *
+     * @param $rule
+     * @return $this
+     */
+    public function aggregateRule($rule)
+    {
+        $this->aggregateRules[] = $rule;
+        return $this;
     }
 }
