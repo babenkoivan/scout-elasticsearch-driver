@@ -348,6 +348,39 @@ class MySearch extends SearchRule
             ]
         ];
     }
+
+    // In case you using any Elasticsearch plugin, which required to set custom payload
+    // Will be same level with `query`, e.g.
+    // 
+    //  {
+    //    "query": {
+    //      "must": {
+    //        "match": {
+    //          "name": "search word"
+    //        }
+    //      }
+    //    },
+    //    "rescore": {
+    //      "some": {
+    //        "custom": {
+    //            "attr": ""
+    //          }
+    //        }
+    //      }
+    //    }
+    //  }
+    public function buildCustomPayload()
+    {
+        return [
+            'rescore' => [
+                'some' => [
+                    'custom' => [
+                        'attr' => ''
+                    ]
+                ]
+            ]
+        ];
+    }
 }
 ```
 

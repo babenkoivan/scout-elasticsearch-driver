@@ -114,6 +114,12 @@ class ElasticEngine extends Engine
                     if ($ruleEntity->isApplicable()) {
                         $payload->setIfNotEmpty('body.query.bool', $ruleEntity->buildQueryPayload());
 
+                        if ($customPayloads = $ruleEntity->buildCustomPayload()) {
+                            foreach ($customPayloads as $customKey => $customPayload) {
+                                $payload->addIfNotEmpty('body.' . $customKey, $customPayload);
+                            }
+                        }
+
                         if ($options['highlight'] ?? true) {
                             $payload->setIfNotEmpty('body.highlight', $ruleEntity->buildHighlightPayload());
                         }
