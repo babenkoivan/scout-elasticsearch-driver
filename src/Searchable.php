@@ -11,7 +11,6 @@ use Laravel\Scout\Searchable as SourceSearchable;
 trait Searchable
 {
     use SourceSearchable {
-        SourceSearchable::bootSearchable as sourceBootSearchable;
         SourceSearchable::getScoutKeyName as sourceGetScoutKeyName;
     }
 
@@ -21,29 +20,6 @@ trait Searchable
      * @var \ScoutElastic\Highlight|null
      */
     private $highlight = null;
-
-    /**
-     * Defines if the model is searchable.
-     *
-     * @var bool
-     */
-    protected static $isSearchableTraitBooted = false;
-
-    /**
-     * Boot the trait.
-     *
-     * @return void
-     */
-    public static function bootSearchable()
-    {
-        if (static::$isSearchableTraitBooted) {
-            return;
-        }
-
-        self::sourceBootSearchable();
-
-        static::$isSearchableTraitBooted = true;
-    }
 
     /**
      * Get the index configurator.
