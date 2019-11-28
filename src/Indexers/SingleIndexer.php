@@ -51,11 +51,16 @@ class SingleIndexer implements IndexerInterface
     public function delete(Collection $models)
     {
         $models->each(function ($model) {
-            $payload = (new DocumentPayload($model))
-                ->set('client.ignore', 404)
-                ->get();
+            $payload = new DocumentPayload($model);
 
-            ElasticClient::delete($payload);
+
+            if ($documentRefresh = config('scout_elastic.document_refresh')) {
+                $payload->set('refresh', $documentRefresh);
+            }
+                
+            $payload->set('client.ignore', 404);
+
+            ElasticClient::delete($payload->get());
         });
     }
 }
