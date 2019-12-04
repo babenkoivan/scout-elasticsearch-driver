@@ -152,6 +152,27 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Exclude results containing text
+     * Can't use it 'term' because it's not analyzed
+     *
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html Terms query
+     *
+     * @param string $field
+     * @param array $value
+     * @return $this
+     */
+    public function whereNotInText($field, $value)
+    {
+        $this->wheres['must_not'][] = [
+            'match_phrase' => [
+                $field => $value
+            ]
+        ];
+        
+        return $this;
+    }
+
+    /**
      * Add a whereIn condition.
      *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html Terms query
