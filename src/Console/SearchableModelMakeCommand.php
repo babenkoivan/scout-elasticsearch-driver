@@ -36,14 +36,14 @@ class SearchableModelMakeCommand extends ModelMakeCommand
             'index-configurator',
             'i',
             InputOption::VALUE_REQUIRED,
-            'Specify the index configurator for the model. It\'ll be created if doesn\'t exist.',
+            "Specify the index configurator for the model. It'll be created if doesn't exist.",
         ];
 
         $options[] = [
             'search-rule',
-            's',
+            'r',
             InputOption::VALUE_REQUIRED,
-            'Specify the search rule for the model. It\'ll be created if doesn\'t exist.',
+            "Specify the search rule for the model. It'll be created if doesn't exist.",
         ];
 
         return $options;
