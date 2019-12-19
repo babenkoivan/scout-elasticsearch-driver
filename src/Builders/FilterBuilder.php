@@ -153,7 +153,7 @@ class FilterBuilder extends Builder
 
     /**
      * Exclude results containing text
-     * Can't use it 'term' because it's not analyzed
+     * Can't use 'term' because it's not analyzed
      *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html Terms query
      *
@@ -169,6 +169,23 @@ class FilterBuilder extends Builder
             ]
         ];
         
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html Match query
+     *
+     * @param string $field
+     * @param string $value
+     * @return $this
+     */
+    public function whereMatch($field, $value)
+    {
+        $this->wheres['must'][] = [
+            'match' => [
+                $field => $value,
+            ]
+        ];
         return $this;
     }
 
