@@ -2,8 +2,8 @@
 
 namespace ScoutElastic\Tests\Payloads;
 
-use ScoutElastic\Tests\AbstractTestCase;
 use ScoutElastic\Payloads\DocumentPayload;
+use ScoutElastic\Tests\AbstractTestCase;
 use ScoutElastic\Tests\Dependencies\Model;
 
 class DocumentPayloadTest extends AbstractTestCase

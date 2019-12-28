@@ -2,8 +2,8 @@
 
 namespace ScoutElastic\Tests\Builders;
 
-use ScoutElastic\SearchRule;
 use ScoutElastic\Builders\SearchBuilder;
+use ScoutElastic\SearchRule;
 use ScoutElastic\Tests\AbstractTestCase;
 use ScoutElastic\Tests\Dependencies\Model;
 

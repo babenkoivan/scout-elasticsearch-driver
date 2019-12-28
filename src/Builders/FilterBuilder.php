@@ -2,9 +2,9 @@
 
 namespace ScoutElastic\Builders;
 
-use Laravel\Scout\Builder;
-use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+use Laravel\Scout\Builder;
 
 class FilterBuilder extends Builder
 {
@@ -84,7 +84,7 @@ class FilterBuilder extends Builder
         $args = func_get_args();
 
         if (count($args) == 3) {
-            list($field, $operator, $value) = $args;
+            [$field, $operator, $value] = $args;
         } else {
             $operator = '=';
         }
@@ -379,8 +379,8 @@ class FilterBuilder extends Builder
             'geo_shape' => [
                 $field => [
                     'shape' => $shape,
-                    'relation' => $relation
-                ]
+                    'relation' => $relation,
+                ],
             ],
         ];
 

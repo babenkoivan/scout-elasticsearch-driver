@@ -2,8 +2,8 @@
 
 namespace ScoutElastic\Console;
 
-use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Foundation\Console\ModelMakeCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 class SearchableModelMakeCommand extends ModelMakeCommand
 {

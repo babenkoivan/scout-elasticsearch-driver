@@ -3,13 +3,13 @@
 namespace ScoutElastic\Console;
 
 use Exception;
-use LogicException;
-use ScoutElastic\Migratable;
 use Illuminate\Console\Command;
-use ScoutElastic\Payloads\RawPayload;
-use ScoutElastic\Facades\ElasticClient;
-use ScoutElastic\Payloads\IndexPayload;
+use LogicException;
 use ScoutElastic\Console\Features\RequiresIndexConfiguratorArgument;
+use ScoutElastic\Facades\ElasticClient;
+use ScoutElastic\Migratable;
+use ScoutElastic\Payloads\IndexPayload;
+use ScoutElastic\Payloads\RawPayload;
 
 class ElasticIndexUpdateCommand extends Command
 {
@@ -39,7 +39,7 @@ class ElasticIndexUpdateCommand extends Command
 
         $indices = ElasticClient::indices();
 
-        if (!$indices->exists($indexPayload)) {
+        if (! $indices->exists($indexPayload)) {
             throw new LogicException(sprintf(
                 'Index %s doesn\'t exist',
                 $configurator->getName()
@@ -79,7 +79,7 @@ class ElasticIndexUpdateCommand extends Command
     {
         $configurator = $this->getIndexConfigurator();
 
-        if (!in_array(Migratable::class, class_uses_recursive($configurator))) {
+        if (! in_array(Migratable::class, class_uses_recursive($configurator))) {
             return;
         }
 

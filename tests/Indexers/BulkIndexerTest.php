@@ -2,9 +2,9 @@
 
 namespace ScoutElastic\Tests\Indexers;
 
-use ScoutElastic\Tests\Config;
-use ScoutElastic\Indexers\BulkIndexer;
 use ScoutElastic\Facades\ElasticClient;
+use ScoutElastic\Indexers\BulkIndexer;
+use ScoutElastic\Tests\Config;
 
 class BulkIndexerTest extends AbstractIndexerTest
 {
