@@ -35,7 +35,7 @@ class Highlight
         if (isset($this->highlight[$field])) {
             $value = $this->highlight[$field];
 
-            return $field == $key ? $value : implode(' ', $value);
+            return $field === $key ? $value : implode(' ', $value);
         } else {
             return;
         }

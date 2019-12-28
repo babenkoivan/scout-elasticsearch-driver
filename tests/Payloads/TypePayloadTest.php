@@ -15,7 +15,7 @@ class TypePayloadTest extends AbstractTestCase
         $model = $this->mockModel();
         $payload = new TypePayload($model);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'index' => 'test',
                 'type' => 'test',
@@ -40,7 +40,7 @@ class TypePayloadTest extends AbstractTestCase
             ->set('type', 'test_type')
             ->set('body', []);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'index' => 'foo',
                 'type' => 'bar',

@@ -15,7 +15,7 @@ class IndexPayloadTest extends AbstractTestCase
         $indexConfigurator = $this->mockIndexConfigurator();
         $payload = new IndexPayload($indexConfigurator);
 
-        $this->assertEquals(
+        $this->assertSame(
             ['index' => 'test'],
             $payload->get()
         );
@@ -30,7 +30,7 @@ class IndexPayloadTest extends AbstractTestCase
         $payload = (new IndexPayload($indexConfigurator))
             ->useAlias('write');
 
-        $this->assertEquals(
+        $this->assertSame(
             ['index' => 'foo_write'],
             $payload->get()
         );
@@ -46,7 +46,7 @@ class IndexPayloadTest extends AbstractTestCase
             ->set('index', 'bar')
             ->set('settings', ['key' => 'value']);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'index' => 'foo',
                 'settings' => ['key' => 'value'],

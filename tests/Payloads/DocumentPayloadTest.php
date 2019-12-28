@@ -16,7 +16,7 @@ class DocumentPayloadTest extends AbstractTestCase
 
         $payload = new DocumentPayload($model);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'index' => 'test',
                 'type' => 'test',
@@ -43,7 +43,7 @@ class DocumentPayloadTest extends AbstractTestCase
             ->set('id', 2)
             ->set('body', []);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'index' => 'foo',
                 'type' => 'bar',

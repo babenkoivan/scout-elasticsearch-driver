@@ -84,7 +84,7 @@ trait Searchable
     {
         $softDelete = static::usesSoftDelete() && config('scout.soft_delete', false);
 
-        if ($query == '*') {
+        if ($query === '*') {
             return new FilterBuilder(new static, $callback, $softDelete);
         } else {
             return new SearchBuilder(new static, $query, $callback, $softDelete);

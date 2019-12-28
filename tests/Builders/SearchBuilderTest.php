@@ -27,7 +27,7 @@ class SearchBuilderTest extends AbstractTestCase
 
         $builder->rule(SearchRule::class)->rule($ruleFunc);
 
-        $this->assertEquals([
+        $this->assertSame([
             SearchRule::class,
             $ruleFunc,
         ], $builder->rules);

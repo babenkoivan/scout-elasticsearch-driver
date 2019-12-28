@@ -291,7 +291,7 @@ class ElasticEngine extends Engine
      */
     public function map(Builder $builder, $results, $model)
     {
-        if ($this->getTotalCount($results) == 0) {
+        if ($this->getTotalCount($results) === 0) {
             return Collection::make();
         }
 

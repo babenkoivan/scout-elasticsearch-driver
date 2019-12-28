@@ -83,7 +83,7 @@ class FilterBuilder extends Builder
     {
         $args = func_get_args();
 
-        if (count($args) == 3) {
+        if (count($args) === 3) {
             [$field, $operator, $value] = $args;
         } else {
             $operator = '=';
@@ -397,7 +397,7 @@ class FilterBuilder extends Builder
     public function orderBy($field, $direction = 'asc')
     {
         $this->orders[] = [
-            $field => strtolower($direction) == 'asc' ? 'asc' : 'desc',
+            $field => strtolower($direction) === 'asc' ? 'asc' : 'desc',
         ];
 
         return $this;
