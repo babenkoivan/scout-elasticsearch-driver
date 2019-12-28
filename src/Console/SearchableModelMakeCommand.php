@@ -41,7 +41,7 @@ class SearchableModelMakeCommand extends ModelMakeCommand
 
         $options[] = [
             'search-rule',
-            's',
+            null,
             InputOption::VALUE_REQUIRED,
             'Specify the search rule for the model. It\'ll be created if doesn\'t exist.',
         ];
