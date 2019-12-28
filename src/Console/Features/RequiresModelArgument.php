@@ -2,9 +2,9 @@
 
 namespace ScoutElastic\Console\Features;
 
-use ScoutElastic\Searchable;
-use InvalidArgumentException;
 use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
+use ScoutElastic\Searchable;
 use Symfony\Component\Console\Input\InputArgument;
 
 trait RequiresModelArgument

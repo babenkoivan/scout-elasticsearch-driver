@@ -2,8 +2,8 @@
 
 namespace ScoutElastic\Tests\Stubs;
 
-use ScoutElastic\Searchable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use ScoutElastic\Searchable;
 
 class Model extends \Illuminate\Database\Eloquent\Model
 {

@@ -2,9 +2,9 @@
 
 namespace ScoutElastic\Tests\Indexers;
 
-use ScoutElastic\Tests\Config;
 use ScoutElastic\Facades\ElasticClient;
 use ScoutElastic\Indexers\SingleIndexer;
+use ScoutElastic\Tests\Config;
 
 class SingleIndexerTest extends AbstractIndexerTest
 {

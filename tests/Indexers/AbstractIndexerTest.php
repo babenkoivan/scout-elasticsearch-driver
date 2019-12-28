@@ -2,9 +2,9 @@
 
 namespace ScoutElastic\Tests\Indexers;
 
+use Illuminate\Database\Eloquent\Collection;
 use ScoutElastic\Tests\AbstractTestCase;
 use ScoutElastic\Tests\Dependencies\Model;
-use Illuminate\Database\Eloquent\Collection;
 
 abstract class AbstractIndexerTest extends AbstractTestCase
 {

@@ -2,17 +2,17 @@
 
 namespace ScoutElastic;
 
-use stdClass;
-use Laravel\Scout\Builder;
-use Illuminate\Support\Arr;
-use Laravel\Scout\Engines\Engine;
-use ScoutElastic\Payloads\TypePayload;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Artisan;
-use ScoutElastic\Facades\ElasticClient;
-use ScoutElastic\Builders\SearchBuilder;
-use ScoutElastic\Indexers\IndexerInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Artisan;
+use Laravel\Scout\Builder;
+use Laravel\Scout\Engines\Engine;
+use ScoutElastic\Builders\SearchBuilder;
+use ScoutElastic\Facades\ElasticClient;
+use ScoutElastic\Indexers\IndexerInterface;
+use ScoutElastic\Payloads\TypePayload;
+use stdClass;
 
 class ElasticEngine extends Engine
 {
