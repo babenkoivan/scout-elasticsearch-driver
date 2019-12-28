@@ -174,7 +174,7 @@ class ElasticMigrateCommand extends Command
     /**
      * Check if an alias exists.
      *
-     * @param string $name
+     * @param  string  $name
      * @return bool
      */
     protected function isAliasExists($name)
@@ -190,7 +190,7 @@ class ElasticMigrateCommand extends Command
     /**
      * Get an alias.
      *
-     * @param string $name
+     * @param  string  $name
      * @return array
      */
     protected function getAlias($name)
@@ -206,7 +206,7 @@ class ElasticMigrateCommand extends Command
     /**
      * Delete an alias.
      *
-     * @param string $name
+     * @param  string  $name
      * @return void
      */
     protected function deleteAlias($name)
@@ -237,7 +237,7 @@ class ElasticMigrateCommand extends Command
     /**
      * Create an alias for the target index.
      *
-     * @param string $name
+     * @param  string  $name
      * @return void
      */
     protected function createAliasForTargetIndex($name)

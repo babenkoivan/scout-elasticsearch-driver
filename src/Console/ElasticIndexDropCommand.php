@@ -5,7 +5,6 @@ namespace ScoutElastic\Console;
 use Illuminate\Console\Command;
 use ScoutElastic\Console\Features\RequiresIndexConfiguratorArgument;
 use ScoutElastic\Facades\ElasticClient;
-use ScoutElastic\IndexConfigurator;
 use ScoutElastic\Migratable;
 use ScoutElastic\Payloads\RawPayload;
 
@@ -47,7 +46,7 @@ class ElasticIndexDropCommand extends Command
     }
 
     /**
-     * @param IndexConfigurator $configurator
+     * @param  \ScoutElastic\IndexConfigurator  $configurator
      * @return string
      */
     protected function resolveIndexName($configurator)

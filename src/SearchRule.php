@@ -16,7 +16,7 @@ class SearchRule
     /**
      * SearchRule constructor.
      *
-     * @param \ScoutElastic\Builders\SearchBuilder $builder
+     * @param  \ScoutElastic\Builders\SearchBuilder  $builder
      * @return void
      */
     public function __construct(SearchBuilder $builder)

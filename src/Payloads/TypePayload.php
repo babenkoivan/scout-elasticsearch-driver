@@ -18,7 +18,7 @@ class TypePayload extends IndexPayload
     /**
      * TypePayload constructor.
      *
-     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param  \Illuminate\Database\Eloquent\Model  $model
      * @throws \Exception
      * @return void
      */

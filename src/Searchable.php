@@ -76,8 +76,8 @@ trait Searchable
     /**
      * Execute the search.
      *
-     * @param string $query
-     * @param callable|null $callback
+     * @param  string  $query
+     * @param  callable|null  $callback
      * @return \ScoutElastic\Builders\FilterBuilder|\ScoutElastic\Builders\SearchBuilder
      */
     public static function search($query, $callback = null)
@@ -94,7 +94,7 @@ trait Searchable
     /**
      * Execute a raw search.
      *
-     * @param array $query
+     * @param  array  $query
      * @return array
      */
     public static function searchRaw(array $query)
@@ -108,7 +108,7 @@ trait Searchable
     /**
      * Set the highlight attribute.
      *
-     * @param \ScoutElastic\Highlight $value
+     * @param  \ScoutElastic\Highlight  $value
      * @return void
      */
     public function setHighlightAttribute(Highlight $value)

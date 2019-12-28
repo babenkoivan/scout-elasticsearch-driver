@@ -29,7 +29,7 @@ class IndexPayload extends RawPayload
     /**
      * IndexPayload constructor.
      *
-     * @param \ScoutElastic\IndexConfigurator $indexConfigurator
+     * @param  \ScoutElastic\IndexConfigurator  $indexConfigurator
      * @return void
      */
     public function __construct(IndexConfigurator $indexConfigurator)
@@ -42,7 +42,7 @@ class IndexPayload extends RawPayload
     /**
      * Use an alias.
      *
-     * @param string $alias
+     * @param  string  $alias
      * @return $this
      * @throws \Exception
      */

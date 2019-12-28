@@ -72,7 +72,7 @@ class SearchableModelMakeCommand extends ModelMakeCommand
     /**
      * Build the class.
      *
-     * @param string $name
+     * @param  string  $name
      * @return string
      */
     protected function buildClass($name)
