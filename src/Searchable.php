@@ -99,7 +99,7 @@ trait Searchable
      */
     public static function searchRaw(array $query)
     {
-        $model = new static();
+        $model = new static;
 
         return $model->searchableUsing()
             ->searchRaw($model, $query);

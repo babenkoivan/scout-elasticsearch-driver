@@ -59,7 +59,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
                     ));
                 }
 
-                return new ElasticEngine(new $indexerClass(), $updateMapping);
+                return new ElasticEngine(new $indexerClass, $updateMapping);
             });
     }
 

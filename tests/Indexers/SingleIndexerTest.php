@@ -34,7 +34,7 @@ class SingleIndexerTest extends AbstractIndexerTest
                 ],
             ]);
 
-        (new SingleIndexer())
+        (new SingleIndexer)
             ->update($this->models);
 
         $this->addToAssertionCount(1);
@@ -78,7 +78,7 @@ class SingleIndexerTest extends AbstractIndexerTest
                 ],
             ]);
 
-        (new SingleIndexer())
+        (new SingleIndexer)
             ->update($this->models);
 
         $this->addToAssertionCount(1);
@@ -112,7 +112,7 @@ class SingleIndexerTest extends AbstractIndexerTest
                 ],
             ]);
 
-        (new SingleIndexer())
+        (new SingleIndexer)
             ->update($this->models);
 
         $this->addToAssertionCount(1);
@@ -152,7 +152,7 @@ class SingleIndexerTest extends AbstractIndexerTest
                 ],
             ]);
 
-        (new SingleIndexer())
+        (new SingleIndexer)
             ->delete($this->models);
 
         $this->addToAssertionCount(1);

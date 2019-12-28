@@ -85,7 +85,7 @@ class ElasticIndexUpdateCommand extends Command
 
         $indices = ElasticClient::indices();
 
-        $existsPayload = (new RawPayload())
+        $existsPayload = (new RawPayload)
             ->set('name', $configurator->getWriteAlias())
             ->get();
 

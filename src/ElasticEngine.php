@@ -126,7 +126,7 @@ class ElasticEngine extends Engine
             }
         } else {
             $payload = (new TypePayload($builder->model))
-                ->setIfNotEmpty('body.query.bool.must.match_all', new stdClass());
+                ->setIfNotEmpty('body.query.bool.must.match_all', new stdClass);
 
             $payloadCollection->push($payload);
         }

@@ -26,7 +26,7 @@ class BulkIndexerTest extends AbstractIndexerTest
                 ],
             ]);
 
-        (new BulkIndexer())
+        (new BulkIndexer)
             ->update($this->models);
 
         $this->addToAssertionCount(1);
@@ -52,7 +52,7 @@ class BulkIndexerTest extends AbstractIndexerTest
                 ],
             ]);
 
-        (new BulkIndexer())
+        (new BulkIndexer)
             ->update($this->models);
 
         $this->addToAssertionCount(1);
@@ -77,7 +77,7 @@ class BulkIndexerTest extends AbstractIndexerTest
                 ],
             ]);
 
-        (new BulkIndexer())
+        (new BulkIndexer)
             ->update($this->models);
 
         $this->addToAssertionCount(1);
@@ -101,7 +101,7 @@ class BulkIndexerTest extends AbstractIndexerTest
                 ],
             ]);
 
-        (new BulkIndexer())
+        (new BulkIndexer)
             ->delete($this->models);
 
         $this->addToAssertionCount(1);
