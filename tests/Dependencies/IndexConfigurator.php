@@ -15,11 +15,11 @@ trait IndexConfigurator
         $name = $params['name'] ?? 'test';
 
         $methods = array_merge($params['methods'] ?? [], [
-                'getName',
-                'getSettings',
-                'getDefaultMapping',
-                'getWriteAlias',
-            ]);
+            'getName',
+            'getSettings',
+            'getDefaultMapping',
+            'getWriteAlias',
+        ]);
 
         $mock = $this->getMockBuilder(ElasticIndexConfigurator::class)
                      ->setMethods($methods)->getMock();
