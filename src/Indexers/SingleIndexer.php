@@ -52,10 +52,13 @@ class SingleIndexer implements IndexerInterface
     {
         $models->each(function ($model) {
             $payload = (new DocumentPayload($model))
-                ->set('client.ignore', 404)
-                ->get();
+                ->set('client.ignore', 404);
 
-            ElasticClient::delete($payload);
+            if ($documentRefresh = config('scout_elastic.document_refresh')) {
+                $payload->set('refresh', $documentRefresh);
+            }
+
+            ElasticClient::delete($payload->get());
         });
     }
 }
