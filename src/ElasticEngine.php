@@ -106,13 +106,21 @@ class ElasticEngine extends Engine
                 $payload = new TypePayload($builder->model);
 
                 if (is_callable($rule)) {
-                    $payload->setIfNotEmpty('body.query.bool', call_user_func($rule, $builder));
+                    if(count($builder->functionScore['functions']) === 0){
+                        $payload->setIfNotEmpty('body.query.bool', call_user_func($rule, $builder));
+                    }else{
+                        $payload->setIfNotEmpty('body.query', []);
+                    }
                 } else {
                     /** @var SearchRule $ruleEntity */
                     $ruleEntity = new $rule($builder);
 
                     if ($ruleEntity->isApplicable()) {
-                        $payload->setIfNotEmpty('body.query.bool', $ruleEntity->buildQueryPayload());
+                        if(count($builder->functionScore['functions']) === 0){
+                            $payload->setIfNotEmpty('body.query.bool', $ruleEntity->buildQueryPayload());
+                        }else{
+                            $payload->setIfNotEmpty('body.query', []);
+                        }
 
                         if ($options['highlight'] ?? true) {
                             $payload->setIfNotEmpty('body.highlight', $ruleEntity->buildHighlightPayload());
@@ -125,8 +133,13 @@ class ElasticEngine extends Engine
                 $payloadCollection->push($payload);
             }
         } else {
-            $payload = (new TypePayload($builder->model))
-                ->setIfNotEmpty('body.query.bool.must.match_all', new stdClass());
+            if(count($builder->functionScore['functions']) === 0){
+                $payload = (new TypePayload($builder->model))
+                    ->setIfNotEmpty('body.query.bool.must.match_all', new stdClass());
+            }else{
+                $payload = (new TypePayload($builder->model))
+                    ->setIfNotEmpty('body.query', []);
+            }
 
             $payloadCollection->push($payload);
         }
@@ -141,16 +154,32 @@ class ElasticEngine extends Engine
                 ->setIfNotNull('body.from', $builder->offset)
                 ->setIfNotNull('body.size', $builder->limit);
 
-            foreach ($builder->wheres as $clause => $filters) {
-                $clauseKey = 'body.query.bool.filter.bool.'.$clause;
+            if(count($builder->functionScore['functions']) > 0){
+                $payload->setIfNotEmpty('body.query.function_score', $builder->functionScore);
+                foreach ($builder->wheres as $clause => $filters) {
+                    $clauseKey = 'body.query.function_score.query.bool.'.$clause;
 
-                $clauseValue = array_merge(
-                    $payload->get($clauseKey, []),
-                    $filters
-                );
+                    $clauseValue = array_merge(
+                        $payload->get($clauseKey, []),
+                        $filters
+                    );
 
-                $payload->setIfNotEmpty($clauseKey, $clauseValue);
+                    $payload->setIfNotEmpty($clauseKey, $clauseValue);
+                }
             }
+            else{
+                foreach ($builder->wheres as $clause => $filters) {
+                    $clauseKey = 'body.query.bool.filter.bool.'.$clause;
+
+                    $clauseValue = array_merge(
+                        $payload->get($clauseKey, []),
+                        $filters
+                    );
+
+                    $payload->setIfNotEmpty($clauseKey, $clauseValue);
+                }
+            }
+
 
             return $payload->get();
         });
@@ -323,6 +352,10 @@ class ElasticEngine extends Engine
 
                     if (isset($hit['highlight'])) {
                         $model->highlight = new Highlight($hit['highlight']);
+                    }
+
+                    if (isset($hit['sort'])) {
+                        $model->sort = $hit['sort'];
                     }
 
                     return $model;

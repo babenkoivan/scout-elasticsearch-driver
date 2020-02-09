@@ -16,6 +16,18 @@ class FilterBuilder extends Builder
     public $wheres = [
         'must' => [],
         'must_not' => [],
+        'should' => [],
+    ];
+
+
+    /**
+     * The condition array.
+     *
+     * @var array
+     */
+    public $functionScore = [
+        'query' => [],
+        'functions' => [],
     ];
 
     /**
@@ -342,6 +354,42 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * Add a whereShould condition.
+     *
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html Geo bounding box query
+     *
+     * @param string $field
+     * @param $value
+     * @return $this
+     */
+    public function whereShould($field, $value)
+    {
+        $this->wheres['should'][] = [
+            'match' => [
+                $field => $value
+            ],
+        ];
+
+        return $this;
+    }
+
+
+    /**
+     * Add a function scroe query
+     *
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html Geo bounding box query
+     *
+     * @param array $value
+     * @return $this
+     */
+    public function whereFunctionScore($value)
+    {
+        $this->functionScore['functions'][] = $value;
+
+        return $this;
+    }
+
+    /**
      * Add a whereGeoPolygon condition.
      *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-polygon-query.html Geo polygon query
@@ -399,6 +447,18 @@ class FilterBuilder extends Builder
         $this->orders[] = [
             $field => strtolower($direction) === 'asc' ? 'asc' : 'desc',
         ];
+
+        return $this;
+    }
+
+    /**
+     * Add complex sort array.
+     * @param array $sort
+     * @return $this
+     */
+    public function sort($sort)
+    {
+        $this->orders[] = $sort;
 
         return $this;
     }
