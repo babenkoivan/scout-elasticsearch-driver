@@ -1,6 +1,4 @@
-# Scout Elasticsearch Driver
-
-:exclamation: **If you are interested in being a collaborator, please fill in [this form](https://goo.gl/forms/hcB8LPQCyDpNRt9u2).** :exclamation:    
+# Scout Elasticsearch Driver   
 
 ---
 
@@ -10,8 +8,6 @@
 [![Donate](https://img.shields.io/badge/donate-PayPal-blue.svg)](https://www.paypal.me/babenkoi)
 
 :beer: If you like my package, it'd be nice of you [to buy me a beer](https://www.paypal.me/ivanbabenko).
- 
-:octocat: The project has a [chat room on Gitter](https://gitter.im/scout-elasticsearch-driver/Lobby)!
 
 ---
 
@@ -48,7 +44,7 @@ Check out its [features](#features)!
 The package has been tested in the following configuration: 
 
 * PHP version &gt;=7.1.3, &lt;=7.3
-* Laravel Framework version 5.8
+* Laravel Framework version &gt;=5.8, &lt;=6
 * Elasticsearch version &gt;=7
 
 ## Installation

@@ -2,10 +2,10 @@
 
 namespace ScoutElastic\Indexers;
 
-use ScoutElastic\Migratable;
-use ScoutElastic\Facades\ElasticClient;
-use ScoutElastic\Payloads\DocumentPayload;
 use Illuminate\Database\Eloquent\Collection;
+use ScoutElastic\Facades\ElasticClient;
+use ScoutElastic\Migratable;
+use ScoutElastic\Payloads\DocumentPayload;
 
 class SingleIndexer implements IndexerInterface
 {

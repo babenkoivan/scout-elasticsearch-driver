@@ -2,8 +2,8 @@
 
 namespace ScoutElastic\Tests\Payloads;
 
-use ScoutElastic\Tests\AbstractTestCase;
 use ScoutElastic\Payloads\DocumentPayload;
+use ScoutElastic\Tests\AbstractTestCase;
 use ScoutElastic\Tests\Dependencies\Model;
 
 class DocumentPayloadTest extends AbstractTestCase
@@ -16,7 +16,7 @@ class DocumentPayloadTest extends AbstractTestCase
 
         $payload = new DocumentPayload($model);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'index' => 'test',
                 'type' => 'test',
@@ -43,7 +43,7 @@ class DocumentPayloadTest extends AbstractTestCase
             ->set('id', 2)
             ->set('body', []);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'index' => 'foo',
                 'type' => 'bar',

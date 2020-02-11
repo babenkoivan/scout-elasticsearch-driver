@@ -2,13 +2,13 @@
 
 namespace ScoutElastic\Tests;
 
-use stdClass;
-use ScoutElastic\ElasticEngine;
-use ScoutElastic\Facades\ElasticClient;
 use ScoutElastic\Builders\FilterBuilder;
 use ScoutElastic\Builders\SearchBuilder;
-use ScoutElastic\Tests\Stubs\SearchRule;
+use ScoutElastic\ElasticEngine;
+use ScoutElastic\Facades\ElasticClient;
 use ScoutElastic\Tests\Dependencies\Model;
+use ScoutElastic\Tests\Stubs\SearchRule;
+use stdClass;
 
 class ElasticEngineTest extends AbstractTestCase
 {
@@ -298,7 +298,7 @@ class ElasticEngineTest extends AbstractTestCase
             ],
         ];
 
-        $this->assertEquals(
+        $this->assertSame(
             [1, 2],
             $this->engine->mapIds($results)->all()
         );
@@ -366,7 +366,7 @@ class ElasticEngineTest extends AbstractTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->assertEquals(
+        $this->assertSame(
             [$model],
             $this->engine->map($builder, $results, $model)->all()
         );
@@ -434,7 +434,7 @@ class ElasticEngineTest extends AbstractTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->assertEquals(
+        $this->assertSame(
             [$model],
             $this->engine->map($builder, $results, $model)->all()
         );
@@ -451,7 +451,7 @@ class ElasticEngineTest extends AbstractTestCase
             ],
         ];
 
-        $this->assertEquals(
+        $this->assertSame(
             100,
             $this->engine->getTotalCount($results)
         );

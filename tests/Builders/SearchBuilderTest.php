@@ -2,8 +2,8 @@
 
 namespace ScoutElastic\Tests\Builders;
 
-use ScoutElastic\SearchRule;
 use ScoutElastic\Builders\SearchBuilder;
+use ScoutElastic\SearchRule;
 use ScoutElastic\Tests\AbstractTestCase;
 use ScoutElastic\Tests\Dependencies\Model;
 
@@ -27,7 +27,7 @@ class SearchBuilderTest extends AbstractTestCase
 
         $builder->rule(SearchRule::class)->rule($ruleFunc);
 
-        $this->assertEquals([
+        $this->assertSame([
             SearchRule::class,
             $ruleFunc,
         ], $builder->rules);

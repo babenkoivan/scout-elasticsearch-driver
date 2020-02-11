@@ -14,7 +14,7 @@ class FilterBuilderTest extends AbstractTestCase
     {
         $builder = new FilterBuilder($this->mockModel(), null, true);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     [
@@ -33,7 +33,7 @@ class FilterBuilderTest extends AbstractTestCase
     {
         $builder = new FilterBuilder($this->mockModel(), null, false);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [],
                 'must_not' => [],
@@ -48,7 +48,7 @@ class FilterBuilderTest extends AbstractTestCase
             ->where('foo', 0)
             ->where('bar', '=', 1);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     ['term' => ['foo' => 0]],
@@ -65,7 +65,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->where('foo', '!=', 'bar');
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [],
                 'must_not' => [
@@ -81,7 +81,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->where('foo', '>', 0);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     ['range' => ['foo' => ['gt' => 0]]],
@@ -97,7 +97,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->where('foo', '>=', 0);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     ['range' => ['foo' => ['gte' => 0]]],
@@ -113,7 +113,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->where('foo', '<', 0);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     ['range' => ['foo' => ['lt' => 0]]],
@@ -129,7 +129,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->where('foo', '>=', 0);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     ['range' => ['foo' => ['gte' => 0]]],
@@ -145,7 +145,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->whereIn('foo', [0, 1]);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     ['terms' => ['foo' => [0, 1]]],
@@ -161,7 +161,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->whereNotIn('foo', [0, 1]);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [],
                 'must_not' => [
@@ -177,7 +177,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->whereBetween('foo', [0, 10]);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     ['range' => ['foo' => ['gte' => 0, 'lte' => 10]]],
@@ -193,7 +193,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->whereNotBetween('foo', [0, 10]);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [],
                 'must_not' => [
@@ -209,7 +209,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->whereExists('foo');
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     ['exists' => ['field' => 'foo']],
@@ -225,7 +225,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->whereNotExists('foo');
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [],
                 'must_not' => [
@@ -242,7 +242,7 @@ class FilterBuilderTest extends AbstractTestCase
             ->whereRegexp('foo', '.*')
             ->whereRegexp('bar', '^test.*', 'EMPTY|NONE');
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     ['regexp' => ['foo' => ['value' => '.*', 'flags' => 'ALL']]],
@@ -279,7 +279,7 @@ class FilterBuilderTest extends AbstractTestCase
                 }
             );
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     ['term' => ['case2' => 2]],
@@ -296,7 +296,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->whereGeoDistance('foo', [-20, 30], '10m');
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     ['geo_distance' => ['distance' => '10m', 'foo' => [-20, 30]]],
@@ -312,7 +312,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->whereGeoBoundingBox('foo', ['top_left' => [-5, 10], 'bottom_right' => [-20, 30]]);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     ['geo_bounding_box' => ['foo' => ['top_left' => [-5, 10], 'bottom_right' => [-20, 30]]]],
@@ -328,7 +328,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->whereGeoPolygon('foo', [[-70, 40], [-80, 30], [-90, 20]]);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     ['geo_polygon' => ['foo' => ['points' => [[-70, 40], [-80, 30], [-90, 20]]]]],
@@ -351,18 +351,18 @@ class FilterBuilderTest extends AbstractTestCase
         ];
 
         $relation = 'WITHIN';
-        
+
         $builder = (new FilterBuilder($this->mockModel()))
             ->whereGeoShape('foo', $shape, $relation);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     [
                         'geo_shape' => [
                             'foo' => [
                                 'shape' => $shape,
-                                'relation' => $relation
+                                'relation' => $relation,
                             ],
                         ],
                     ],
@@ -379,7 +379,7 @@ class FilterBuilderTest extends AbstractTestCase
             ->orderBy('foo')
             ->orderBy('bar', 'DESC');
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 ['foo' => 'asc'],
                 ['bar' => 'desc'],
@@ -393,7 +393,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->with('RelatedModel');
 
-        $this->assertEquals(
+        $this->assertSame(
             'RelatedModel',
             $builder->with
         );
@@ -403,14 +403,13 @@ class FilterBuilderTest extends AbstractTestCase
     {
         $builder = new FilterBuilder($this->mockModel());
 
-        $this->assertEquals(
-            0,
+        $this->assertNull(
             $builder->offset
         );
 
         $builder->from(100);
 
-        $this->assertEquals(
+        $this->assertSame(
             100,
             $builder->offset
         );
@@ -421,7 +420,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->collapse('foo');
 
-        $this->assertEquals(
+        $this->assertSame(
             'foo',
             $builder->collapse
         );
@@ -432,7 +431,7 @@ class FilterBuilderTest extends AbstractTestCase
         $builder = (new FilterBuilder($this->mockModel()))
             ->select(['foo', 'bar']);
 
-        $this->assertEquals(
+        $this->assertSame(
             ['foo', 'bar'],
             $builder->select
         );
@@ -444,7 +443,7 @@ class FilterBuilderTest extends AbstractTestCase
             ->withTrashed()
             ->where('foo', 'bar');
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     [
@@ -465,7 +464,7 @@ class FilterBuilderTest extends AbstractTestCase
             ->onlyTrashed()
             ->where('foo', 'bar');
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'must' => [
                     [

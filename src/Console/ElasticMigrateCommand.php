@@ -3,13 +3,13 @@
 namespace ScoutElastic\Console;
 
 use Exception;
-use ScoutElastic\Migratable;
 use Illuminate\Console\Command;
-use ScoutElastic\Payloads\RawPayload;
-use ScoutElastic\Facades\ElasticClient;
-use ScoutElastic\Payloads\IndexPayload;
-use Symfony\Component\Console\Input\InputArgument;
 use ScoutElastic\Console\Features\RequiresModelArgument;
+use ScoutElastic\Facades\ElasticClient;
+use ScoutElastic\Migratable;
+use ScoutElastic\Payloads\IndexPayload;
+use ScoutElastic\Payloads\RawPayload;
+use Symfony\Component\Console\Input\InputArgument;
 
 class ElasticMigrateCommand extends Command
 {
@@ -159,7 +159,7 @@ class ElasticMigrateCommand extends Command
             ->set('index', $targetIndex)
             ->set('type', $targetType)
             ->set('include_type_name', 'true')
-            ->set('body.' . $targetType, $mapping)
+            ->set('body.'.$targetType, $mapping)
             ->get();
 
         ElasticClient::indices()
@@ -329,7 +329,7 @@ class ElasticMigrateCommand extends Command
         $sourceModel = $this->getModel();
         $sourceIndexConfigurator = $sourceModel->getIndexConfigurator();
 
-        if (!in_array(Migratable::class, class_uses_recursive($sourceIndexConfigurator))) {
+        if (! in_array(Migratable::class, class_uses_recursive($sourceIndexConfigurator))) {
             $this->error(sprintf(
                 'The %s index configurator must use the %s trait.',
                 get_class($sourceIndexConfigurator),
