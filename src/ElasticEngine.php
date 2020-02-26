@@ -142,7 +142,7 @@ class ElasticEngine extends Engine
                 ->setIfNotNull('body.size', $builder->limit);
 
             foreach ($builder->wheres as $clause => $filters) {
-                $clauseKey = 'body.query.bool.filter.bool.'.$clause;
+                $clauseKey = 'body.query.bool.filter.bool.' . $clause;
 
                 $clauseValue = array_merge(
                     $payload->get($clauseKey, []),
@@ -311,6 +311,9 @@ class ElasticEngine extends Engine
 
         $models = $query
             ->whereIn($scoutKeyName, $ids)
+            ->when($builder->queryCallback, function ($query, $callback) {
+                return $callback($query);
+            })
             ->get($columns)
             ->keyBy($scoutKeyName);
 
