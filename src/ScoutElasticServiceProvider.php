@@ -26,7 +26,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (!$this->isLumen()) {
+        if (! $this->isLumen()) {
             $this->publishes([
                 __DIR__.'/../config/scout_elastic.php' => config_path('scout_elastic.php'),
             ]);
