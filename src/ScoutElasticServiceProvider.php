@@ -5,6 +5,7 @@ namespace ScoutElastic;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Laravel\Scout\EngineManager;
 use ScoutElastic\Console\ElasticIndexCreateCommand;
@@ -25,16 +26,20 @@ class ScoutElasticServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__.'/../config/scout_elastic.php' => config_path('scout_elastic.php'),
-        ]);
+        if (!$this->isLumen()) {
+            $this->publishes([
+                __DIR__.'/../config/scout_elastic.php' => config_path('scout_elastic.php'),
+            ]);
+
+            $this->commands([
+                // make commands
+                IndexConfiguratorMakeCommand::class,
+                SearchableModelMakeCommand::class,
+                SearchRuleMakeCommand::class,
+            ]);
+        }
 
         $this->commands([
-            // make commands
-            IndexConfiguratorMakeCommand::class,
-            SearchableModelMakeCommand::class,
-            SearchRuleMakeCommand::class,
-
             // elastic commands
             ElasticIndexCreateCommand::class,
             ElasticIndexUpdateCommand::class,
@@ -77,5 +82,10 @@ class ScoutElasticServiceProvider extends ServiceProvider
 
                 return ClientBuilder::fromConfig($config);
             });
+    }
+
+    protected function isLumen()
+    {
+        return Str::contains($this->app->version(), 'Lumen');
     }
 }
