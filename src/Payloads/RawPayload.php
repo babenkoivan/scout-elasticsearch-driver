@@ -16,8 +16,8 @@ class RawPayload
     /**
      * Set a value.
      *
-     * @param string $key
-     * @param mixed $value
+     * @param  string  $key
+     * @param  mixed  $value
      * @return $this
      */
     public function set($key, $value)
@@ -32,8 +32,8 @@ class RawPayload
     /**
      * Set a value if it's not empty.
      *
-     * @param string $key
-     * @param mixed $value
+     * @param  string  $key
+     * @param  mixed  $value
      * @return $this
      */
     public function setIfNotEmpty($key, $value)
@@ -48,8 +48,8 @@ class RawPayload
     /**
      * Set a value if it's not null.
      *
-     * @param string $key
-     * @param mixed $value
+     * @param  string  $key
+     * @param  mixed  $value
      * @return $this
      */
     public function setIfNotNull($key, $value)
@@ -64,7 +64,7 @@ class RawPayload
     /**
      * Checks that the payload key has a value.
      *
-     * @param string $key
+     * @param  string  $key
      * @return bool
      */
     public function has($key)
@@ -75,8 +75,8 @@ class RawPayload
     /**
      * Add a value.
      *
-     * @param string $key
-     * @param mixed $value
+     * @param  string  $key
+     * @param  mixed  $value
      * @return $this
      */
     public function add($key, $value)
@@ -99,8 +99,8 @@ class RawPayload
     /**
      * Add a value if it's not empty.
      *
-     * @param string $key
-     * @param mixed $value
+     * @param  string  $key
+     * @param  mixed  $value
      * @return $this
      */
     public function addIfNotEmpty($key, $value)
@@ -115,8 +115,8 @@ class RawPayload
     /**
      * Get value.
      *
-     * @param string|null $key
-     * @param mixed|null $default
+     * @param  string|null  $key
+     * @param  mixed|null  $default
      * @return mixed
      */
     public function get($key = null, $default = null)

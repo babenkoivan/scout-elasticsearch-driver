@@ -7,7 +7,7 @@ use ScoutElastic\IndexConfigurator as ElasticIndexConfigurator;
 trait IndexConfigurator
 {
     /**
-     * @param array $params Available parameters: name, settings, default_mapping, methods.
+     * @param  array  $params Available parameters: name, settings, default_mapping, methods.
      * @return ElasticIndexConfigurator
      */
     public function mockIndexConfigurator(array $params = [])

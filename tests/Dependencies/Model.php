@@ -10,7 +10,7 @@ trait Model
     use IndexConfigurator;
 
     /**
-     * @param array $params Available parameters: key, searchable_as, searchable_array, index_configurator, methods.
+     * @param  array  $params Available parameters: key, searchable_as, searchable_array, index_configurator, methods.
      * @return Searchable
      */
     public function mockModel(array $params = [])

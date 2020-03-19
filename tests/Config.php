@@ -12,8 +12,8 @@ class Config
     private static $values = [];
 
     /**
-     * @param string $key
-     * @param mixed $value
+     * @param  string  $key
+     * @param  mixed  $value
      */
     public static function set($key, $value)
     {
@@ -21,8 +21,8 @@ class Config
     }
 
     /**
-     * @param string|null $key
-     * @param mixed|null $default
+     * @param  string|null  $key
+     * @param  mixed|null  $default
      * @return mixed
      */
     public static function get($key = null, $default = null)
@@ -31,7 +31,7 @@ class Config
     }
 
     /**
-     * @param array $values
+     * @param  array  $values
      */
     public static function reset(array $values = [])
     {
