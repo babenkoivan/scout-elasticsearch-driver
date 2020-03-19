@@ -9,7 +9,7 @@ class RawPayloadTest extends AbstractTestCase
 {
     public function testSet()
     {
-        $payload = (new RawPayload())
+        $payload = (new RawPayload)
             ->set('foo.bar', 10);
 
         $this->assertSame(
@@ -20,7 +20,7 @@ class RawPayloadTest extends AbstractTestCase
 
     public function testSetIfNotEmpty()
     {
-        $payload = (new RawPayload())
+        $payload = (new RawPayload)
             ->setIfNotEmpty('null', null)
             ->setIfNotEmpty('false', false)
             ->setIfNotEmpty('zero', 0)
@@ -36,7 +36,7 @@ class RawPayloadTest extends AbstractTestCase
 
     public function testSetIfNotNull()
     {
-        $payload = (new RawPayload())
+        $payload = (new RawPayload)
             ->setIfNotNull('null', null)
             ->setIfNotNull('false', false)
             ->setIfNotNull('zero', 0)
@@ -58,7 +58,7 @@ class RawPayloadTest extends AbstractTestCase
 
     public function testHas()
     {
-        $payload = (new RawPayload())
+        $payload = (new RawPayload)
             ->set('foo.bar', 100);
 
         $this->assertTrue($payload->has('foo'));
@@ -68,7 +68,7 @@ class RawPayloadTest extends AbstractTestCase
 
     public function testAdd()
     {
-        $payload = (new RawPayload())
+        $payload = (new RawPayload)
             ->set('foo', 0)
             ->add('foo', 1);
 
@@ -80,7 +80,7 @@ class RawPayloadTest extends AbstractTestCase
 
     public function testAddIfNotEmpty()
     {
-        $payload = (new RawPayload())
+        $payload = (new RawPayload)
             ->addIfNotEmpty('foo', 0)
             ->addIfNotEmpty('foo', 1);
 
@@ -92,7 +92,7 @@ class RawPayloadTest extends AbstractTestCase
 
     public function testGet()
     {
-        $payload = (new RawPayload())
+        $payload = (new RawPayload)
             ->set('foo.bar', 0);
 
         $this->assertSame(

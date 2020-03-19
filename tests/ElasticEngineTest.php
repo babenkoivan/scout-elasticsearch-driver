@@ -184,7 +184,7 @@ class ElasticEngineTest extends AbstractTestCase
                         'query' => [
                             'bool' => [
                                 'must' => [
-                                    'match_all' => new stdClass(),
+                                    'match_all' => new stdClass,
                                 ],
                                 'filter' => [
                                     'bool' => [

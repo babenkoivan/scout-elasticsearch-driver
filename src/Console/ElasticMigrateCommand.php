@@ -50,7 +50,7 @@ class ElasticMigrateCommand extends Command
     {
         $targetIndex = $this->argument('target-index');
 
-        $payload = (new RawPayload())
+        $payload = (new RawPayload)
             ->set('index', $targetIndex)
             ->get();
 
@@ -70,7 +70,7 @@ class ElasticMigrateCommand extends Command
         $sourceIndexConfigurator = $this->getModel()
             ->getIndexConfigurator();
 
-        $payload = (new RawPayload())
+        $payload = (new RawPayload)
             ->set('index', $targetIndex)
             ->setIfNotEmpty('body.settings', $sourceIndexConfigurator->getSettings())
             ->get();
@@ -97,7 +97,7 @@ class ElasticMigrateCommand extends Command
         $sourceIndexConfigurator = $this->getModel()
             ->getIndexConfigurator();
 
-        $targetIndexPayload = (new RawPayload())
+        $targetIndexPayload = (new RawPayload)
             ->set('index', $targetIndex)
             ->get();
 
@@ -107,7 +107,7 @@ class ElasticMigrateCommand extends Command
             $indices->close($targetIndexPayload);
 
             if ($settings = $sourceIndexConfigurator->getSettings()) {
-                $targetIndexSettingsPayload = (new RawPayload())
+                $targetIndexSettingsPayload = (new RawPayload)
                     ->set('index', $targetIndex)
                     ->set('body.settings', $settings)
                     ->get();
@@ -155,7 +155,7 @@ class ElasticMigrateCommand extends Command
             return;
         }
 
-        $payload = (new RawPayload())
+        $payload = (new RawPayload)
             ->set('index', $targetIndex)
             ->set('type', $targetType)
             ->set('include_type_name', 'true')
@@ -179,7 +179,7 @@ class ElasticMigrateCommand extends Command
      */
     protected function isAliasExists($name)
     {
-        $payload = (new RawPayload())
+        $payload = (new RawPayload)
             ->set('name', $name)
             ->get();
 
@@ -195,7 +195,7 @@ class ElasticMigrateCommand extends Command
      */
     protected function getAlias($name)
     {
-        $getPayload = (new RawPayload())
+        $getPayload = (new RawPayload)
             ->set('name', $name)
             ->get();
 
@@ -218,7 +218,7 @@ class ElasticMigrateCommand extends Command
         }
 
         foreach ($aliases as $index => $alias) {
-            $deletePayload = (new RawPayload())
+            $deletePayload = (new RawPayload)
                 ->set('index', $index)
                 ->set('name', $name)
                 ->get();
@@ -248,7 +248,7 @@ class ElasticMigrateCommand extends Command
             $this->deleteAlias($name);
         }
 
-        $payload = (new RawPayload())
+        $payload = (new RawPayload)
             ->set('index', $targetIndex)
             ->set('name', $name)
             ->get();
@@ -293,7 +293,7 @@ class ElasticMigrateCommand extends Command
             $aliases = $this->getAlias($sourceIndexConfigurator->getName());
 
             foreach ($aliases as $index => $alias) {
-                $payload = (new RawPayload())
+                $payload = (new RawPayload)
                     ->set('index', $index)
                     ->get();
 

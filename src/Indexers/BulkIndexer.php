@@ -42,7 +42,7 @@ class BulkIndexer implements IndexerInterface
                 return true;
             }
 
-            $actionPayload = (new RawPayload())
+            $actionPayload = (new RawPayload)
                 ->set('index._id', $model->getScoutKey());
 
             $bulkPayload
@@ -63,7 +63,7 @@ class BulkIndexer implements IndexerInterface
         $bulkPayload = new TypePayload($model);
 
         $models->each(function ($model) use ($bulkPayload) {
-            $actionPayload = (new RawPayload())
+            $actionPayload = (new RawPayload)
                 ->set('delete._id', $model->getScoutKey());
 
             $bulkPayload->add('body', $actionPayload->get());
