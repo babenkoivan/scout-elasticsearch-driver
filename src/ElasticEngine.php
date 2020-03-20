@@ -138,6 +138,7 @@ class ElasticEngine extends Engine
                 ->setIfNotEmpty('body.sort', $builder->orders)
                 ->setIfNotEmpty('body.explain', $options['explain'] ?? null)
                 ->setIfNotEmpty('body.profile', $options['profile'] ?? null)
+                ->setIfNotEmpty('body.min_score', $builder->minScore)
                 ->setIfNotNull('body.from', $builder->offset)
                 ->setIfNotNull('body.size', $builder->limit);
 

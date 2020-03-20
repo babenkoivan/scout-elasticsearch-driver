@@ -483,4 +483,22 @@ class FilterBuilderTest extends AbstractTestCase
             $builder->wheres
         );
     }
+
+    public function testMinScore()
+    {
+        $builder = (new FilterBuilder($this->mockModel()));
+
+        $this->assertSame(
+            null,
+            $builder->minScore
+        );
+
+        $builder = (new FilterBuilder($this->mockModel()))
+            ->minScore(0.5);
+
+        $this->assertSame(
+            0.5,
+            $builder->minScore
+        );
+    }
 }
