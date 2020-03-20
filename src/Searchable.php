@@ -98,6 +98,14 @@ trait Searchable
     }
 
     /**
+     * @return array
+     */
+    public function getAggregateRules()
+    {
+        return isset($this->aggregateRules) && count($this->aggregateRules) > 0 ? $this->aggregateRules : [AggregateRule::class];
+    }
+
+    /**
      * Execute the search.
      *
      * @param string $query
