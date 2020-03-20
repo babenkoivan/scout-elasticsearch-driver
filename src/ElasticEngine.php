@@ -337,7 +337,17 @@ class ElasticEngine extends Engine
      */
     public function getTotalCount($results)
     {
-        return $results['hits']['total']['value'];
+        //for es6
+        if (is_int($results['hits']['total'])) {
+            return $results['hits']['total'];
+        }
+
+        //for es7
+        if (isset($results['hits']['total']['value']) && is_int($results['hits']['total']['value'])) {
+            return $results['hits']['total']['value'];
+        }
+
+        return 0;
     }
 
     /**
