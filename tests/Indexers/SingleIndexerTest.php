@@ -197,9 +197,9 @@ class SingleIndexerTest extends AbstractIndexerTest
                 ],
             ]);
 
-            (new SingleIndexer())
+        (new SingleIndexer())
                 ->delete($this->models);
 
-            $this->addToAssertionCount(1);
+        $this->addToAssertionCount(1);
     }
 }
