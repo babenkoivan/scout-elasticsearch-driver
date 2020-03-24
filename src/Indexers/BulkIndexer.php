@@ -69,6 +69,10 @@ class BulkIndexer implements IndexerInterface
             $bulkPayload->add('body', $actionPayload->get());
         });
 
+        if ($documentRefresh = config('scout_elastic.document_refresh')) {
+            $bulkPayload->set('refresh', $documentRefresh);
+        }   
+
         $bulkPayload->set('client.ignore', 404);
 
         ElasticClient::bulk($bulkPayload->get());

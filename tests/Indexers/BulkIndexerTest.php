@@ -106,4 +106,31 @@ class BulkIndexerTest extends AbstractIndexerTest
 
         $this->addToAssertionCount(1);
     }
+
+    public function testDeleteWithSpecifiedDocumentRefreshOption()
+    {
+        Config::set('scout_elastic.document_refresh', true);
+
+        ElasticClient
+            ::shouldReceive('bulk')
+            ->once()
+            ->with([
+                'index' => 'test',
+                'type' => 'test',
+                'body' => [
+                    ['delete' => ['_id' => 1]],
+                    ['delete' => ['_id' => 2]],
+                    ['delete' => ['_id' => 3]],
+                ],
+                'refresh' => true,
+                'client' => [
+                    'ignore' => 404,
+                ],
+            ]);
+
+        (new BulkIndexer())
+            ->delete($this->models);
+
+        $this->addToAssertionCount(1);
+    }
 }
