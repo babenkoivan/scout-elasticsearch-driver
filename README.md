@@ -265,6 +265,14 @@ App\MyModel::search('*')
     ->get();
 ```
 
+And filter out results with a score less than [min_score](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html#request-body-search-min-score): 
+
+```php
+App\MyModel::search('sales')
+    ->minScore(1.0)
+    ->get();
+```
+
 At last, if you want to send a custom request, you can use the `searchRaw` method:
 
 ```php

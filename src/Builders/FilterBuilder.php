@@ -47,6 +47,13 @@ class FilterBuilder extends Builder
     public $select = [];
 
     /**
+     * The min_score parameter.
+     *
+     * @var string
+     */
+    public $minScore;
+
+    /**
      * FilterBuilder constructor.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $model
@@ -520,6 +527,19 @@ class FilterBuilder extends Builder
             $this->select,
             Arr::wrap($fields)
         );
+
+        return $this;
+    }
+
+    /**
+     * Set the min_score on the filter.
+     *
+     * @param  float  $score
+     * @return $this
+     */
+    public function minScore($score)
+    {
+        $this->minScore = $score;
 
         return $this;
     }
