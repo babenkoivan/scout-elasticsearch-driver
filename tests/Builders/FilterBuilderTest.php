@@ -236,6 +236,46 @@ class FilterBuilderTest extends AbstractTestCase
         );
     }
 
+    public function testWhereMatch()
+    {
+        $builder = (new FilterBuilder($this->mockModel()))
+            ->whereMatch('tags', 'travel')
+            ->whereMatch('tags', 'spain')
+
+        ;
+
+        $this->assertEquals(
+            [
+                'must' => [
+                    ['match' => ['tags' => 'travel']],
+                    ['match' => ['tags' => 'spain']]
+                ],
+                'must_not' => []
+            ],
+            $builder->wheres
+        );
+    }
+
+    public function testWhereNotMatch()
+    {
+        $builder = (new FilterBuilder($this->mockModel()))
+            ->whereNotMatch('tags', 'travel')
+            ->whereNotMatch('tags', 'spain')
+
+        ;
+
+        $this->assertEquals(
+            [
+                'must' => [],
+                'must_not' => [
+                    ['match' => ['tags' => 'travel']],
+                    ['match' => ['tags' => 'spain']]
+                ],
+            ],
+            $builder->wheres
+        );
+    }
+
     public function testWhereRegexp()
     {
         $builder = (new FilterBuilder($this->mockModel()))
