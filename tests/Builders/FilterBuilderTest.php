@@ -240,17 +240,15 @@ class FilterBuilderTest extends AbstractTestCase
     {
         $builder = (new FilterBuilder($this->mockModel()))
             ->whereMatch('tags', 'travel')
-            ->whereMatch('tags', 'spain')
-
-        ;
+            ->whereMatch('tags', 'spain');
 
         $this->assertEquals(
             [
                 'must' => [
                     ['match' => ['tags' => 'travel']],
-                    ['match' => ['tags' => 'spain']]
+                    ['match' => ['tags' => 'spain']],
                 ],
-                'must_not' => []
+                'must_not' => [],
             ],
             $builder->wheres
         );
@@ -260,16 +258,14 @@ class FilterBuilderTest extends AbstractTestCase
     {
         $builder = (new FilterBuilder($this->mockModel()))
             ->whereNotMatch('tags', 'travel')
-            ->whereNotMatch('tags', 'spain')
-
-        ;
+            ->whereNotMatch('tags', 'spain');
 
         $this->assertEquals(
             [
                 'must' => [],
                 'must_not' => [
                     ['match' => ['tags' => 'travel']],
-                    ['match' => ['tags' => 'spain']]
+                    ['match' => ['tags' => 'spain']],
                 ],
             ],
             $builder->wheres
