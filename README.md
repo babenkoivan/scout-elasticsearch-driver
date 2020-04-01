@@ -444,6 +444,8 @@ whereBetween($field, $value) | whereBetween('price', [100, 200]) | Checks if a v
 whereNotBetween($field, $value) | whereNotBetween('price', [100, 200]) | Checks if a value isn't in a range.
 whereExists($field) | whereExists('unemployed') | Checks if a value is defined.
 whereNotExists($field) | whereNotExists('unemployed') | Checks if a value isn't defined.  
+whereMatch($field, $value) | whereMatch('tags', 'travel') | Filters records matching exact value. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html) you can find more about syntax.
+whereNotMatch($field, $value) | whereNotMatch('tags', 'travel') | Filters records not matching exact value. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html) you can find more about syntax.
 whereRegexp($field, $value, $flags = 'ALL') | whereRegexp('name.raw', 'A.+') | Filters records according to a given regular expression. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html#regexp-syntax) you can find more about syntax.
 whereGeoDistance($field, $value, $distance) | whereGeoDistance('location', [-70, 40], '1000m') | Filters records according to given point and distance from it. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html) you can find more about syntax.
 whereGeoBoundingBox($field, array $value) | whereGeoBoundingBox('location', ['top_left' =>  [-74.1, 40.73], 'bottom_right' => [-71.12, 40.01]]) | Filters records within given boundings. [Here](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-query.html) you can find more about syntax.
