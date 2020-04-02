@@ -315,7 +315,7 @@ class ElasticEngine extends Engine
             ->get($columns)
             ->keyBy($scoutKeyName);
 
-        return Collection::make($results['hits']['hits'])
+        $values = Collection::make($results['hits']['hits'])
             ->map(function ($hit) use ($models) {
                 $id = $hit['_id'];
 
@@ -331,6 +331,8 @@ class ElasticEngine extends Engine
             })
             ->filter()
             ->values();
+
+        return $values instanceof Collection ? $values : Collection::make($values);
     }
 
     /**
