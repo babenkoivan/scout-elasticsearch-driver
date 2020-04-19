@@ -32,6 +32,17 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'body' => [
                     'name' => 'bar',
                 ],
+            ])
+            ->shouldReceive('index')
+            ->once()
+            ->with([
+                'index' => 'test',
+                'type' => 'test',
+                'id' => 4,
+                'body' => [
+                    'name' => 'bar',
+                ],
+                'routing' => 'woo',
             ]);
 
         (new SingleIndexer)
@@ -76,6 +87,18 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'body' => [
                     '__soft_deleted' => 0,
                 ],
+            ])
+            ->shouldReceive('index')
+            ->once()
+            ->with([
+                'index' => 'test',
+                'type' => 'test',
+                'id' => 4,
+                'body' => [
+                    'name' => 'bar',
+                    '__soft_deleted' => 0,
+                ],
+                'routing' => 'woo',
             ]);
 
         (new SingleIndexer)
@@ -110,6 +133,17 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'body' => [
                     'name' => 'bar',
                 ],
+            ])
+            ->shouldReceive('index')
+            ->once()
+            ->with([
+                'index' => 'test',
+                'type' => 'test',
+                'id' => 4,
+                'body' => [
+                    'name' => 'bar',
+                ],
+                'routing' => 'woo',
             ]);
 
         (new SingleIndexer)
@@ -147,6 +181,16 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'index' => 'test',
                 'type' => 'test',
                 'id' => 3,
+                'client' => [
+                    'ignore' => 404,
+                ],
+            ])
+            ->shouldReceive('delete')
+            ->once()
+            ->with([
+                'index' => 'test',
+                'type' => 'test',
+                'id' => 4,
                 'client' => [
                     'ignore' => 404,
                 ],
@@ -191,6 +235,17 @@ class SingleIndexerTest extends AbstractIndexerTest
                 'index' => 'test',
                 'type' => 'test',
                 'id' => 3,
+                'refresh' => true,
+                'client' => [
+                    'ignore' => 404,
+                ],
+            ])
+            ->shouldReceive('delete')
+            ->once()
+            ->with([
+                'index' => 'test',
+                'type' => 'test',
+                'id' => 2,
                 'refresh' => true,
                 'client' => [
                     'ignore' => 404,

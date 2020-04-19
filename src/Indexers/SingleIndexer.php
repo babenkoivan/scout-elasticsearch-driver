@@ -19,9 +19,19 @@ class SingleIndexer implements IndexerInterface
                 $model->pushSoftDeleteMetadata();
             }
 
+            $scoutMetaBody = [];
+            $scoutMetaOther = [];
+            foreach ($model->scoutMetadata() as $k => $v) {
+                if (is_string($k) && substr($k, 0, 1) === '_') {
+                    $scoutMetaOther[substr($k, 1)] = $v;
+                } else {
+                    $scoutMetaBody[$k] = $v;
+                }
+            }
+
             $modelData = array_merge(
                 $model->toSearchableArray(),
-                $model->scoutMetadata()
+                $scoutMetaBody
             );
 
             if (empty($modelData)) {
@@ -32,6 +42,9 @@ class SingleIndexer implements IndexerInterface
 
             $payload = (new DocumentPayload($model))
                 ->set('body', $modelData);
+            foreach ($scoutMetaOther as $k => $v) {
+                $payload->set($k, $v);
+            }
 
             if (in_array(Migratable::class, class_uses_recursive($indexConfigurator))) {
                 $payload->useAlias('write');
