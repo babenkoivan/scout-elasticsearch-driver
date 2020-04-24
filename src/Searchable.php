@@ -74,6 +74,17 @@ trait Searchable
     }
 
     /**
+     * Get the search rules.
+     *
+     * @return array
+     */
+    public function getSearchSettings()
+    {
+        return isset($this->searchSettings) && count($this->searchSettings) > 0 ?
+            $this->searchSettings : array();
+    }
+
+    /**
      * Execute the search.
      *
      * @param  string  $query
