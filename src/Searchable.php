@@ -81,7 +81,7 @@ trait Searchable
     public function getSearchSettings()
     {
         return isset($this->searchSettings) && count($this->searchSettings) > 0 ?
-            $this->searchSettings : array();
+            $this->searchSettings : [];
     }
 
     /**
