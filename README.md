@@ -273,6 +273,23 @@ App\MyModel::search('sales')
     ->get();
 ```
 
+And add more complex sorting (geo_distance eg.)
+
+```php
+App\MyModel::search('sales')
+    ->orderRaw([
+       '_geo_distance' =>  [
+           'coordinates' => [
+               'lat'   =>  51.507351,
+               'lon'   =>  -0.127758
+           ],
+           'order'     =>  'asc',
+           'unit'      =>  'm'
+       ]
+    ])
+    ->get();
+```
+
 At last, if you want to send a custom request, you can use the `searchRaw` method:
 
 ```php
