@@ -434,7 +434,7 @@ class FilterBuilderTest extends AbstractTestCase
                 ],
                 'order'     =>  'asc',
                 'unit'      =>  'm',
-            ]
+            ],
         ];
 
         $builder = (new FilterBuilder($this->mockModel()))
