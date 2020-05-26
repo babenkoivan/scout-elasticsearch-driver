@@ -424,6 +424,25 @@ class FilterBuilderTest extends AbstractTestCase
         );
     }
 
+    public function testOrderRaw()
+    {
+        $orderRaw = [
+            '_geo_distance' =>  [
+                'coordinates' => [
+                    'lat'   =>  51.507351,
+                    'lon'   =>  -0.127758
+                ],
+                'order'     =>  'asc',
+                'unit'      =>  'm'
+            ]
+        ];
+
+        $builder = (new FilterBuilder($this->mockModel()))
+            ->orderRaw($orderRaw);
+
+        $this->assertSame([$orderRaw], $builder->orders);
+    }
+
     public function testWith()
     {
         $builder = (new FilterBuilder($this->mockModel()))
