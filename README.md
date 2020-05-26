@@ -276,7 +276,7 @@ App\MyModel::search('sales')
 And add more complex sorting (geo_distance eg.)
 
 ```php
-App\MyModel::search('sales')
+$model = App\MyModel::search('sales')
     ->orderRaw([
        '_geo_distance' =>  [
            'coordinates' => [
@@ -288,7 +288,12 @@ App\MyModel::search('sales')
        ]
     ])
     ->get();
+
+// To retrieve sort result, use model `sortPayload` attribute:
+$model->sortPayload;
 ```
+
+
 
 At last, if you want to send a custom request, you can use the `searchRaw` method:
 
