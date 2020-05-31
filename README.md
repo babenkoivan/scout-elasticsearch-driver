@@ -1,13 +1,13 @@
 # Scout Elasticsearch Driver   
 
+💥 **Introducing [a new Elasticsearch ecosystem for Laravel](#alternatives).** 💥 
+
 ---
 
 [![Packagist](https://img.shields.io/packagist/v/babenkoivan/scout-elasticsearch-driver.svg)](https://packagist.org/packages/babenkoivan/scout-elasticsearch-driver)
 [![Packagist](https://img.shields.io/packagist/dt/babenkoivan/scout-elasticsearch-driver.svg)](https://packagist.org/packages/babenkoivan/scout-elasticsearch-driver)
 [![Build Status](https://travis-ci.com/babenkoivan/scout-elasticsearch-driver.svg?branch=master)](https://travis-ci.com/babenkoivan/scout-elasticsearch-driver)
 [![Donate](https://img.shields.io/badge/donate-PayPal-blue.svg)](https://www.paypal.me/babenkoi)
-
-:beer: If you like my package, it'd be nice of you [to buy me a beer](https://www.paypal.me/ivanbabenko).
 
 ---
 
@@ -28,6 +28,7 @@ Check out its [features](#features)!
 * [Available filters](#available-filters)
 * [Zero downtime migration](#zero-downtime-migration)
 * [Debug](#debug)
+* [Alternatives](#alternatives)
 
 ## Features
 
@@ -505,3 +506,28 @@ App\MyModel::search('Brazil')
 ```
 
 Note, that this method returns a collection of payloads, because of possibility of using multiple search rules in one query. 
+
+## Alternatives
+
+Recently I've released a new Elasticsearch ecosystem for Laravel, it includes:
+
+* [Elastic Scout](https://github.com/babenkoivan/elastic-scout-driver) - a generic Elasticsearch driver for Laravel Scout.
+It's perfect, if you need to build a simple search in your Laravel application. 
+* [Elastic Scout Driver](https://github.com/babenkoivan/elastic-scout-driver) - an extension for Elastic Scout.
+If you want to take advantage of such Elasticsearch features as bool queries, highlighting, etc., it's a way to go.
+* [Elastic Migrations](https://github.com/babenkoivan/elastic-migrations) - an easy way to create, delete or update 
+Elasticsearch index schema and share it with your teammates. It has quite similar interface to Laravel database migrations.
+
+If any of it sounds interesting to you and you want to get more details, please read 
+[The Ultimate Guide to Elasticsearch in Laravel Application](https://itnext.io/the-ultimate-guide-to-elasticsearch-in-laravel-application-ee636b79419c). 
+The article makes a good overview of the mentioned packages and provides usage examples.
+
+FAQ:
+* Why did you create a new package instead of a new `scout-elasticsearch-driver` version? - I didn't want to create another 
+all in one package for obvious reasons: no separation of concerns, not compatible with other Scout drivers, hard to test
+and develop, etc. As [Elastic Scout](https://github.com/babenkoivan/elastic-scout-driver) is a generic driver and
+doesn't implement all the `scout-elasticsearch-driver` features, it would be wrong to call it a new `scout-elasticsearch-driver` 
+version.   
+* What does it mean for scout-elasticsearch-driver? - Well, it's maintained by the community at the moment 
+(thank you @iget-esoares and @lucamichot for keeping the project alive 🎉). I hope they will continue contributing to the 
+project and bring a new version of `scout-elasticsearch-driver` in the future.
