@@ -511,9 +511,9 @@ Note, that this method returns a collection of payloads, because of possibility 
 
 Recently I've released a new Elasticsearch ecosystem for Laravel, it includes:
 
-* [Elastic Scout](https://github.com/babenkoivan/elastic-scout-driver) - a generic Elasticsearch driver for Laravel Scout.
+* [Elastic Scout Driver](https://github.com/babenkoivan/elastic-scout-driver) - a generic Elasticsearch driver for Laravel Scout.
 It's perfect, if you need to build a simple search in your Laravel application. 
-* [Elastic Scout Driver](https://github.com/babenkoivan/elastic-scout-driver) - an extension for Elastic Scout.
+* [Elastic Scout Driver Plus](https://github.com/babenkoivan/elastic-scout-driver-plus) - an extension for Elastic Scout Driver.
 If you want to take advantage of such Elasticsearch features as bool queries, highlighting, etc., it's a way to go.
 * [Elastic Migrations](https://github.com/babenkoivan/elastic-migrations) - an easy way to create, delete or update 
 Elasticsearch index schema and share it with your teammates. It has quite similar interface to Laravel database migrations.
@@ -525,9 +525,8 @@ The article makes a good overview of the mentioned packages and provides usage e
 FAQ:
 * Why did you create a new package instead of a new `scout-elasticsearch-driver` version? - I didn't want to create another 
 all in one package for obvious reasons: no separation of concerns, not compatible with other Scout drivers, hard to test
-and develop, etc. As [Elastic Scout](https://github.com/babenkoivan/elastic-scout-driver) is a generic driver and
-doesn't implement all the `scout-elasticsearch-driver` features, it would be wrong to call it a new `scout-elasticsearch-driver` 
-version.   
+and develop, etc. As Elastic Scout Driver is a generic driver and doesn't implement all the `scout-elasticsearch-driver` 
+features, it would be wrong to call it a new `scout-elasticsearch-driver` version.   
 * What does it mean for scout-elasticsearch-driver? - Well, it's maintained by the community at the moment 
 (thank you @iget-esoares and @lucamichot for keeping the project alive 🎉). I hope they will continue contributing to the 
 project and bring a new version of `scout-elasticsearch-driver` in the future.
