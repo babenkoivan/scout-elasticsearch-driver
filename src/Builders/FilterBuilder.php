@@ -508,6 +508,6 @@ class FilterBuilder extends Builder
      */
     public function getModel()
     {
-        retutn $this->model;
+        return $this->model;
     }
 }
