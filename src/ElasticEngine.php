@@ -312,6 +312,9 @@ class ElasticEngine extends Engine
 
         $models = $query
             ->whereIn($scoutKeyName, $ids)
+            ->when($builder->queryCallback, function ($query, $callback) {
+                return $callback($query);
+            })
             ->get($columns)
             ->keyBy($scoutKeyName);
 
