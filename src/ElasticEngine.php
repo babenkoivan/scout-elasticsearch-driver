@@ -113,10 +113,7 @@ class ElasticEngine extends Engine
 
                     if ($ruleEntity->isApplicable()) {
                         $payload->setIfNotEmpty('body.query.bool', $ruleEntity->buildQueryPayload());
-
-                        if ($options['highlight'] ?? true) {
-                            $payload->setIfNotEmpty('body.highlight', $ruleEntity->buildHighlightPayload());
-                        }
+                        $payload->setIfNotEmpty('body.highlight', $ruleEntity->buildHighlightPayload());
                     } else {
                         continue;
                     }
@@ -151,6 +148,13 @@ class ElasticEngine extends Engine
                 );
 
                 $payload->setIfNotEmpty($clauseKey, $clauseValue);
+            }
+
+            // for _count api
+            if ($options['count_query'] ?? false) {
+                $query = $payload->get('body.query');
+                $payload->set('body', []); // clean all except query
+                $payload->set('body.query', $query);
             }
 
             return $payload->get();
@@ -249,7 +253,7 @@ class ElasticEngine extends Engine
         $count = 0;
 
         $this
-            ->buildSearchQueryPayloadCollection($builder, ['highlight' => false])
+            ->buildSearchQueryPayloadCollection($builder, ['count_query' => true])
             ->each(function ($payload) use (&$count) {
                 $result = ElasticClient::count($payload);
 
