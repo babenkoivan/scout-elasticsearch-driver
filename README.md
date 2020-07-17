@@ -327,7 +327,7 @@ elastic:create-index | `index-configurator` - The index configurator class | Cre
 elastic:update-index | `index-configurator` - The index configurator class | Updates settings and mappings of an Elasticsearch index.
 elastic:drop-index | `index-configurator` - The index configurator class | Drops an Elasticsearch index.
 elastic:update-mapping | `model` - The model class | Updates a model mapping.
-elastic:migrate | `model` - The model class, `target-index` - The index name to migrate | Migrates model to another index.
+elastic:migrate-model | `model` - The model class, `target-index` - The index name to migrate | Migrates model to another index.
 
 For detailed description and all available options run `php artisan help [command]` in the command line.
 
@@ -483,7 +483,7 @@ As you might know, you can't change the type of already created field in Elastic
 The only choice in such case is to create a new index with necessary mapping and import your models into the new index.      
 A migration can take quite a long time, so to avoid downtime during the process the driver reads from the old index and writes to the new one.
 As soon as migration is over it starts reading from the new index and removes the old index.
-This is how the artisan `elastic:migrate` command works.  
+This is how the artisan `elastic:migrate-model` command works.  
 
 Before you run the command, make sure that your index configurator uses the `ScoutElastic\Migratable` trait.
 If it's not, add the trait and run the artisan `elastic:update-index` command using your index configurator class name as an argument:
@@ -492,10 +492,10 @@ If it's not, add the trait and run the artisan `elastic:update-index` command us
 php artisan elastic:update-index "App\MyIndexConfigurator"
 ```
 
-When you are ready, make changes in the model mapping and run the `elastic:migrate` command using the model class as the first argument and desired index name as the second argument:
+When you are ready, make changes in the model mapping and run the `elastic:migrate-model` command using the model class as the first argument and desired index name as the second argument:
 
 ```
-php artisan elastic:migrate "App\MyModel" my_index_v2
+php artisan elastic:migrate-model "App\MyModel" my_index_v2
 ``` 
 
 Note, that if you need just to add new fields in your mapping, use the `elastic:update-mapping` command.

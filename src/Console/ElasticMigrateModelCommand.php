@@ -11,7 +11,7 @@ use ScoutElastic\Payloads\IndexPayload;
 use ScoutElastic\Payloads\RawPayload;
 use Symfony\Component\Console\Input\InputArgument;
 
-class ElasticMigrateCommand extends Command
+class ElasticMigrateModelCommand extends Command
 {
     use RequiresModelArgument {
         RequiresModelArgument::getArguments as private modelArgument;
@@ -20,7 +20,7 @@ class ElasticMigrateCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'elastic:migrate';
+    protected $name = 'elastic:migrate-model';
 
     /**
      * {@inheritdoc}
