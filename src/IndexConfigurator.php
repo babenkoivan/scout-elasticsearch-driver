@@ -28,7 +28,7 @@ abstract class IndexConfigurator
     protected $defaultMapping = [];
 
     /**
-     * Get th name.
+     * Get the name.
      *
      * @return string
      */
