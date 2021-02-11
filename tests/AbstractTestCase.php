@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 abstract class AbstractTestCase extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown() : void
     {
         parent::tearDown();
 
