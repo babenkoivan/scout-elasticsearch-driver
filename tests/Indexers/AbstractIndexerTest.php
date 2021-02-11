@@ -15,7 +15,7 @@ abstract class AbstractIndexerTest extends AbstractTestCase
      */
     protected $models;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->models = new Collection([
             $this->mockModel([
