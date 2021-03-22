@@ -236,6 +236,9 @@ class ElasticEngineTest extends AbstractTestCase
                         ],
                     ],
                 ],
+            ])
+            ->andReturn([
+                'count' => 1,
             ]);
 
         $model = $this->mockModel();
