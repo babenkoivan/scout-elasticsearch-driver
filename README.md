@@ -75,7 +75,7 @@ php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 php artisan vendor:publish --provider="ScoutElastic\ScoutElasticServiceProvider"
 ```
 
-Then, set the driver setting to `elastic` in the `config/scout.php` file and configure the driver itself in the `config/scout_elastic.php` file.
+Then, set the driver setting to `elastic` in the `config/scout.php` file (or set `SCOUT_DRIVER=elastic` in the `.env`) and configure the driver itself in the `config/scout_elastic.php` file.
 The available options are:
 
 Option | Description
