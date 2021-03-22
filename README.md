@@ -461,7 +461,7 @@ Method | Example | Description
 --- | --- | ---
 where($field, $value) | where('id', 1) | Checks equality to a simple value.
 where($field, $operator, $value) | where('id', '>=', 1) | Filters records according to a given rule. Available operators are: =, <, >, <=, >=, <>.    
-whereIn($field, $value) | where('id', [1, 2, 3]) | Checks if a value is in a set of values. 
+whereIn($field, $value) | whereIn('id', [1, 2, 3]) | Checks if a value is in a set of values. 
 whereNotIn($field, $value) | whereNotIn('id', [1, 2, 3]) | Checks if a value isn't in a set of values. 
 whereBetween($field, $value) | whereBetween('price', [100, 200]) | Checks if a value is in a range.
 whereNotBetween($field, $value) | whereNotBetween('price', [100, 200]) | Checks if a value isn't in a range.
