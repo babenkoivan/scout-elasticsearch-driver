@@ -53,6 +53,10 @@ trait Model
             ->willReturn($params['searchable_array'] ?? []);
 
         $mock
+            ->method('scoutMetadata')
+            ->willReturn($params['scoutMetadata'] ?? []);
+
+        $mock
             ->method('getIndexConfigurator')
             ->willReturn($params['index_configurator'] ?? $this->mockIndexConfigurator());
 

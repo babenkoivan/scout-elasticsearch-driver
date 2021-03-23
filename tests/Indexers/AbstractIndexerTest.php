@@ -37,6 +37,14 @@ abstract class AbstractIndexerTest extends AbstractTestCase
                 'trashed' => false,
                 'searchable_array' => [],
             ]),
+            $this->mockModel([
+                'key' => 4,
+                'trashed' => false,
+                'scoutMetadata' => [
+                    'name' => 'bar',
+                    '_routing' => 'woo',
+                ],
+            ]),
         ]);
     }
 }
