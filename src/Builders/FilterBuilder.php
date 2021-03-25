@@ -56,7 +56,7 @@ class FilterBuilder extends Builder
     /**
      * Determines if the score should be returned with the model.
      *
-     * @var boolean - false
+     * @var bool - false
      */
     public $withScores = false;
 
