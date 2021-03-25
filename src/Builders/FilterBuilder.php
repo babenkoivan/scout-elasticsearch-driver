@@ -54,7 +54,7 @@ class FilterBuilder extends Builder
     public $minScore;
 
     /**
-     * Determines if the score should be returned with the model
+     * Determines if the score should be returned with the model.
      *
      * @var boolean - false
      */
@@ -603,7 +603,7 @@ class FilterBuilder extends Builder
     /**
      * Set the withScores property.
      *
-     * @param  boolean  $score - true
+     * @param  bool  $withScores - true
      * @return $this
      */
     public function withScores($withScores = true)

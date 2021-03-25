@@ -22,7 +22,7 @@ trait Searchable
     private $highlight = null;
 
     /**
-     * The score returned from elasticsearch
+     * The score returned from elasticsearch.
      *
      * @var float|null
      */

@@ -327,7 +327,7 @@ class ElasticEngine extends Engine
                 if (isset($models[$id])) {
                     $model = $models[$id];
 
-                    if($withScores && isset($hit['_score'])) {
+                    if ($withScores && isset($hit['_score'])) {
                         $model->_score = $hit['_score'];
                     }
 
