@@ -54,6 +54,13 @@ class FilterBuilder extends Builder
     public $minScore;
 
     /**
+     * Determines if the score should be returned with the model.
+     *
+     * @var bool - false
+     */
+    public $withScores = false;
+
+    /**
      * FilterBuilder constructor.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $model
@@ -589,6 +596,19 @@ class FilterBuilder extends Builder
     public function minScore($score)
     {
         $this->minScore = $score;
+
+        return $this;
+    }
+
+    /**
+     * Set the withScores property.
+     *
+     * @param  bool  $withScores - true
+     * @return $this
+     */
+    public function withScores($withScores = true)
+    {
+        $this->withScores = $withScores;
 
         return $this;
     }

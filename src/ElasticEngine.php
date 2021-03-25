@@ -306,6 +306,8 @@ class ElasticEngine extends Engine
             $columns[] = $scoutKeyName;
         }
 
+        $withScores = $builder->withScores;
+
         $ids = $this->mapIds($results)->all();
 
         $query = $model::usesSoftDelete() ? $model->withTrashed() : $model->newQuery();
@@ -319,11 +321,15 @@ class ElasticEngine extends Engine
             ->keyBy($scoutKeyName);
 
         $values = Collection::make($results['hits']['hits'])
-            ->map(function ($hit) use ($models) {
+            ->map(function ($hit) use ($models, $withScores) {
                 $id = $hit['_id'];
 
                 if (isset($models[$id])) {
                     $model = $models[$id];
+
+                    if ($withScores && isset($hit['_score'])) {
+                        $model->_score = $hit['_score'];
+                    }
 
                     if (isset($hit['highlight'])) {
                         $model->highlight = new Highlight($hit['highlight']);

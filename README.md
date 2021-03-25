@@ -294,6 +294,17 @@ $model = App\MyModel::search('sales')
 $model->sortPayload;
 ```
 
+And return the score assigned by ElasticSearch with the models:
+
+```php
+$model = App\MyModel::search('sales')
+    ->withScores()
+    ->get();
+
+// To retrieve the score, use model \`_score\` attribute:
+$model->_score;
+```
+
 
 
 At last, if you want to send a custom request, you can use the `searchRaw` method:
