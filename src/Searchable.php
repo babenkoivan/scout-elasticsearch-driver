@@ -15,11 +15,18 @@ trait Searchable
     }
 
     /**
-     * The highligths.
+     * The highlights.
      *
      * @var \ScoutElastic\Highlight|null
      */
     private $highlight = null;
+
+    /**
+     * The score returned from elasticsearch
+     *
+     * @var float|null
+     */
+    public $_score;
 
     /**
      * Get the index configurator.
