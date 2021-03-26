@@ -58,4 +58,13 @@ class SearchRule
             ],
         ];
     }
+
+    /**
+     * Build the custom payload which same level with `query`.
+     *
+     * @return array|null
+     */
+    public function buildCustomPayload()
+    {
+    }
 }
