@@ -629,4 +629,12 @@ class FilterBuilder extends Builder
             $this->wheres['must'][] = ['term' => ['__soft_deleted' => 1]];
         });
     }
+
+    /**
+     * @return Model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
 }
