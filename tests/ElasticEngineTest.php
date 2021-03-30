@@ -223,9 +223,6 @@ class ElasticEngineTest extends AbstractTestCase
                 'index' => 'test',
                 'type' => 'test',
                 'body' => [
-                    '_source' => [
-                        'title',
-                    ],
                     'query' => [
                         'bool' => [
                             'must' => [
