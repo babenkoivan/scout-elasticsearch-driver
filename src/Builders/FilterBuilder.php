@@ -276,6 +276,42 @@ class FilterBuilder extends Builder
     }
 
     /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/6.8/query-dsl-match-query.html Match query
+     *
+     * @param string $field
+     * @param string $value
+     * @return $this
+     */
+    public function whereMatch($field, $value)
+    {
+        $this->wheres['must'][] = [
+            'match' => [
+                $field => $value,
+            ],
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/6.8/query-dsl-match-query.html Match query
+     *
+     * @param string $field
+     * @param string $value
+     * @return $this
+     */
+    public function whereNotMatch($field, $value)
+    {
+        $this->wheres['must_not'][] = [
+            'match' => [
+                $field => $value,
+            ],
+        ];
+
+        return $this;
+    }
+
+    /**
      * Add a whereRegexp condition.
      *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html Regexp query
