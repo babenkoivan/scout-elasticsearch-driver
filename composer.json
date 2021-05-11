@@ -23,7 +23,7 @@
     "require": {
         "php": "^7.1.|^8.0",
         "elasticsearch/elasticsearch": ">=7.0 <=7.11.0",
-        "laravel/scout": "^7.0|^8.0"
+        "laravel/scout": "^7.0|^8.0|^9.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.0|^8.0",
