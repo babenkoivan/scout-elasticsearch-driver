@@ -314,6 +314,39 @@ App\MyModel::searchRaw([
 
 This query will return raw response.
 
+
+## Usage scopes model 
+
+When you have written a series of scope methods for your model and you want to use it in elastic, do it easily by adding a trait class.
+
+Basic usage example:
+
+```php
+<?php
+
+namespace App;
+
+use ScoutElastic\ScopesModelHandleable;
+use Illuminate\Database\Eloquent\Model;
+
+class MyModel extends Model
+{
+    use ScopesModelHandleable;
+    
+    // You can set several scopes for one model. In this case, the first not empty result will be returned.
+    protected $scopesElastic = [
+        'scopePublished',
+         ...
+    ];
+    
+    public function scopePublished($query)
+    {
+        return $query->where('has_published', true);
+    }
+
+}
+```
+
 ## Console commands
 
 Available artisan commands are listed below:
