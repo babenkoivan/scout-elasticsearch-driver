@@ -20,7 +20,7 @@ class ElasticEngineTest extends AbstractTestCase
      */
     private $engine;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->engine = $this
             ->getMockBuilder(ElasticEngine::class)
@@ -236,6 +236,9 @@ class ElasticEngineTest extends AbstractTestCase
                         ],
                     ],
                 ],
+            ])
+            ->andReturn([
+                'count' => 1,
             ]);
 
         $model = $this->mockModel();
